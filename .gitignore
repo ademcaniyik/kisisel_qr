@@ -1,0 +1,8 @@
+# Çevre Değişkenleri ve Konfigürasyon
+.env
+.env.local
+.env.production
+.env.staging
+.env.backup
+.env.clean
+
