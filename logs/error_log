@@ -1,0 +1,557 @@
+[25-Jun-2025 12:28:36 UTC] Giriş denemesi - Kullanıcı: admin
+[25-Jun-2025 12:28:36 UTC] Veritabanından gelen şifre hash'i: $2y$10$5ZCpuHzTmlPiTWB630Mc7eurP1ou/jW/z8LpzhHfLhfeMZu6L90Yq
+[25-Jun-2025 12:28:36 UTC] Başarılı giriş: admin
+[27-Jun-2025 03:21:55 Europe/Berlin] Sitemap oluşturma hatası: Unknown column 'p.is_active' in 'field list'
+[27-Jun-2025 03:27:42 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:42 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:42 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:43 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:43 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:43 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:44 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:27:45 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:28:20 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:28:20 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:28:20 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:28:23 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:28:23 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:28:23 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[27-Jun-2025 03:51:54 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 44
+[27-Jun-2025 03:51:54 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 45
+[27-Jun-2025 03:51:54 Europe/Berlin] PHP Warning:  ini_set(): Session ini settings cannot be changed when a session is active in C:\xampp\htdocs\kisisel_qr_canli\config\security.php on line 46
+[2025-06-27 13:34:43] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:34:48] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:34:56] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:18] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:21] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:28] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:28] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:29] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:29] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:29] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:29] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:30] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:56:30] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:57:25] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[2025-06-27 13:59:39] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 353
+[27-Jun-2025 14:22:37 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef?id=245dc983-31d6-41ae-b260-cca88dfb79dd&vscodeBrowserReqId=1751026957889
+[27-Jun-2025 14:22:37 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[2025-06-27 14:22:37] Uncaught Exception: htmlspecialchars(): Argument #1 ($string) must be of type string, array given in C:\xampp\htdocs\kisisel_qr_canli\profile.php on line 364
+[27-Jun-2025 14:23:53 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef?id=245dc983-31d6-41ae-b260-cca88dfb79dd&vscodeBrowserReqId=1751027033358
+[27-Jun-2025 14:23:53 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[27-Jun-2025 14:25:50 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef
+[27-Jun-2025 14:25:50 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[27-Jun-2025 14:26:57 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef
+[27-Jun-2025 14:26:57 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[27-Jun-2025 14:27:11 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef?id=245dc983-31d6-41ae-b260-cca88dfb79dd&vscodeBrowserReqId=1751027231339
+[27-Jun-2025 14:27:11 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[27-Jun-2025 14:29:32 Europe/Berlin] Profile.php debug - qr_id: f10acbef, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f10acbef
+[27-Jun-2025 14:29:32 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e879787550.jpg, photo_data: has_data
+[27-Jun-2025 14:30:01 Europe/Berlin] Profile.php debug - qr_id: be6add31, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/be6add31
+[27-Jun-2025 14:30:01 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[27-Jun-2025 14:30:05 Europe/Berlin] Profile.php debug - qr_id: be6add31, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/be6add31
+[27-Jun-2025 14:30:05 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[27-Jun-2025 14:30:54 Europe/Berlin] Profile.php debug - qr_id: 739f8209, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/739f8209
+[27-Jun-2025 14:30:54 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e8ef9263be.jpeg, photo_data: empty
+[27-Jun-2025 14:30:56 Europe/Berlin] Profile.php debug - qr_id: 739f8209, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/739f8209
+[27-Jun-2025 14:30:56 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e8ef9263be.jpeg, photo_data: empty
+[27-Jun-2025 14:31:04 Europe/Berlin] Profile.php debug - qr_id: 739f8209, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/739f8209
+[27-Jun-2025 14:31:04 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e8ef9263be.jpeg, photo_data: empty
+[27-Jun-2025 14:31:05 Europe/Berlin] Profile.php debug - qr_id: 739f8209, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/739f8209
+[27-Jun-2025 14:31:05 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr_canli/public/uploads/profiles/685e8ef9263be.jpeg, photo_data: empty
+[27-Jun-2025 14:31:35 Europe/Berlin] Profile.php debug - qr_id: be6add31, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/be6add31
+[27-Jun-2025 14:31:35 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[27-Jun-2025 14:46:04 Europe/Berlin] Profile.php debug - qr_id: null, slug: demo-profil, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=demo-profil
+[27-Jun-2025 14:46:04 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[2025-06-27 14:48:16] Error [2]: include(includes/header.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 38
+[27-Jun-2025 14:48:16 Europe/Berlin] PHP Warning:  include(includes/header.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 38
+[2025-06-27 14:48:16] Error [2]: include(): Failed opening 'includes/header.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 38
+[27-Jun-2025 14:48:16 Europe/Berlin] PHP Warning:  include(): Failed opening 'includes/header.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 38
+[2025-06-27 14:48:16] Error [2]: include(includes/sidebar.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 42
+[27-Jun-2025 14:48:16 Europe/Berlin] PHP Warning:  include(includes/sidebar.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 42
+[2025-06-27 14:48:16] Error [2]: include(): Failed opening 'includes/sidebar.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 42
+[27-Jun-2025 14:48:16 Europe/Berlin] PHP Warning:  include(): Failed opening 'includes/sidebar.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\kisisel_qr_canli\admin\index.php on line 42
+[27-Jun-2025 14:56:57 Europe/Berlin] Profile.php debug - qr_id: null, slug: demo-profil, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=demo-profil
+[27-Jun-2025 14:56:57 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[27-Jun-2025 15:21:05 Europe/Berlin] Profile.php debug - qr_id: f7d90f52, slug: null, REQUEST_URI: /kisisel_qr_canli/qr/f7d90f52
+[27-Jun-2025 15:21:05 Europe/Berlin] Profile loaded - ID: 23, photo_url: null, photo_data: empty
+[27-Jun-2025 15:22:25 Europe/Berlin] Profile.php debug - qr_id: null, slug: orcun-iyik, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=orcun-iyik
+[27-Jun-2025 15:22:25 Europe/Berlin] Profile loaded - ID: 27, photo_url: null, photo_data: empty
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 95
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 96
+[2025-06-27 15:31:44] Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:31:44 Europe/Berlin] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\kisisel_qr_canli\admin\scan_statistics.php on line 99
+[27-Jun-2025 15:37:48 Europe/Berlin] Profile.php debug - qr_id: null, slug: demo-profil, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=demo-profil
+[27-Jun-2025 15:37:48 Europe/Berlin] Profile loaded - ID: 27, photo_url: /kisisel_qr/public/uploads/profiles/685df4961f7a2.jpg, photo_data: has_data
+[27-Jun-2025 15:42:15 Europe/Berlin] Profile.php debug - qr_id: null, slug: burak-iyik, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=burak-iyik
+[27-Jun-2025 15:42:15 Europe/Berlin] Profile loaded - ID: 6, photo_url: null, photo_data: empty
+[27-Jun-2025 15:57:54 Europe/Berlin] Profile.php debug - qr_id: null, slug: burak-iyik, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=burak-iyik
+[27-Jun-2025 15:57:54 Europe/Berlin] Profile loaded - ID: 6, photo_url: null, photo_data: empty
+[27-Jun-2025 16:29:36 Europe/Berlin] DEBUG - Input data: Array
+(
+    [customer_name] => Test User
+    [customer_phone] => +905349334631
+    [customer_email] => 
+    [product_type] => personal_qr
+    [product_name] => 10x10 cm Şeffaf QR Sticker
+    [quantity] => 1
+    [price] => 200
+    [special_requests] => Adres: Test Adres Mahallesi, Test Sokak No:123, Test İlçe/Test İl
+Bio: Test Bio
+Tema: Varsayılan
+    [whatsapp_sent] => 1
+)
+
+[27-Jun-2025 16:29:36 Europe/Berlin] DEBUG - Special requests from input: Adres: Test Adres Mahallesi, Test Sokak No:123, Test İlçe/Test İl
+Bio: Test Bio
+Tema: Varsayılan
+[27-Jun-2025 16:29:36 Europe/Berlin] DEBUG - Order data: Array
+(
+    [customer_name] => Test User
+    [customer_phone] => +905349334631
+    [customer_email] => 
+    [product_type] => personal_qr
+    [product_name] => 10x10 cm Şeffaf QR Sticker
+    [quantity] => 1
+    [price] => 200
+    [special_requests] => Adres: Test Adres Mahallesi, Test Sokak No:123, Test İlçe/Test İl
+Bio: Test Bio
+Tema: Varsayılan
+    [whatsapp_sent] => 1
+)
+
+[27-Jun-2025 17:20:47 Europe/Berlin] Profile.php debug - qr_id: null, slug: deneme, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=deneme
+[27-Jun-2025 17:20:47 Europe/Berlin] Profile loaded - ID: 27, photo_url: null, photo_data: empty
+[27-Jun-2025 17:24:05 Europe/Berlin] Profile.php debug - qr_id: null, slug: zart, REQUEST_URI: /kisisel_qr_canli/profile.php?slug=zart
+[27-Jun-2025 17:24:05 Europe/Berlin] Profile loaded - ID: 27, photo_url: null, photo_data: empty
+[2025-06-27 23:42:26] Uncaught Exception: Access denied for user 'acd1f4ftwarecom_master'@'localhost' (using password: YES) in C:\xampp\htdocs\kisisel_qr_canli\config\database.php on line 29
+[2025-06-28 00:28:31] Uncaught Exception: Access denied for user 'acd1f4ftwarecom_master'@'localhost' (using password: YES) in C:\xampp\htdocs\kisisel_qr_canli\config\database.php on line 29
