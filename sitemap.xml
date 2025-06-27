@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Ana Sayfa -->
+  <url>
+    <loc>https://acdisoftware.com.tr/kisisel_qr/</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Demo Profil -->
+  <url>
+    <loc>https://acdisoftware.com.tr/kisisel_qr/profile.php?slug=demo-profil</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Dinamik sitemap için referans -->
+  <!-- Bu dosya sitemap.php ile otomatik güncellenebilir -->
+</urlset>

@@ -1,0 +1,80 @@
+# Kişisel QR - Robots.txt
+User-agent: *
+
+# İzin verilen sayfalar
+Allow: /
+Allow: /profile.php
+Allow: /assets/
+Allow: /public/qr_codes/
+Allow: /public/uploads/profiles/
+
+# Yasaklanan alanlar
+Disallow: /admin/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /vendor/
+Disallow: /logs/
+Disallow: /backups/
+Disallow: /errors/
+Disallow: /database/
+Disallow: /docs/
+Disallow: /*.env
+Disallow: /*.log
+Disallow: /*.sql
+Disallow: /production_test.php
+Disallow: /create_admin.php
+
+# Sitemap
+Sitemap: https://acdisoftware.com.tr/kisisel_qr/sitemap.xml
+
+# Crawl-delay (saniye)
+Crawl-delay: 1
+Disallow: /.env
+Disallow: /composer.json
+Disallow: /composer.lock
+
+# Admin paneli tamamen yasaklı
+Disallow: /admin/*
+Disallow: /admin/api/*
+
+# Geçici ve test dosyaları
+Disallow: /*debug*
+Disallow: /*test*
+Disallow: /*temp*
+Disallow: /*.tmp
+Disallow: /*.log
+
+# Profil sayfaları için özel kurallar
+# QR kodla erişilen profiller indexlenebilir
+Allow: /profile.php?qr_id=*
+Allow: /profile.php?slug=*
+
+# Redirect sayfası indexlenmemeli
+Disallow: /redirect.php
+
+# Sitemap konumu
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl delay (saniye)
+Crawl-delay: 1
+
+# Özel bot kuralları
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Crawl-delay: 1
+
+# Kötü niyetli botları engelle
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
