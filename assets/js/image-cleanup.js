@@ -5,7 +5,7 @@
 
 class ImageCleanupUtility {
     constructor() {
-        this.cleanupEndpoint = '/kisisel_qr_canli/admin/api/profile.php';
+        this.cleanupEndpoint = '/kisisel_qr/admin/api/profile.php';
         this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         this.observerOptions = {
             root: null,
@@ -76,7 +76,7 @@ class ImageCleanupUtility {
             if (event.target.tagName === 'IMG') {
                 const img = event.target;
                 if (!img.classList.contains('fallback-applied')) {
-                    img.src = '/kisisel_qr_canli/assets/images/default-profile.svg';
+                    img.src = '/kisisel_qr/assets/images/default-profile.svg';
                     img.classList.add('fallback-applied');
                     img.alt = 'Varsayılan profil resmi';
                 }
@@ -168,7 +168,7 @@ class ImageCleanupUtility {
      */
     generateResponsiveImageHtml(filename, alt = '', cssClasses = '', sizes = 'auto') {
         if (!filename) {
-            return `<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="${alt}" class="${cssClasses}" loading="lazy">`;
+            return `<img src="/kisisel_qr/assets/images/default-profile.svg" alt="${alt}" class="${cssClasses}" loading="lazy">`;
         }
 
         const baseName = filename.replace(/\.[^/.]+$/, '');
@@ -180,22 +180,22 @@ class ImageCleanupUtility {
         }
 
         const webpSrcset = [
-            `/kisisel_qr_canli/public/uploads/profiles/thumb/${baseName}.webp 150w`,
-            `/kisisel_qr_canli/public/uploads/profiles/medium/${baseName}.webp 300w`,
-            `/kisisel_qr_canli/public/uploads/profiles/large/${baseName}.webp 600w`
+            `/kisisel_qr/public/uploads/profiles/thumb/${baseName}.webp 150w`,
+            `/kisisel_qr/public/uploads/profiles/medium/${baseName}.webp 300w`,
+            `/kisisel_qr/public/uploads/profiles/large/${baseName}.webp 600w`
         ].join(', ');
 
         const jpegSrcset = [
-            `/kisisel_qr_canli/public/uploads/profiles/thumb/${filename} 150w`,
-            `/kisisel_qr_canli/public/uploads/profiles/medium/${filename} 300w`,
-            `/kisisel_qr_canli/public/uploads/profiles/large/${filename} 600w`
+            `/kisisel_qr/public/uploads/profiles/thumb/${filename} 150w`,
+            `/kisisel_qr/public/uploads/profiles/medium/${filename} 300w`,
+            `/kisisel_qr/public/uploads/profiles/large/${filename} 600w`
         ].join(', ');
 
         return `
             <picture>
                 <source srcset="${webpSrcset}" sizes="${sizes}" type="image/webp">
                 <source srcset="${jpegSrcset}" sizes="${sizes}" type="image/jpeg">
-                <img src="/kisisel_qr_canli/public/uploads/profiles/medium/${filename}" 
+                <img src="/kisisel_qr/public/uploads/profiles/medium/${filename}" 
                      alt="${alt}" 
                      class="${cssClasses}" 
                      loading="lazy">

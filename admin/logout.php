@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../config/site.php';
 
 // Oturum değişkenlerini temizle
 $_SESSION = array();
@@ -13,6 +14,6 @@ if (isset($_COOKIE[session_name()])) {
 session_destroy();
 
 // Ana sayfaya yönlendir
-header('Location: /kisisel_qr_canli/admin/login.php');
+header('Location: ' . getBasePath() . '/admin/login.php');
 exit();
 ?>

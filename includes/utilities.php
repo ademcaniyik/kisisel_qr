@@ -29,7 +29,7 @@ class Utilities {
             session_start();
         }
         if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-            header('Location: /kisisel_qr_canli/admin/login.php');
+            header('Location: /kisisel_qr/admin/login.php');
             exit();
         }
     }

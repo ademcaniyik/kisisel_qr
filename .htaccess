@@ -66,5 +66,5 @@ DirectoryIndex index.php
 AddDefaultCharset UTF-8
 
 # Hata sayfaları
-ErrorDocument 404 /kisisel_qr_canli/errors/404.php
-ErrorDocument 500 /kisisel_qr_canli/errors/500.php
+ErrorDocument 404 /kisisel_qr/errors/404.php
+ErrorDocument 500 /kisisel_qr/errors/500.php

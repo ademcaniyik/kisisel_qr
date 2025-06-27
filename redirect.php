@@ -43,7 +43,7 @@ try {
 
     // Tarama istatistiğini kaydet
     Utilities::logScan($qrId);    // Profil sayfasına yönlendir
-    header('Location: /kisisel_qr_canli/qr/' . $qrId);
+    header('Location: /kisisel_qr/qr/' . $qrId);
     exit();
 
 } catch (Exception $e) {

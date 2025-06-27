@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/site.php';
 require_once __DIR__ . '/../includes/utilities.php';
 
 // Oturum kontrolü
@@ -43,13 +44,13 @@ while ($row = $result->fetch_assoc()) {
     <title>QR Tarama İstatistikleri - Kişisel QR Sistemi</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/kisisel_qr_canli/assets/images/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr_canli/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr_canli/assets/images/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr_canli/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="<?= getBasePath() ?>/assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= getBasePath() ?>/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= getBasePath() ?>/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= getBasePath() ?>/assets/images/apple-touch-icon.png">
     <meta name="theme-color" content="#3498db">
     
-    <link href="/kisisel_qr_canli/assets/css/dashboard.css" rel="stylesheet">
+    <link href="<?= getBasePath() ?>/assets/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">

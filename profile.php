@@ -302,9 +302,9 @@ if (!$theme) {
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>">
     <?php if (!empty($profile['photo_url'])): ?>
-    <meta property="og:image" content="https://yourdomain.com/kisisel_qr_canli<?php echo htmlspecialchars($profile['photo_url']); ?>">
+    <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr<?php echo htmlspecialchars($profile['photo_url']); ?>">
     <?php else: ?>
-    <meta property="og:image" content="https://yourdomain.com/kisisel_qr_canli/assets/images/default-profile.jpg">
+    <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr/assets/images/default-profile.jpg">
     <?php endif; ?>
     <meta property="og:image:width" content="400">
     <meta property="og:image:height" content="400">
@@ -320,9 +320,9 @@ if (!$theme) {
     <meta name="twitter:title" content="<?php echo htmlspecialchars($profile['name']); ?> - Kişisel QR Profil">
     <meta name="twitter:description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti ve iletişim bilgileri.">
     <?php if (!empty($profile['photo'])): ?>
-    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr_canli/<?php echo htmlspecialchars($profile['photo_url'] ?? ''); ?>">
+    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/<?php echo htmlspecialchars($profile['photo_url'] ?? ''); ?>">
     <?php else: ?>
-    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr_canli/assets/images/default-profile.jpg">
+    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/assets/images/default-profile.jpg">
     <?php endif; ?>
     
     <!-- Additional Meta Tags -->
@@ -330,10 +330,10 @@ if (!$theme) {
     <meta name="msapplication-TileColor" content="#3498db">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/kisisel_qr_canli/assets/images/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr_canli/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr_canli/assets/images/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr_canli/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/kisisel_qr/assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr/assets/images/apple-touch-icon.png">
     <meta name="theme-color" content="#3498db">
     
     <!-- Structured Data (JSON-LD) -->
@@ -345,7 +345,7 @@ if (!$theme) {
         "description": "<?php echo addslashes(htmlspecialchars(substr(strip_tags($profile['bio']), 0, 200))); ?>",
         "url": "https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>",
         <?php if (!empty($profile['photo'])): ?>
-        "image": "https://yourdomain.com/kisisel_qr_canli/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
+        "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
         <?php endif; ?>
         <?php if (!empty($profile['phone'])): ?>
         "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
@@ -396,8 +396,8 @@ if (!$theme) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles -->
-    <link href="/kisisel_qr_canli/assets/css/profile-themes.css" rel="stylesheet">
-    <link href="/kisisel_qr_canli/assets/css/image-enhancements.css" rel="stylesheet">
+    <link href="/kisisel_qr/assets/css/profile-themes.css" rel="stylesheet">
+    <link href="/kisisel_qr/assets/css/image-enhancements.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -550,7 +550,7 @@ if (!$theme) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/kisisel_qr_canli/assets/js/image-cleanup.js"></script>
+    <script src="/kisisel_qr/assets/js/image-cleanup.js"></script>
     <script>
         // Profile page specific image enhancements
         document.addEventListener('DOMContentLoaded', function() {
@@ -577,7 +577,7 @@ if (!$theme) {
                     this.classList.add('error');
                     this.alt = 'Profil fotoğrafı yüklenemedi';
                     if (!this.src.includes('default-profile.svg')) {
-                        this.src = '/kisisel_qr_canli/assets/images/default-profile.svg';
+                        this.src = '/kisisel_qr/assets/images/default-profile.svg';
                     }
                 });
                 

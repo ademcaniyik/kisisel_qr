@@ -314,7 +314,7 @@ class ImageOptimizer {
      */
     public function getOptimizedImageUrl($filename, $size = 'original', $format = 'auto') {
         if (empty($filename)) {
-            return '/kisisel_qr_canli/assets/images/default-profile.svg';
+            return '/kisisel_qr/assets/images/default-profile.svg';
         }
         
         $baseName = pathinfo($filename, PATHINFO_FILENAME);
@@ -327,12 +327,12 @@ class ImageOptimizer {
         
         if ($size === 'original') {
             $path = $supportsWebP ? 
-                "/kisisel_qr_canli/public/uploads/profiles/{$baseName}.webp" :
-                "/kisisel_qr_canli/public/uploads/profiles/{$filename}";
+                "/kisisel_qr/public/uploads/profiles/{$baseName}.webp" :
+                "/kisisel_qr/public/uploads/profiles/{$filename}";
         } else {
             $path = $supportsWebP ?
-                "/kisisel_qr_canli/public/uploads/profiles/{$size}/{$baseName}.webp" :
-                "/kisisel_qr_canli/public/uploads/profiles/{$size}/{$filename}";
+                "/kisisel_qr/public/uploads/profiles/{$size}/{$baseName}.webp" :
+                "/kisisel_qr/public/uploads/profiles/{$size}/{$filename}";
         }
         
         // Dosya var mı kontrol et
@@ -340,15 +340,15 @@ class ImageOptimizer {
         if (!file_exists($fullPath)) {
             // Fallback to JPEG
             if ($size === 'original') {
-                $path = "/kisisel_qr_canli/public/uploads/profiles/{$filename}";
+                $path = "/kisisel_qr/public/uploads/profiles/{$filename}";
             } else {
-                $path = "/kisisel_qr_canli/public/uploads/profiles/{$size}/{$filename}";
+                $path = "/kisisel_qr/public/uploads/profiles/{$size}/{$filename}";
             }
             
             // Hala yoksa default resim
             $fullPath = $_SERVER['DOCUMENT_ROOT'] . $path;
             if (!file_exists($fullPath)) {
-                return '/kisisel_qr_canli/assets/images/default-profile.svg';
+                return '/kisisel_qr/assets/images/default-profile.svg';
             }
         }
         
@@ -360,7 +360,7 @@ class ImageOptimizer {
      */
     public function generateResponsiveImageHtml($filename, $alt = '', $class = '', $sizes = 'auto') {
         if (empty($filename)) {
-            return '<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="' . htmlspecialchars($alt) . '" class="' . htmlspecialchars($class) . '">';
+            return '<img src="/kisisel_qr/assets/images/default-profile.svg" alt="' . htmlspecialchars($alt) . '" class="' . htmlspecialchars($class) . '">';
         }
         
         $baseName = pathinfo($filename, PATHINFO_FILENAME);
@@ -370,8 +370,8 @@ class ImageOptimizer {
         $jpegSrcset = [];
         
         foreach ($this->thumbnailSizes as $size => $dimensions) {
-            $webpSrcset[] = "/kisisel_qr_canli/public/uploads/profiles/{$size}/{$baseName}.webp {$dimensions['width']}w";
-            $jpegSrcset[] = "/kisisel_qr_canli/public/uploads/profiles/{$size}/{$filename} {$dimensions['width']}w";
+            $webpSrcset[] = "/kisisel_qr/public/uploads/profiles/{$size}/{$baseName}.webp {$dimensions['width']}w";
+            $jpegSrcset[] = "/kisisel_qr/public/uploads/profiles/{$size}/{$filename} {$dimensions['width']}w";
         }
         
         if ($sizes === 'auto') {

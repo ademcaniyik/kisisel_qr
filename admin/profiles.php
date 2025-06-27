@@ -1,6 +1,7 @@
 <?php
 // Session ayarları ve güvenlik önce yüklensin
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/site.php';
 
 // Session'ı güvenli şekilde başlat
 if (session_status() === PHP_SESSION_NONE) {
@@ -43,14 +44,14 @@ if ($result) {
     <title>Profil Yönetimi - Kişisel QR Sistemi</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/kisisel_qr_canli/assets/images/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr_canli/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr_canli/assets/images/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr_canli/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="<?= getBasePath() ?>/assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= getBasePath() ?>/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= getBasePath() ?>/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= getBasePath() ?>/assets/images/apple-touch-icon.png">
     <meta name="theme-color" content="#3498db">
     
-    <link href="/kisisel_qr_canli/assets/css/dashboard.css" rel="stylesheet">
-    <link href="/kisisel_qr_canli/assets/css/profile-themes.css" rel="stylesheet">
+    <link href="<?= getBasePath() ?>/assets/css/dashboard.css" rel="stylesheet">
+    <link href="<?= getBasePath() ?>/assets/css/profile-themes.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -139,13 +140,13 @@ if ($result) {
                                             if ($photoData && isset($photoData['filename'])) {
                                                 $baseName = pathinfo($photoData['filename'], PATHINFO_FILENAME);
                                                 echo '<picture>';
-                                                echo '<source srcset="/kisisel_qr_canli/public/uploads/profiles/thumb/' . $baseName . '.webp" type="image/webp">';
-                                                echo '<img src="/kisisel_qr_canli/public/uploads/profiles/thumb/' . $photoData['filename'] . '" ';
+                                                echo '<source srcset="' . getBasePath() . '/public/uploads/profiles/thumb/' . $baseName . '.webp" type="image/webp">';
+                                                echo '<img src="' . getBasePath() . '/public/uploads/profiles/thumb/' . $photoData['filename'] . '" ';
                                                 echo 'alt="' . htmlspecialchars($profile['name']) . ' profil fotoğrafı" ';
                                                 echo 'class="profile-photo-admin" loading="lazy">';
                                                 echo '</picture>';
                                             } else {
-                                                echo '<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="Varsayılan profil" class="profile-photo-admin" loading="lazy">';
+                                                echo '<img src="' . getBasePath() . '/assets/images/default-profile.svg" alt="Varsayılan profil" class="profile-photo-admin" loading="lazy">';
                                             }
                                             ?>
                                         </td>
@@ -181,11 +182,11 @@ if ($result) {
                                                     </a></li>
                                                     <?php while ($qr = $qrResult->fetch_assoc()): ?>
                                                     <li class="d-flex align-items-center justify-content-between px-2">
-                                                        <a class="dropdown-item flex-grow-1" href="/kisisel_qr_canli/public/qr_codes/<?php echo $qr['id']; ?>.png" download>
+                                                        <a class="dropdown-item flex-grow-1" href="<?= getBasePath() ?>/public/qr_codes/<?php echo $qr['id']; ?>.png" download>
                                                             <i class="fas fa-download"></i> QR #<?php echo substr($qr['id'], 0, 8); ?>
                                                         </a>
                                                         <span class="text-muted small ms-2">Oluşturulma: <?php echo date('d.m.Y H:i', strtotime($qr['created_at'])); ?></span>
-                                                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/kisisel_qr_canli/public/qr_codes/' . $qr['id']; ?>.png')" title="Kopyala"><i class="fas fa-copy"></i></button>
+                                                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . getBasePath() . '/public/qr_codes/' . $qr['id']; ?>.png')" title="Kopyala"><i class="fas fa-copy"></i></button>
                                                         <button class="btn btn-sm btn-danger ms-2" onclick="deleteQR('<?php echo $qr['id']; ?>', <?php echo $profile['id']; ?>)"><i class="fas fa-trash"></i></button>
                                                     </li>
                                                     <?php endwhile; ?>
@@ -402,13 +403,16 @@ if ($result) {
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     
     <!-- Custom Scripts -->
-    <script src="/kisisel_qr_canli/assets/js/image-cleanup.js"></script>
-    <script src="/kisisel_qr_canli/assets/js/profile-manager.js"></script>
+    <script src="<?= getBasePath() ?>/assets/js/image-cleanup.js"></script>
+    <script src="<?= getBasePath() ?>/assets/js/profile-manager.js"></script>
     <script>
+    // Base path tanımlayalım
+    const BASE_PATH = '<?= getBasePath() ?>';
+    
     // Profil düzenleme modalını aç ve verileri doldur
     function editProfile(id) {
         $.ajax({
-            url: '/kisisel_qr_canli/admin/api/profile.php',
+            url: BASE_PATH + '/admin/api/profile.php',
             method: 'GET',
             data: { action: 'get', id: id },
             dataType: 'json',
@@ -430,8 +434,8 @@ if ($result) {
                                 photoContainer.html(`
                                     <div class="d-flex align-items-center">
                                         <picture>
-                                            <source srcset="/kisisel_qr_canli/public/uploads/profiles/thumb/${photoData.filename.replace(/\.[^/.]+$/, '')}.webp" type="image/webp">
-                                            <img src="/kisisel_qr_canli/public/uploads/profiles/thumb/${photoData.filename}" 
+                                            <source srcset="${BASE_PATH}/public/uploads/profiles/thumb/${photoData.filename.replace(/\.[^/.]+$/, '')}.webp" type="image/webp">
+                                            <img src="${BASE_PATH}/public/uploads/profiles/thumb/${photoData.filename}" 
                                                  alt="Mevcut profil fotoğrafı" 
                                                  class="img-thumbnail profile-photo-edit me-2" 
                                                  loading="lazy">
@@ -445,12 +449,15 @@ if ($result) {
                             photoContainer.empty();
                         }
                     } else if (res.profile.photo_url) {
-                        // Eski format için fallback
+                        // Eski format için fallback - URL'yi düzelt
                         let photoUrl = res.profile.photo_url;
-                        if (photoUrl.startsWith('/kisisel_qr_canli/kisisel_qr/public')) {
-                            photoUrl = photoUrl.replace('/kisisel_qr_canli/kisisel_qr/public', '/kisisel_qr_canli/public');
-                        } else if (photoUrl.startsWith('/kisisel_qr/public')) {
-                            photoUrl = photoUrl.replace('/kisisel_qr/public', '/kisisel_qr_canli/public');
+                        // Sadece BASE_PATH kullan, path fix'lere gerek yok
+                        if (!photoUrl.startsWith('http') && !photoUrl.startsWith(BASE_PATH)) {
+                            if (photoUrl.startsWith('/')) {
+                                photoUrl = BASE_PATH + photoUrl;
+                            } else {
+                                photoUrl = BASE_PATH + '/' + photoUrl;
+                            }
                         }
                         photoContainer.html(`
                             <div class="d-flex align-items-center">
@@ -499,7 +506,7 @@ if ($result) {
         formData.append('action', 'update');
         
         $.ajax({
-            url: '/kisisel_qr_canli/admin/api/profile.php',
+            url: BASE_PATH + '/admin/api/profile.php',
             method: 'POST',
             data: formData,
             processData: false,
@@ -530,7 +537,7 @@ if ($result) {
 
     function viewProfile(id) {
         $.ajax({
-            url: '/kisisel_qr_canli/admin/api/profile.php',
+            url: BASE_PATH + '/admin/api/profile.php',
             method: 'GET',
             data: { action: 'get', id: id },
             dataType: 'json',
@@ -549,31 +556,33 @@ if ($result) {
                             if (photoData.filename) {
                                 photoContainer.html(`
                                     <picture>
-                                        <source srcset="/kisisel_qr_canli/public/uploads/profiles/medium/${photoData.filename.replace(/\.[^/.]+$/, '')}.webp" type="image/webp">
-                                        <img src="/kisisel_qr_canli/public/uploads/profiles/medium/${photoData.filename}" 
+                                        <source srcset="${BASE_PATH}/public/uploads/profiles/medium/${photoData.filename.replace(/\.[^/.]+$/, '')}.webp" type="image/webp">
+                                        <img src="${BASE_PATH}/public/uploads/profiles/medium/${photoData.filename}" 
                                              alt="${res.profile.name} profil fotoğrafı" 
                                              class="img-thumbnail profile-photo-preview" 
                                              loading="lazy">
                                     </picture>
                                 `);
                             } else {
-                                photoContainer.html('<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">');
+                                photoContainer.html(`<img src="${BASE_PATH}/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">`);
                             }
                         } catch(e) {
                             console.error('Photo data parse error:', e);
-                            photoContainer.html('<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">');
+                            photoContainer.html(`<img src="${BASE_PATH}/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">`);
                         }
                     } else if (res.profile.photo_url) {
-                        // Eski format için fallback
+                        // Eski format için fallback - URL'yi düzelt
                         let photoUrl = res.profile.photo_url;
-                        if (photoUrl.startsWith('/kisisel_qr/public')) {
-                            photoUrl = photoUrl.replace('/kisisel_qr/public', '/kisisel_qr_canli/public');
-                        } else if (photoUrl.startsWith('/kisisel_qr_canli/kisisel_qr/public')) {
-                            photoUrl = photoUrl.replace('/kisisel_qr_canli/kisisel_qr/public', '/kisisel_qr_canli/public');
+                        if (!photoUrl.startsWith('http') && !photoUrl.startsWith(BASE_PATH)) {
+                            if (photoUrl.startsWith('/')) {
+                                photoUrl = BASE_PATH + photoUrl;
+                            } else {
+                                photoUrl = BASE_PATH + '/' + photoUrl;
+                            }
                         }
                         photoContainer.html(`<img src="${photoUrl}" alt="${res.profile.name} profil fotoğrafı" class="img-thumbnail profile-photo-preview">`);
                     } else {
-                        photoContainer.html('<img src="/kisisel_qr_canli/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">');
+                        photoContainer.html(`<img src="${BASE_PATH}/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">`);
                     }
                     
                     // Sosyal medya linkleri
@@ -605,7 +614,7 @@ if ($result) {
             formData.append('action', 'delete');
             formData.append('id', profileId);
             $.ajax({
-                url: '/kisisel_qr_canli/admin/api/profile.php',
+                url: BASE_PATH + '/admin/api/profile.php',
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -627,7 +636,7 @@ if ($result) {
     // QR kod silme fonksiyonu
     function deleteQR(qrId, profileId) {
         if (confirm('Bu QR kodunu silmek istediğinize emin misiniz?')) {
-            fetch('/kisisel_qr_canli/admin/api/qr.php?action=delete', {
+            fetch(BASE_PATH + '/admin/api/qr.php?action=delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

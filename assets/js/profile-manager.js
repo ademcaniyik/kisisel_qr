@@ -137,7 +137,7 @@ async function createProfile() {
         });
         formData.append('socialLinks', JSON.stringify(socialLinks));
         // Fetch API ile istek gönder
-        const response = await fetch('/kisisel_qr_canli/admin/api/create_profile.php', {
+        const response = await fetch('/kisisel_qr/admin/api/create_profile.php', {
             method: 'POST',
             body: formData
         });
@@ -213,7 +213,7 @@ async function createQRForProfile(profileId) {
     try {
         showLoader();
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await fetch('/kisisel_qr_canli/admin/api/qr.php?action=create', {
+        const response = await fetch('/kisisel_qr/admin/api/qr.php?action=create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -259,7 +259,7 @@ function deleteProfile(profileId) {
         formData.append('action', 'delete');
         formData.append('id', profileId);
         $.ajax({
-            url: '/kisisel_qr_canli/admin/api/profile.php',
+            url: '/kisisel_qr/admin/api/profile.php',
             method: 'POST',
             data: formData,
             processData: false,
@@ -268,7 +268,7 @@ function deleteProfile(profileId) {
             success: function(res) {
                 if (res.success) {
                     // Log admin action
-                    fetch('/kisisel_qr_canli/admin/api/log_action.php', {
+                    fetch('/kisisel_qr/admin/api/log_action.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `action=delete_profile&id=${encodeURIComponent(profileId)}`

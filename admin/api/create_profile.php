@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/site.php';
 require_once __DIR__ . '/../../includes/utilities.php';
 
 // Oturum kontrolü
@@ -55,7 +56,7 @@ try {
         $fileName = uniqid() . '.' . $extension;
         $filePath = $uploadDir . $fileName;
         if (move_uploaded_file($_FILES['photo']['tmp_name'], $filePath)) {
-            $photoUrl = '/kisisel_qr_canli/public/uploads/profiles/' . $fileName;
+            $photoUrl = getBasePath() . '/public/uploads/profiles/' . $fileName;
         }
     }
     $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, slug, theme) VALUES (?, ?, ?, ?, ?, ?, ?)");

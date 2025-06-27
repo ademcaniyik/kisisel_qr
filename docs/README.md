@@ -8,7 +8,7 @@ Bu sistem, kullanıcıların dijital kartvizitlerini QR kod aracılığıyla pay
 
 ### Klasör Yapısı
 ```
-kisisel_qr_canli/
+kisisel_qr/
 ├── admin/                  # Yönetim paneli
 │   ├── api/               # API endpoints
 │   │   ├── profile.php    # Profil CRUD işlemleri

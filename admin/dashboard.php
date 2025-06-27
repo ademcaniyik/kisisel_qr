@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/site.php';
 
 // Session'ı güvenli şekilde başlat
 if (session_status() === PHP_SESSION_NONE) {
@@ -50,13 +51,13 @@ while ($row = $result->fetch_assoc()) {
     <title>Yönetim Paneli - Kişisel QR Sistemi</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/kisisel_qr_canli/assets/images/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr_canli/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr_canli/assets/images/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr_canli/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="<?= getBasePath() ?>/assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= getBasePath() ?>/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= getBasePath() ?>/assets/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= getBasePath() ?>/assets/images/apple-touch-icon.png">
     <meta name="theme-color" content="#3498db">
     
-    <link href="/kisisel_qr_canli/assets/css/dashboard.css" rel="stylesheet">
+    <link href="<?= getBasePath() ?>/assets/css/dashboard.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -255,7 +256,7 @@ while ($row = $result->fetch_assoc()) {
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="/kisisel_qr_canli/public/qr_codes/<?= htmlspecialchars($qr['id']) ?>.png"
+                                                <a href="<?= getBasePath() ?>/public/qr_codes/<?= htmlspecialchars($qr['id']) ?>.png"
                                                     class="btn btn-sm btn-success"
                                                     download="QR-<?= htmlspecialchars($qr['id']) ?>.png"
                                                     title="QR Kodu İndir">
@@ -266,7 +267,7 @@ while ($row = $result->fetch_assoc()) {
                                                     title="Tarama İstatistikleri">
                                                     <i class="fas fa-chart-bar"></i>
                                                 </a>
-                                                <a href="/kisisel_qr_canli/redirect.php?qr_id=<?= htmlspecialchars($qr['id']) ?>"
+                                                <a href="<?= getBasePath() ?>/redirect.php?qr_id=<?= htmlspecialchars($qr['id']) ?>"
                                                     class="btn btn-sm btn-primary"
                                                     title="QR ile açılan sayfaya git">
                                                     <i class="fas fa-external-link-alt"></i>
