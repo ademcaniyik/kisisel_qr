@@ -1,1 +1,81 @@
-vendor
+# Çevre Değişkenleri ve Konfigürasyon
+.env
+.env.local
+.env.production
+.env.staging
+.env.backup
+.env.clean
+
+# Geliştirme ve test dosyaları
+production_test.php
+create_admin.php
+test_*.php
+test_*.html
+quick_test.html
+
+# Vendor dizini (Composer dependencies)
+/vendor/
+
+# Log dosyaları
+/logs/
+*.log
+error_log
+access.log
+
+# Geçici dosyalar ve cache
+/tmp/
+/temp/
+/cache/
+*.tmp
+*.cache
+
+# Backup dosyaları
+/backups/
+*.backup
+*.bak
+*.sql
+
+# Upload dosyaları (profil resimleri hariç önemli olanlar)
+/public/uploads/temp/
+/public/qr_codes/*.png
+!/public/qr_codes/.gitkeep
+
+# Test ve debug dosyaları
+debug_*.php
+test_*.php
+create_demo_*.php
+*_debug.php
+*_test.php
+
+# IDE ve editör dosyaları
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Sistem dosyaları
+.htaccess.backup
+.htaccess.old
+
+# Composer
+composer.phar
+composer.lock
+
+# NPM (eğer ileride kullanılırsa)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Error pages backup
+/errors/*.backup
+
+# Config backups
+/config/*.backup
+/config/*.old
+
+# Session dosyaları
+/sessions/
+/tmp/sessions/
