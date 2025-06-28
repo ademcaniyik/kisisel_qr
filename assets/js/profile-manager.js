@@ -2,10 +2,26 @@
 const socialPlatforms = {
     facebook: { name: 'Facebook', placeholder: 'facebook.com/kullaniciadi' },
     twitter: { name: 'Twitter', placeholder: 'twitter.com/kullaniciadi' },
+    x: { name: 'X (Twitter)', placeholder: 'x.com/kullaniciadi' },
     instagram: { name: 'Instagram', placeholder: 'instagram.com/kullaniciadi' },
     linkedin: { name: 'LinkedIn', placeholder: 'linkedin.com/in/kullaniciadi' },
     github: { name: 'GitHub', placeholder: 'github.com/kullaniciadi' },
-    youtube: { name: 'YouTube', placeholder: 'youtube.com/@kanal' }
+    youtube: { name: 'YouTube', placeholder: 'youtube.com/@kanal' },
+    tiktok: { name: 'TikTok', placeholder: 'tiktok.com/@kullaniciadi' },
+    pinterest: { name: 'Pinterest', placeholder: 'pinterest.com/kullaniciadi' },
+    spotify: { name: 'Spotify', placeholder: 'open.spotify.com/user/kullaniciadi' },
+    medium: { name: 'Medium', placeholder: 'medium.com/@kullaniciadi' },
+    twitch: { name: 'Twitch', placeholder: 'twitch.tv/kullaniciadi' },
+    discord: { name: 'Discord', placeholder: 'discord.com/users/kullaniciadi' },
+    reddit: { name: 'Reddit', placeholder: 'reddit.com/user/kullaniciadi' },
+    whatsapp: { name: 'WhatsApp', placeholder: '905XXXXXXXXX' },
+    telegram: { name: 'Telegram', placeholder: 't.me/kullaniciadi' },
+    snapchat: { name: 'Snapchat', placeholder: 'snapchat.com/add/kullaniciadi' },
+    steam: { name: 'Steam', placeholder: 'steamcommunity.com/id/kullaniciadi' },
+    behance: { name: 'Behance', placeholder: 'behance.net/kullaniciadi' },
+    dribbble: { name: 'Dribbble', placeholder: 'dribbble.com/kullaniciadi' },
+    email: { name: 'E-posta', placeholder: 'ornek@email.com' },
+    website: { name: 'Website', placeholder: 'www.website.com' }
 };
 
 $(document).ready(function() {
@@ -43,15 +59,36 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
         select.appendChild(option);
     });
     const input = document.createElement('input');
-    input.type = 'url';
     input.className = 'form-control';
     input.required = true;
-    input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
+    
+    // WhatsApp için özel input tipi
+    if (platform === 'whatsapp') {
+        input.type = 'tel';
+        input.placeholder = '905XXXXXXXXX';
+    } else if (platform === 'email') {
+        input.type = 'email';
+        input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
+    } else {
+        input.type = 'url';
+        input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
+    }
+    
     if (url) input.value = url;
     select.addEventListener('change', (e) => {
         const plat = e.target.value;
         if (plat in socialPlatforms) {
             input.placeholder = socialPlatforms[plat].placeholder;
+            
+            // Platform'a göre input tipini güncelle
+            if (plat === 'whatsapp') {
+                input.type = 'tel';
+                input.placeholder = '905XXXXXXXXX';
+            } else if (plat === 'email') {
+                input.type = 'email';
+            } else {
+                input.type = 'url';
+            }
         }
     });
     const deleteButton = document.createElement('button');
@@ -115,16 +152,23 @@ async function createProfile() {
         showLoader();
         const form = document.getElementById('createProfileForm');
         const formData = new FormData();
+        
         // Ana bilgileri ekle
         formData.append('name', document.getElementById('name').value);
         formData.append('bio', document.getElementById('bio').value);
         formData.append('phone', document.getElementById('phone').value);
         formData.append('theme', document.getElementById('theme').value);
+        
+        // IBAN ve Kan Grubu bilgilerini ekle
+        formData.append('iban', document.getElementById('iban').value || '');
+        formData.append('blood_type', document.getElementById('blood_type').value || '');
+        
         // Profil fotoğrafını ekle
         const photoInput = document.getElementById('photo');
         if (photoInput.files.length > 0) {
             formData.append('photo', photoInput.files[0]);
         }
+        
         // Sosyal medya bağlantılarını ekle
         const socialLinks = {};
         const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
@@ -136,13 +180,16 @@ async function createProfile() {
             }
         });
         formData.append('socialLinks', JSON.stringify(socialLinks));
+        
         // Fetch API ile istek gönder
         const response = await fetch('/kisisel_qr/admin/api/create_profile.php', {
             method: 'POST',
             body: formData
         });
+        
         const data = await response.json();
         hideLoader();
+        
         if (data.success) {
             showToast('Profil başarıyla oluşturuldu!', 'success');
             setTimeout(() => location.reload(), 1200);

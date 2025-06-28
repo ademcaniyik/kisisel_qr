@@ -26,6 +26,8 @@ try {
     $bio = Utilities::sanitizeInput($_POST['bio']);
     $phone = Utilities::sanitizeInput($_POST['phone']);
     $theme = Utilities::sanitizeInput($_POST['theme'] ?? 'default');
+    $iban = Utilities::sanitizeInput($_POST['iban'] ?? '');
+    $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
     $socialLinks = json_decode($_POST['socialLinks'], true);
     $slug = Utilities::generateSlug();
 
@@ -59,8 +61,8 @@ try {
             $photoUrl = getBasePath() . '/public/uploads/profiles/' . $fileName;
         }
     }
-    $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, slug, theme) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssss", $name, $bio, $phone, $socialLinksJson, $photoUrl, $slug, $theme);
+    $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, slug, theme, iban, blood_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssss", $name, $bio, $phone, $socialLinksJson, $photoUrl, $slug, $theme, $iban, $bloodType);
     if ($stmt->execute()) {
         // Profil başarıyla oluşturulduysa, otomatik QR oluştur
         $newProfileId = $connection->insert_id;

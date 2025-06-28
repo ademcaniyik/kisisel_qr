@@ -215,18 +215,18 @@ if ($result) {
                 <div class="modal-body">                    <form id="createProfileForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="name" class="form-label">İsim</label>
-                            <input type="text" class="form-control" id="name" required>
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>                        <div class="mb-3">
                             <label for="bio" class="form-label">Biyografi</label>
-                            <textarea class="form-control" id="bio" rows="3"></textarea>
+                            <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Telefon Numarası</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+90 5XX XXX XX XX">
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+90 5XX XXX XX XX">
                         </div>
                         <div class="mb-3">
                             <label for="photo" class="form-label">Profil Fotoğrafı</label>
-                            <input type="file" class="form-control" id="photo" accept="image/*">
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                         </div>
                         <div class="mb-3">
                             <label for="socialLinks" class="form-label">Sosyal Medya Bağlantıları</label>
