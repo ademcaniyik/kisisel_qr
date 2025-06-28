@@ -1122,11 +1122,11 @@
                                 <input type="file" class="form-control" id="customerPhoto" accept="image/*">
                             </div>
                             <div class="mb-3">
-                                <label for="customerBio" class="form-label">Kısa Bio</label>
+                                <label for="customerBio" class="form-label">Kısa Yazı (İsteğe bağlı)</label>
                                 <textarea class="form-control" id="customerBio" rows="2" placeholder="Kendizi tanıtın..."></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Sosyal Medya Hesapları</label>
+                                <label class="form-label">Sosyal Medya Hesapları (isteğe bağlı)</label>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <input type="url" class="form-control mb-2" id="instagram" placeholder="Instagram URL">
