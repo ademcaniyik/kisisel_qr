@@ -634,32 +634,6 @@ if (!$theme) {
                                 <i class="fas fa-chevron-right"></i>
                             </div>
                         </a>
-
-                        <?php 
-                        // WhatsApp butonunu sadece sosyal medya linklerinde WhatsApp varsa göster
-                        $showWhatsAppBtn = false;
-                        if ($profile['social_links']) {
-                            $links = json_decode($profile['social_links'], true);
-                            if (is_array($links) && isset($links['whatsapp'])) {
-                                $showWhatsAppBtn = true;
-                            }
-                        }
-                        
-                        if ($showWhatsAppBtn): ?>
-                            <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $profile['phone']); ?>"
-                                target="_blank" class="contact-btn whatsapp-btn">
-                                <div class="btn-icon">
-                                    <i class="fab fa-whatsapp"></i>
-                                </div>
-                                <div class="btn-content">
-                                    <span class="btn-title">WhatsApp Mesaj</span>
-                                    <span class="btn-subtitle">Hemen mesaj gönder</span>
-                                </div>
-                                <div class="btn-arrow">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-                            </a>
-                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -741,21 +715,23 @@ if (!$theme) {
                         <!-- İban Bilgisi -->
                         <div class="info-item iban-info"
                             onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', '✅ İban kopyalandı!')"
-                            style="display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+                            style="display: flex; align-items: center; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25); margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.35)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.25)'">
 
-                            <div class="info-icon" style="margin-right: 10px; font-size: 18px; color: #333;">
-                                <i class="fas fa-university"></i>
+                            <div class="info-icon" style="margin-right: 12px; font-size: 20px; color: #fff; background: rgba(255,255,255,0.2); padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-credit-card"></i>
                             </div>
 
-                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #333;">
-                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">IBAN</div>
-                                <div class="info-value" style="display: flex; align-items: center; gap: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    <?php echo htmlspecialchars($profile['iban']); ?>
-                                    <span class="info-action" style="cursor: pointer; color: #007bff; transition: color 0.3s;"
-                                        onmouseover="this.style.color='#0056b3'"
-                                        onmouseout="this.style.color='#007bff'">
-                                        <i class="fas fa-copy"></i>
-                                    </span>
+                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #fff;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px;">IBAN</div>
+                                    <div class="info-value" style="font-weight: 600; font-family: monospace;">
+                                        <?php echo htmlspecialchars($profile['iban']); ?>
+                                    </div>
+                                </div>
+                                <div class="info-action" style="background: rgba(255,255,255,0.2); padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-copy" style="font-size: 12px;"></i>
                                 </div>
                             </div>
                         </div>
@@ -763,16 +739,23 @@ if (!$theme) {
                     <?php if ($profile['blood_type']): ?>
                         <!-- Kan Grubu Bilgisi -->
                         <div class="info-item blood-group-info"
-                            style="display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                            style="display: flex; align-items: center; padding: 12px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25); cursor: pointer; transition: all 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 107, 0.35)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.25)'">
 
-                            <div class="info-icon" style="margin-right: 10px; font-size: 18px; color: #333;">
-                                <i class="fas fa-tint"></i>
+                            <div class="info-icon" style="margin-right: 12px; font-size: 20px; color: #fff; background: rgba(255,255,255,0.2); padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-heartbeat"></i>
                             </div>
 
-                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #333;">
-                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">Kan Grubu</div>
-                                <div class="info-value" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    <?php echo htmlspecialchars($profile['blood_type']); ?>
+                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #fff;">
+                                <div style="display: flex; flex-direction: column;">
+                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px;">Kan Grubu</div>
+                                    <div class="info-value" style="font-weight: 600; font-size: 16px;">
+                                        <?php echo htmlspecialchars($profile['blood_type']); ?>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.2); padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-plus" style="font-size: 12px;"></i>
                                 </div>
                             </div>
                         </div>

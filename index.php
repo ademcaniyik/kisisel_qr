@@ -2420,6 +2420,16 @@
                 url: ''
             };
 
+            // WhatsApp için otomatik telefon numarası doldur
+            if (platformKey === 'whatsapp') {
+                const phoneInput = document.getElementById('customerPhone');
+                if (phoneInput && phoneInput.value) {
+                    const phoneNumber = phoneInput.value.replace(/\D/g, '');
+                    socialMediaItem.username = phoneNumber;
+                    socialMediaItem.url = generateSocialMediaUrl(platformKey, phoneNumber);
+                }
+            }
+
             selectedSocialMedias.push(socialMediaItem);
             renderSocialMediaItem(socialMediaItem, selectedSocialMedias.length - 1);
             updatePlatformButton(platformKey, true);
@@ -2428,6 +2438,14 @@
         function renderSocialMediaItem(item, index) {
             const platform = socialMediaPlatforms[item.platform];
             const container = document.getElementById('selectedSocialMedias');
+            
+            // WhatsApp için özel placeholder
+            let placeholder = platform.placeholder;
+            let inputType = 'text';
+            if (item.platform === 'whatsapp') {
+                placeholder = 'Telefon numarası (örn: 905551234567)';
+                inputType = 'tel';
+            }
             
             const itemHtml = `
                 <div class="social-media-item" data-index="${index}">
@@ -2441,12 +2459,12 @@
                         </button>
                     </div>
                     <div class="input-group">
-                        ${platform.prefix ? `<span class="username-prefix">${platform.prefix}</span>` : ''}
-                        <input type="text" 
+                        ${platform.prefix && item.platform !== 'whatsapp' ? `<span class="username-prefix">${platform.prefix}</span>` : ''}
+                        <input type="${inputType}" 
                                class="form-control social-username-input" 
                                data-platform="${item.platform}"
                                data-index="${index}"
-                               placeholder="${platform.placeholder}"
+                               placeholder="${placeholder}"
                                oninput="updateSocialMediaUrl(${index})"
                                value="${item.username}">
                     </div>
@@ -2478,8 +2496,9 @@
             
             switch(platformKey) {
                 case 'whatsapp':
-                    // WhatsApp için sadece numara
-                    return platform.baseUrl + username.replace(/\D/g, '');
+                    // WhatsApp için sadece numara, temizlenmiş format
+                    const cleanNumber = username.replace(/\D/g, '');
+                    return cleanNumber ? platform.baseUrl + cleanNumber : '';
                 case 'website':
                     // Website için direkt URL
                     return username.startsWith('http') ? username : 'https://' + username;
