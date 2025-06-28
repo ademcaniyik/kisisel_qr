@@ -449,7 +449,16 @@ if ($result) {
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Telefon Numarası</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+90 5XX XXX XX XX">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #e9ecef; color: #495057; font-weight: 500;">+90</span>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       placeholder="5XX XXX XX XX" 
+                                       pattern="^5[0-9]{9}$" 
+                                       maxlength="10"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0,10);"
+                                       title="5 ile başlayan 10 haneli telefon numarası giriniz">
+                            </div>
+                            <div class="form-text">5 ile başlayan 10 haneli telefon numarası (örn: 5321234567)</div>
                         </div>
                         <div class="mb-3">
                             <label for="photo" class="form-label">Profil Fotoğrafı</label>
@@ -577,7 +586,7 @@ if ($result) {
                         
                         <div class="mb-3">
                             <label for="theme" class="form-label">Profil Teması</label>
-                            <select class="form-select" id="theme" name="theme">
+                            <select class="form-select" id="theme" name="theme" onchange="updateThemePreview()">
                                 <?php
                                 $themesQuery = "SELECT * FROM themes WHERE is_active = 1 ORDER BY theme_title";
                                 $themesResult = $connection->query($themesQuery);
@@ -585,6 +594,8 @@ if ($result) {
                                     while ($theme = $themesResult->fetch_assoc()):
                                         // Charset sorunu için özel işlem
                                         $themeTitle = mb_convert_encoding($theme['theme_title'], 'UTF-8', 'UTF-8');
+                                        // Default tema seçili olsun
+                                        $isSelected = ($theme['theme_name'] === 'default') ? 'selected' : '';
                                 ?>
                                 <option value="<?php echo htmlspecialchars($theme['theme_name'], ENT_QUOTES, 'UTF-8'); ?>"
                                         data-background-color="<?php echo htmlspecialchars($theme['background_color'], ENT_QUOTES, 'UTF-8'); ?>"
@@ -593,7 +604,7 @@ if ($result) {
                                         data-card-background="<?php echo htmlspecialchars($theme['card_background'], ENT_QUOTES, 'UTF-8'); ?>"
                                         data-font-family="<?php echo htmlspecialchars($theme['font_family'], ENT_QUOTES, 'UTF-8'); ?>"
                                         data-button-style="<?php echo htmlspecialchars($theme['button_style'], ENT_QUOTES, 'UTF-8'); ?>"
-                                        <?php echo (isset($profile['theme']) && $profile['theme'] === $theme['theme_name']) ? 'selected' : ''; ?>>
+                                        <?php echo $isSelected; ?>>
                                     <?php echo htmlspecialchars($themeTitle, ENT_QUOTES, 'UTF-8'); ?>
                                 </option>
                                 <?php 
@@ -648,7 +659,16 @@ if ($result) {
                         </div>
                         <div class="mb-3">
                             <label for="edit_phone" class="form-label">Telefon Numarası</label>
-                            <input type="tel" class="form-control" id="edit_phone" name="phone">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: #e9ecef; color: #495057; font-weight: 500;">+90</span>
+                                <input type="tel" class="form-control" id="edit_phone" name="phone" 
+                                       placeholder="5XX XXX XX XX" 
+                                       pattern="^5[0-9]{9}$" 
+                                       maxlength="10"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0,10);"
+                                       title="5 ile başlayan 10 haneli telefon numarası giriniz">
+                            </div>
+                            <div class="form-text">5 ile başlayan 10 haneli telefon numarası (örn: 5321234567)</div>
                         </div>
                         <div class="mb-3">
                             <label for="edit_photo" class="form-label">Profil Fotoğrafı</label>
@@ -920,7 +940,16 @@ if ($result) {
                     $('#edit_id').val(res.profile.id);
                     $('#edit_name').val(res.profile.name);
                     $('#edit_bio').val(res.profile.bio);
-                    $('#edit_phone').val(res.profile.phone);
+                    
+                    // Telefon numarasını formatla - +90 prefixi olmadan göster
+                    let phone = res.profile.phone || '';
+                    if (phone.startsWith('+90')) {
+                        phone = phone.substring(3);
+                    } else if (phone.startsWith('90')) {
+                        phone = phone.substring(2);
+                    }
+                    $('#edit_phone').val(phone);
+                    
                     $('#edit_theme').val(res.profile.theme);
                     $('#edit_current_photo_url').val(res.profile.photo_url);
                     
@@ -1021,6 +1050,12 @@ if ($result) {
     function updateProfile() {
         var form = document.getElementById('editProfileForm');
         var formData = new FormData(form);
+        
+        // Telefon numarasına +90 prefixi ekle
+        const phoneInput = document.getElementById('edit_phone');
+        if (phoneInput.value && phoneInput.value.length === 10) {
+            formData.set('phone', '+90' + phoneInput.value);
+        }
         
         // Modern sosyal medya linklerini topla
         let links = [];
@@ -1439,6 +1474,12 @@ if ($result) {
         var form = document.getElementById('createProfileForm');
         var formData = new FormData(form);
         
+        // Telefon numarasına +90 prefixi ekle
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput.value && phoneInput.value.length === 10) {
+            formData.set('phone', '+90' + phoneInput.value);
+        }
+        
         // Modern sosyal medya linklerini topla
         let links = [];
         $('#socialLinksContainer .social-media-item').each(function() {
@@ -1508,6 +1549,84 @@ if ($result) {
             $('.social-platform-btn[data-container="edit_socialLinksContainer"]')
                 .removeClass('disabled')
                 .prop('disabled', false);
+        });
+
+        // Tema önizleme fonksiyonu
+        function updateThemePreview() {
+            const themeSelect = document.getElementById('theme');
+            const selectedOption = themeSelect.options[themeSelect.selectedIndex];
+            const previewCard = document.getElementById('preview-card');
+            const previewButton = document.getElementById('preview-button');
+            const themePreview = document.getElementById('theme-preview');
+
+            if (selectedOption && selectedOption.value) {
+                // Tema verilerini al
+                const backgroundColor = selectedOption.getAttribute('data-background-color') || '#ffffff';
+                const textColor = selectedOption.getAttribute('data-text-color') || '#333333';
+                const accentColor = selectedOption.getAttribute('data-accent-color') || '#007bff';
+                const cardBackground = selectedOption.getAttribute('data-card-background') || '#ffffff';
+                const fontFamily = selectedOption.getAttribute('data-font-family') || 'Arial, sans-serif';
+                const buttonStyle = selectedOption.getAttribute('data-button-style') || 'rounded';
+
+                // Tema önizleme alanını güncelle
+                themePreview.style.background = backgroundColor;
+                themePreview.style.color = textColor;
+                themePreview.style.fontFamily = fontFamily;
+
+                // Kart stilini güncelle
+                previewCard.style.background = cardBackground;
+                previewCard.style.color = textColor;
+                previewCard.style.fontFamily = fontFamily;
+
+                // Buton stilini güncelle
+                previewButton.style.backgroundColor = accentColor;
+                previewButton.style.borderColor = accentColor;
+                previewButton.style.color = '#ffffff';
+                
+                // Buton şekli
+                if (buttonStyle === 'rounded') {
+                    previewButton.style.borderRadius = '25px';
+                } else if (buttonStyle === 'square') {
+                    previewButton.style.borderRadius = '4px';
+                } else {
+                    previewButton.style.borderRadius = '8px';
+                }
+            }
+        }
+
+        // Modal açıldığında tema önizlemesini başlat
+        $('#createProfileModal').on('shown.bs.modal', function() {
+            // Default tema seçili olduğunda önizlemeyi güncelle
+            updateThemePreview();
+        });
+
+        // Telefon numarası formatlaması
+        function formatPhoneInput(input) {
+            // Sadece rakam kabul et
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            // 10 haneden fazla girişi engelle
+            if (input.value.length > 10) {
+                input.value = input.value.substring(0, 10);
+            }
+            
+            // 5 ile başlamasını zorunlu kıl
+            if (input.value.length > 0 && !input.value.startsWith('5')) {
+                input.value = '5' + input.value.substring(1);
+            }
+        }
+
+        // Telefon inputları için olay dinleyicileri
+        $(document).ready(function() {
+            // Profil oluşturma telefon inputu
+            $('#phone').on('input', function() {
+                formatPhoneInput(this);
+            });
+            
+            // Profil düzenleme telefon inputu
+            $('#edit_phone').on('input', function() {
+                formatPhoneInput(this);
+            });
         });
 
         // Sayfa yüklendiğinde DataTable'ı başlat
