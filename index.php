@@ -1259,10 +1259,109 @@
                         <!-- Teslimat Adresi Bölümü -->
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h6 class="card-title">Teslimat Adresi</h6>
+                                <h6 class="card-title">Teslimat Adresi*</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="customerCity" class="form-label">Şehir *</label>
+                                            <select class="form-select" id="customerCity" required onchange="loadDistricts()">
+                                                <option value="">Şehir Seçiniz</option>
+                                                <option value="01">Adana</option>
+                                                <option value="02">Adıyaman</option>
+                                                <option value="03">Afyonkarahisar</option>
+                                                <option value="04">Ağrı</option>
+                                                <option value="05">Amasya</option>
+                                                <option value="06">Ankara</option>
+                                                <option value="07">Antalya</option>
+                                                <option value="08">Artvin</option>
+                                                <option value="09">Aydın</option>
+                                                <option value="10">Balıkesir</option>
+                                                <option value="11">Bilecik</option>
+                                                <option value="12">Bingöl</option>
+                                                <option value="13">Bitlis</option>
+                                                <option value="14">Bolu</option>
+                                                <option value="15">Burdur</option>
+                                                <option value="16">Bursa</option>
+                                                <option value="17">Çanakkale</option>
+                                                <option value="18">Çankırı</option>
+                                                <option value="19">Çorum</option>
+                                                <option value="20">Denizli</option>
+                                                <option value="21">Diyarbakır</option>
+                                                <option value="22">Edirne</option>
+                                                <option value="23">Elazığ</option>
+                                                <option value="24">Erzincan</option>
+                                                <option value="25">Erzurum</option>
+                                                <option value="26">Eskişehir</option>
+                                                <option value="27">Gaziantep</option>
+                                                <option value="28">Giresun</option>
+                                                <option value="29">Gümüşhane</option>
+                                                <option value="30">Hakkâri</option>
+                                                <option value="31">Hatay</option>
+                                                <option value="32">Isparta</option>
+                                                <option value="33">Mersin</option>
+                                                <option value="34">İstanbul</option>
+                                                <option value="35">İzmir</option>
+                                                <option value="36">Kars</option>
+                                                <option value="37">Kastamonu</option>
+                                                <option value="38">Kayseri</option>
+                                                <option value="39">Kırklareli</option>
+                                                <option value="40">Kırşehir</option>
+                                                <option value="41">Kocaeli</option>
+                                                <option value="42">Konya</option>
+                                                <option value="43">Kütahya</option>
+                                                <option value="44">Malatya</option>
+                                                <option value="45">Manisa</option>
+                                                <option value="46">Kahramanmaraş</option>
+                                                <option value="47">Mardin</option>
+                                                <option value="48">Muğla</option>
+                                                <option value="49">Muş</option>
+                                                <option value="50">Nevşehir</option>
+                                                <option value="51">Niğde</option>
+                                                <option value="52">Ordu</option>
+                                                <option value="53">Rize</option>
+                                                <option value="54">Sakarya</option>
+                                                <option value="55">Samsun</option>
+                                                <option value="56">Siirt</option>
+                                                <option value="57">Sinop</option>
+                                                <option value="58">Sivas</option>
+                                                <option value="59">Tekirdağ</option>
+                                                <option value="60">Tokat</option>
+                                                <option value="61">Trabzon</option>
+                                                <option value="62">Tunceli</option>
+                                                <option value="63">Şanlıurfa</option>
+                                                <option value="64">Uşak</option>
+                                                <option value="65">Van</option>
+                                                <option value="66">Yozgat</option>
+                                                <option value="67">Zonguldak</option>
+                                                <option value="68">Aksaray</option>
+                                                <option value="69">Bayburt</option>
+                                                <option value="70">Karaman</option>
+                                                <option value="71">Kırıkkale</option>
+                                                <option value="72">Batman</option>
+                                                <option value="73">Şırnak</option>
+                                                <option value="74">Bartın</option>
+                                                <option value="75">Ardahan</option>
+                                                <option value="76">Iğdır</option>
+                                                <option value="77">Yalova</option>
+                                                <option value="78">Karabük</option>
+                                                <option value="79">Kilis</option>
+                                                <option value="80">Osmaniye</option>
+                                                <option value="81">Düzce</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="customerDistrict" class="form-label">İlçe *</label>
+                                            <select class="form-select" id="customerDistrict" required disabled>
+                                                <option value="">Önce şehir seçiniz</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
-                                    <label for="customerAddress" class="form-label">Teslimat Adresi *</label>
-                                    <textarea class="form-control" id="customerAddress" rows="3" required placeholder="Mahalle, sokak, kapı no, şehir bilgilerinizi yazınız..."></textarea>
+                                    <label for="customerDetailAddress" class="form-label">Detay Adres *</label>
+                                    <textarea class="form-control" id="customerDetailAddress" rows="3" required placeholder="Mahalle, sokak, cadde, apt. no, kat, daire no gibi detay bilgilerinizi yazınız..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1624,16 +1723,14 @@
 
         async function completeOrder() {
             try {
-                // Validate address field first
-                const customerAddress = document.getElementById('customerAddress').value;
-                if (!customerAddress.trim()) {
-                    document.getElementById('customerAddress').classList.add('is-invalid');
-                    document.getElementById('customerAddress').focus();
-                    alert('Lütfen teslimat adresini girin.');
+                // Validate address fields first
+                if (!validateAddressFields()) {
+                    alert('Lütfen tüm adres bilgilerini eksiksiz doldurun.');
                     return;
-                } else {
-                    document.getElementById('customerAddress').classList.remove('is-invalid');
                 }
+                
+                // Get full address
+                const customerAddress = getFullAddress();
                 
                 // Collect form data
                 const customerName = document.getElementById('customerName').value;
@@ -1767,7 +1864,7 @@
             // Form data kontrolü
             const customerName = document.getElementById('customerName')?.value || '';
             const customerPhone = document.getElementById('customerPhone')?.value || '';
-            const customerAddress = document.getElementById('customerAddress')?.value || '';
+            const customerAddress = getFullAddress() || '';
             const customerBio = document.getElementById('customerBio')?.value || '';
 
             // Eğer form verileri yoksa genel mesaj oluştur
@@ -1966,10 +2063,172 @@
             }
         });
 
-        // Initialize theme preview when modal opens
-        document.getElementById('orderModal').addEventListener('shown.bs.modal', function() {
-            updateThemePreview();
-        });
+        // City districts data
+        const cityDistricts = {
+            '01': ['Aladağ', 'Ceyhan', 'Çukurova', 'Feke', 'İmamoğlu', 'Karaisalı', 'Karataş', 'Kozan', 'Pozantı', 'Saimbeyli', 'Sarıçam', 'Seyhan', 'Tufanbeyli', 'Yumurtalık', 'Yüreğir'],
+            '02': ['Besni', 'Çelikhan', 'Gerger', 'Gölbaşı', 'Kahta', 'Merkez', 'Samsat', 'Sincik', 'Tut'],
+            '03': ['Afyonkarahisar Merkez', 'Başmakçı', 'Bayat', 'Bolvadin', 'Çay', 'Çobanlar', 'Dazkırı', 'Dinar', 'Emirdağ', 'Evciler', 'Hocalar', 'İhsaniye', 'İscehisar', 'Kızılören', 'Sandıklı', 'Sinanpaşa', 'Sultandağı', 'Şuhut'],
+            '06': ['Akyurt', 'Altındağ', 'Ayaş', 'Bala', 'Beypazarı', 'Çamlıdere', 'Çankaya', 'Çubuk', 'Elmadağ', 'Etimesgut', 'Evren', 'Gölbaşı', 'Güdül', 'Haymana', 'Kalecik', 'Kazan', 'Keçiören', 'Kızılcahamam', 'Mamak', 'Nallıhan', 'Polatlı', 'Pursaklar', 'Sincan', 'Şereflikoçhisar', 'Yenimahalle'],
+            '07': ['Akseki', 'Aksu', 'Alanya', 'Demre', 'Döşemealtı', 'Elmalı', 'Finike', 'Gazipaşa', 'Gündoğmuş', 'İbradı', 'Kaş', 'Kemer', 'Kepez', 'Konyaaltı', 'Korkuteli', 'Kumluca', 'Manavgat', 'Muratpaşa', 'Serik'],
+            '16': ['Büyükorhan', 'Gemlik', 'Gürsu', 'Harmancık', 'İnegöl', 'İznik', 'Karacabey', 'Keles', 'Kestel', 'Mudanya', 'Mustafakemalpaşa', 'Nilüfer', 'Orhaneli', 'Orhangazi', 'Osmangazi', 'Yenişehir', 'Yıldırım'],
+            '34': ['Adalar', 'Arnavutköy', 'Ataşehir', 'Avcılar', 'Bağcılar', 'Bahçelievler', 'Bakırköy', 'Başakşehir', 'Bayrampaşa', 'Beşiktaş', 'Beykoz', 'Beylikdüzü', 'Beyoğlu', 'Büyükçekmece', 'Çatalca', 'Çekmeköy', 'Esenler', 'Esenyurt', 'Eyüpsultan', 'Fatih', 'Gaziosmanpaşa', 'Güngören', 'Kadıköy', 'Kağıthane', 'Kartal', 'Küçükçekmece', 'Maltepe', 'Pendik', 'Sancaktepe', 'Sarıyer', 'Silivri', 'Sultanbeyli', 'Sultangazi', 'Şile', 'Şişli', 'Tuzla', 'Ümraniye', 'Üsküdar', 'Zeytinburnu'],
+            '35': ['Aliağa', 'Balçova', 'Bayındır', 'Bayraklı', 'Bergama', 'Beydağ', 'Bornova', 'Buca', 'Çeşme', 'Çiğli', 'Dikili', 'Foça', 'Gaziemir', 'Güzelbahçe', 'Karabağlar', 'Karaburun', 'Karşıyaka', 'Kemalpaşa', 'Kınık', 'Kiraz', 'Konak', 'Menderes', 'Menemen', 'Narlıdere', 'Ödemiş', 'Seferihisar', 'Selçuk', 'Tire', 'Torbalı', 'Urla'],
+            '41': ['Başiskele', 'Çayırova', 'Darıca', 'Derince', 'Dilovası', 'Gebze', 'Gölcük', 'İzmit', 'Kandıra', 'Karamürsel', 'Kartepe', 'Körfez'],
+            '10': ['Altıeylül', 'Ayvalık', 'Balya', 'Bandırma', 'Bigadiç', 'Burhaniye', 'Dursunbey', 'Edremit', 'Erdek', 'Gömeç', 'Gönen', 'Havran', 'İvrindi', 'Karesi', 'Kepsut', 'Manyas', 'Marmara', 'Savaştepe', 'Sındırgı', 'Susurluk'],
+            '42': ['Ahırlı', 'Akören', 'Akşehir', 'Altınekin', 'Beyşehir', 'Bozkır', 'Cihanbeyli', 'Çeltik', 'Çumra', 'Derbent', 'Derebucak', 'Doğanhisar', 'Emirgazi', 'Ereğli', 'Güneysınır', 'Hadim', 'Halkapınar', 'Hüyük', 'Ilgın', 'Kadınhanı', 'Karapınar', 'Karatay', 'Kulu', 'Meram', 'Sarayönü', 'Selçuklu', 'Seydişehir', 'Taşkent', 'Tuzlukçu', 'Yalıhüyük', 'Yunak'],
+            '54': ['Adapazarı', 'Akyazı', 'Arifiye', 'Erenler', 'Ferizli', 'Geyve', 'Hendek', 'Karapürçek', 'Karasu', 'Kaynarca', 'Kocaali', 'Pamukova', 'Sapanca', 'Serdivan', 'Söğütlü', 'Taraklı'],
+            // Diğer şehirler için basit ilçe listesi
+            '04': ['Ağrı Merkez', 'Diyadin', 'Doğubayazıt', 'Eleşkirt', 'Hamur', 'Patnos', 'Taşlıçay', 'Tutak'],
+            '05': ['Amasya Merkez', 'Göynücek', 'Gümüşhacıköy', 'Hamamözü', 'Merzifon', 'Suluova', 'Taşova'],
+            '08': ['Artvin Merkez', 'Ardanuç', 'Arhavi', 'Borçka', 'Hopa', 'Murgul', 'Şavşat', 'Yusufeli'],
+            '09': ['Aydın Merkez', 'Bozdoğan', 'Buharkent', 'Çine', 'Didim', 'Germencik', 'İncirliova', 'Karacasu', 'Karpuzlu', 'Koçarlı', 'Köşk', 'Kuşadası', 'Kuyucak', 'Nazilli', 'Söke', 'Sultanhisar', 'Yenipazar'],
+            // Default districts for other cities
+            '11': ['Bilecik Merkez', 'Bozüyük', 'Gölpazarı', 'İnhisar', 'Osmaneli', 'Pazaryeri', 'Söğüt', 'Yenipazar'],
+            '12': ['Bingöl Merkez', 'Adaklı', 'Genç', 'Karlıova', 'Kiğı', 'Solhan', 'Yayladere', 'Yedisu'],
+            '13': ['Bitlis Merkez', 'Adilcevaz', 'Ahlat', 'Güroymak', 'Hizan', 'Mutki', 'Tatvan'],
+            '14': ['Bolu Merkez', 'Dörtdivan', 'Gerede', 'Göynük', 'Kıbrıscık', 'Mengen', 'Mudurnu', 'Seben', 'Yeniçağa'],
+            '15': ['Burdur Merkez', 'Ağlasun', 'Altınyayla', 'Bucak', 'Çavdır', 'Çeltikçi', 'Gölhisar', 'Karamanlı', 'Kemer', 'Tefenni', 'Yeşilova'],
+            '17': ['Çanakkale Merkez', 'Ayvacık', 'Bayramiç', 'Biga', 'Bozcaada', 'Çan', 'Eceabat', 'Ezine', 'Gelibolu', 'Gökçeada', 'Lapseki', 'Yenice'],
+            '18': ['Çankırı Merkez', 'Atkaracalar', 'Bayramören', 'Çerkeş', 'Eldivan', 'Ilgaz', 'Kızılırmak', 'Korgun', 'Kurşunlu', 'Orta', 'Şabanözü', 'Yapraklı'],
+            '19': ['Çorum Merkez', 'Alaca', 'Bayat', 'Boğazkale', 'Dodurga', 'İskilip', 'Kargı', 'Laçin', 'Mecitözü', 'Oğuzlar', 'Ortaköy', 'Osmancık', 'Sungurlu', 'Uğurludağ'],
+            '20': ['Denizli Merkez', 'Acıpayam', 'Babadağ', 'Baklan', 'Bekilli', 'Beyağaç', 'Bozkurt', 'Buldan', 'Çal', 'Çameli', 'Çardak', 'Çivril', 'Güney', 'Honaz', 'Kale', 'Merkezefendi', 'Pamukkale', 'Sarayköy', 'Serinhisar', 'Tavas'],
+            '21': ['Diyarbakır Merkez', 'Bağlar', 'Bismil', 'Çermik', 'Çınar', 'Çüngüş', 'Dicle', 'Eğil', 'Ergani', 'Hani', 'Hazro', 'Kayapınar', 'Kocaköy', 'Kulp', 'Lice', 'Silvan', 'Sur', 'Yenişehir'],
+            '22': ['Edirne Merkez', 'Enez', 'Havsa', 'İpsala', 'Keşan', 'Lalapaşa', 'Meriç', 'Süloğlu', 'Uzunköprü'],
+            '23': ['Elazığ Merkez', 'Ağın', 'Alacakaya', 'Arıcak', 'Baskil', 'Karakoçan', 'Keban', 'Kovancılar', 'Maden', 'Palu', 'Sivrice'],
+            '24': ['Erzincan Merkez', 'Çayırlı', 'İliç', 'Kemah', 'Kemaliye', 'Otlukbeli', 'Refahiye', 'Tercan', 'Üzümlü'],
+            '25': ['Erzurum Merkez', 'Aşkale', 'Aziziye', 'Çat', 'Hınıs', 'Horasan', 'İspir', 'Karaçoban', 'Karayazı', 'Köprüköy', 'Narman', 'Oltu', 'Olur', 'Palandöken', 'Pasinler', 'Pazaryolu', 'Şenkaya', 'Tekman', 'Tortum', 'Uzundere', 'Yakutiye'],
+            '26': ['Eskişehir Merkez', 'Alpu', 'Beylikova', 'Çifteler', 'Günyüzü', 'Han', 'İnönü', 'Mahmudiye', 'Mihalgazi', 'Mihalıççık', 'Odunpazarı', 'Sarıcakaya', 'Seyitgazi', 'Sivrihisar', 'Tepebaşı'],
+            '27': ['Gaziantep Merkez', 'Araban', 'İslahiye', 'Karkamış', 'Nizip', 'Nurdağı', 'Oğuzeli', 'Şahinbey', 'Şehitkamil', 'Yavuzeli'],
+            '28': ['Giresun Merkez', 'Alucra', 'Bulancak', 'Çamoluk', 'Çanakçı', 'Dereli', 'Doğankent', 'Espiye', 'Eynesil', 'Görele', 'Güce', 'Keşap', 'Piraziz', 'Şebinkarahisar', 'Tirebolu', 'Yağlıdere'],
+            '29': ['Gümüşhane Merkez', 'Kelkit', 'Köse', 'Kürtün', 'Şiran', 'Torul'],
+            '30': ['Hakkâri Merkez', 'Çukurca', 'Derecik', 'Şemdinli', 'Yüksekova'],
+            '31': ['Hatay Merkez', 'Altınözü', 'Antakya', 'Arsuz', 'Belen', 'Defne', 'Dörtyol', 'Erzin', 'Hassa', 'İskenderun', 'Kırıkhan', 'Kumlu', 'Payas', 'Reyhanlı', 'Samandağ', 'Yayladağı'],
+            '32': ['Isparta Merkez', 'Aksu', 'Atabey', 'Eğirdir', 'Gelendost', 'Gönen', 'Keçiborlu', 'Senirkent', 'Sütçüler', 'Şarkikaraağaç', 'Uluborlu', 'Yalvaç', 'Yenişarbademli'],
+            '33': ['Mersin Merkez', 'Akdeniz', 'Anamur', 'Aydıncık', 'Bozyazı', 'Çamlıyayla', 'Erdemli', 'Gülnar', 'Mezitli', 'Mut', 'Silifke', 'Tarsus', 'Toroslar', 'Yenişehir'],
+            '36': ['Kars Merkez', 'Akyaka', 'Arpaçay', 'Digor', 'Kağızman', 'Sarıkamış', 'Selim', 'Susuz'],
+            '37': ['Kastamonu Merkez', 'Abana', 'Ağlı', 'Araç', 'Azdavay', 'Bozkurt', 'Cide', 'Çatalzeytin', 'Daday', 'Devrekani', 'Doğanyurt', 'Hanönü', 'İhsangazi', 'İnebolu', 'Küre', 'Pınarbaşı', 'Seydiler', 'Şenpazar', 'Taşköprü', 'Tosya'],
+            '38': ['Kayseri Merkez', 'Akkışla', 'Bünyan', 'Develi', 'Felahiye', 'Hacılar', 'İncesu', 'Kocasinan', 'Melikgazi', 'Özvatan', 'Pınarbaşı', 'Sarıoğlan', 'Sarız', 'Talas', 'Tomarza', 'Yahyalı', 'Yeşilhisar'],
+            '39': ['Kırklareli Merkez', 'Babaeski', 'Demirköy', 'Kofçaz', 'Lüleburgaz', 'Pehlivanköy', 'Pınarhisar', 'Vize'],
+            '40': ['Kırşehir Merkez', 'Akçakent', 'Akpınar', 'Boztepe', 'Çiçekdağı', 'Kaman', 'Mucur'],
+            '43': ['Kütahya Merkez', 'Altıntaş', 'Aslanapa', 'Çavdarhisar', 'Domaniç', 'Dumlupınar', 'Emet', 'Gediz', 'Hisarcık', 'Pazarlar', 'Simav', 'Şaphane', 'Tavşanlı'],
+            '44': ['Malatya Merkez', 'Akçadağ', 'Arapgir', 'Arguvan', 'Battalgazi', 'Darende', 'Doğanşehir', 'Doğanyol', 'Hekimhan', 'Kale', 'Kuluncak', 'Pütürge', 'Yazıhan', 'Yeşilyurt'],
+            '45': ['Manisa Merkez', 'Ahmetli', 'Akhisar', 'Alaşehir', 'Demirci', 'Gölmarmara', 'Gördes', 'Kırkağaç', 'Köprübaşı', 'Kula', 'Salihli', 'Sarıgöl', 'Saruhanlı', 'Selendi', 'Soma', 'Şehzadeler', 'Turgutlu', 'Yunusemre'],
+            '46': ['Kahramanmaraş Merkez', 'Afşin', 'Andırın', 'Çağlayancerit', 'Dulkadiroğlu', 'Ekinözü', 'Elbistan', 'Göksun', 'Nurhak', 'Onikişubat', 'Pazarcık', 'Türkoğlu'],
+            '47': ['Mardin Merkez', 'Artuklu', 'Dargeçit', 'Derik', 'Kızıltepe', 'Mazıdağı', 'Midyat', 'Nusaybin', 'Ömerli', 'Savur', 'Yeşilli'],
+            '48': ['Muğla Merkez', 'Bodrum', 'Dalaman', 'Datça', 'Fethiye', 'Kavaklıdere', 'Köyceğiz', 'Marmaris', 'Menteşe', 'Milas', 'Ortaca', 'Seydikemer', 'Ula', 'Yatağan'],
+            '49': ['Muş Merkez', 'Bulanık', 'Hasköy', 'Korkut', 'Malazgirt', 'Varto'],
+            '50': ['Nevşehir Merkez', 'Acıgöl', 'Avanos', 'Derinkuyu', 'Gülşehir', 'Hacıbektaş', 'Kozaklı', 'Ürgüp'],
+            '51': ['Niğde Merkez', 'Altunhisar', 'Bor', 'Çamardı', 'Çiftlik', 'Ulukışla'],
+            '52': ['Ordu Merkez', 'Akkuş', 'Altınordu', 'Aybastı', 'Çamaş', 'Çatalpınar', 'Çaybaşı', 'Fatsa', 'Gölköy', 'Gülyalı', 'Gürgentepe', 'İkizce', 'Kabadüz', 'Kabataş', 'Korgan', 'Kumru', 'Mesudiye', 'Perşembe', 'Ulubey', 'Ünye'],
+            '53': ['Rize Merkez', 'Ardeşen', 'Çamlıhemşin', 'Çayeli', 'Derepazarı', 'Fındıklı', 'Güneysu', 'Hemşin', 'İkizdere', 'İyidere', 'Kalkandere', 'Pazar'],
+            '55': ['Samsun Merkez', 'Alaçam', 'Asarcık', 'Atakum', 'Ayvacık', 'Bafra', 'Canik', 'Çarşamba', 'Havza', 'İlkadım', 'Kavak', 'Ladik', 'Ondokuzmayıs', 'Salıpazarı', 'Tekkeköy', 'Terme', 'Vezirköprü', 'Yakakent'],
+            '56': ['Siirt Merkez', 'Baykan', 'Eruh', 'Kurtalan', 'Pervari', 'Şirvan', 'Tillo'],
+            '57': ['Sinop Merkez', 'Ayancık', 'Boyabat', 'Dikmen', 'Durağan', 'Erfelek', 'Gerze', 'Saraydüzü', 'Türkeli'],
+            '58': ['Sivas Merkez', 'Akıncılar', 'Altınyayla', 'Divriği', 'Doğanşar', 'Gemerek', 'Gölova', 'Gürün', 'Hafik', 'İmranlı', 'Kangal', 'Koyulhisar', 'Merkez', 'Suşehri', 'Şarkışla', 'Ulaş', 'Yıldızeli', 'Zara'],
+            '59': ['Tekirdağ Merkez', 'Çerkezköy', 'Çorlu', 'Ergene', 'Hayrabolu', 'Kapaklı', 'Malkara', 'Marmaraereğlisi', 'Muratlı', 'Saray', 'Süleymanpaşa', 'Şarköy'],
+            '60': ['Tokat Merkez', 'Almus', 'Artova', 'Başçiftlik', 'Erbaa', 'Niksar', 'Pazar', 'Reşadiye', 'Sulusaray', 'Turhal', 'Yeşilyurt', 'Zile'],
+            '61': ['Trabzon Merkez', 'Akçaabat', 'Araklı', 'Arsin', 'Beşikdüzü', 'Çarşıbaşı', 'Çaykara', 'Dernekpazarı', 'Düzköy', 'Hayrat', 'Köprübaşı', 'Maçka', 'Of', 'Ortahisar', 'Şalpazarı', 'Sürmene', 'Tonya', 'Vakfıkebir', 'Yomra'],
+            '62': ['Tunceli Merkez', 'Çemişgezek', 'Hozat', 'Mazgirt', 'Nazımiye', 'Ovacık', 'Pertek', 'Pülümür'],
+            '63': ['Şanlıurfa Merkez', 'Akçakale', 'Birecik', 'Bozova', 'Ceylanpınar', 'Eyyübiye', 'Halfeti', 'Haliliye', 'Harran', 'Hilvan', 'Karaköprü', 'Siverek', 'Suruç', 'Viranşehir'],
+            '64': ['Uşak Merkez', 'Banaz', 'Eşme', 'Karahallı', 'Sivaslı', 'Ulubey'],
+            '65': ['Van Merkez', 'Bahçesaray', 'Başkale', 'Çaldıran', 'Çatak', 'Edremit', 'Erciş', 'Gevaş', 'Gürpınar', 'İpekyolu', 'Muradiye', 'Özalp', 'Saray', 'Tuşba'],
+            '66': ['Yozgat Merkez', 'Akdağmadeni', 'Aydıncık', 'Boğazlıyan', 'Çandır', 'Çayıralan', 'Çekerek', 'Kadışehri', 'Saraykent', 'Sarıkaya', 'Şefaatli', 'Sorgun', 'Yenifakılı', 'Yerköy'],
+            '67': ['Zonguldak Merkez', 'Alaplı', 'Çaycuma', 'Devrek', 'Gökçebey', 'Kilimli', 'Kozlu'],
+            '68': ['Aksaray Merkez', 'Ağaçören', 'Eskil', 'Gülağaç', 'Güzelyurt', 'Ortaköy', 'Sarıyahşi'],
+            '69': ['Bayburt Merkez', 'Aydıntepe', 'Demirözü'],
+            '70': ['Karaman Merkez', 'Ayrancı', 'Başyayla', 'Ermenek', 'Kazımkarabekir', 'Sarıveliler'],
+            '71': ['Kırıkkale Merkez', 'Bahşılı', 'Balışeyh', 'Çelebi', 'Delice', 'Karakeçili', 'Keskin', 'Sulakyurt', 'Yahşihan'],
+            '72': ['Batman Merkez', 'Beşiri', 'Gercüş', 'Hasankeyf', 'Kozluk', 'Sason'],
+            '73': ['Şırnak Merkez', 'Beytüşşebap', 'Cizre', 'Güçlükonak', 'İdil', 'Silopi', 'Uludere'],
+            '74': ['Bartın Merkez', 'Amasra', 'Kurucaşile', 'Ulus'],
+            '75': ['Ardahan Merkez', 'Çıldır', 'Damal', 'Göle', 'Hanak', 'Posof'],
+            '76': ['Iğdır Merkez', 'Aralık', 'Karakoyunlu', 'Tuzluca'],
+            '77': ['Yalova Merkez', 'Altınova', 'Armutlu', 'Çınarcık', 'Çiftlikköy', 'Termal'],
+            '78': ['Karabük Merkez', 'Eflani', 'Eskipazar', 'Ovacık', 'Safranbolu', 'Yenice'],
+            '79': ['Kilis Merkez', 'Elbeyli', 'Musabeyli', 'Polateli'],
+            '80': ['Osmaniye Merkez', 'Bahçe', 'Düziçi', 'Hasanbeyli', 'Kadirli', 'Sumbas', 'Toprakkale'],
+            '81': ['Düzce Merkez', 'Akçakoca', 'Cumayeri', 'Çilimli', 'Gölyaka', 'Gümüşova', 'Kaynaşlı', 'Yığılca']
+        };
+
+        // Load districts based on selected city
+        function loadDistricts() {
+            const citySelect = document.getElementById('customerCity');
+            const districtSelect = document.getElementById('customerDistrict');
+            const selectedCity = citySelect.value;
+
+            // Clear districts
+            districtSelect.innerHTML = '<option value="">İlçe Seçiniz</option>';
+
+            if (selectedCity && cityDistricts[selectedCity]) {
+                // Enable district select
+                districtSelect.disabled = false;
+                
+                // Add districts
+                cityDistricts[selectedCity].forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                // Disable district select
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">Önce şehir seçiniz</option>';
+            }
+        }
+
+        // Get full address text
+        function getFullAddress() {
+            const citySelect = document.getElementById('customerCity');
+            const districtSelect = document.getElementById('customerDistrict');
+            const detailAddress = document.getElementById('customerDetailAddress').value;
+            
+            if (!citySelect.value || !districtSelect.value || !detailAddress.trim()) {
+                return null;
+            }
+            
+            const cityText = citySelect.options[citySelect.selectedIndex].text;
+            const districtText = districtSelect.value;
+            
+            return `${detailAddress.trim()}, ${districtText}, ${cityText}`;
+        }
+
+        // Validate address fields
+        function validateAddressFields() {
+            const citySelect = document.getElementById('customerCity');
+            const districtSelect = document.getElementById('customerDistrict');
+            const detailAddress = document.getElementById('customerDetailAddress');
+            
+            let isValid = true;
+            
+            // Validate city
+            if (!citySelect.value) {
+                citySelect.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                citySelect.classList.remove('is-invalid');
+            }
+            
+            // Validate district
+            if (!districtSelect.value) {
+                districtSelect.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                districtSelect.classList.remove('is-invalid');
+            }
+            
+            // Validate detail address
+            if (!detailAddress.value.trim()) {
+                detailAddress.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                detailAddress.classList.remove('is-invalid');
+            }
+            
+            return isValid;
+        }
+
+        // ...existing code...
     </script>
 </body>
 
