@@ -98,15 +98,16 @@ if ($result) {
         
         /* IBAN display formatting */
         .iban-display {
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-family: 'Courier New', monospace !important;
+            font-weight: 600 !important;
+            letter-spacing: 1px !important;
             text-align: left !important;
-            display: inline-block;
-            background: #f8f9fa;
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
+            display: inline-block !important;
+            background: #f8f9fa !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            border: 1px solid #dee2e6 !important;
+            direction: ltr !important;
         }
     </style>
     <?php $csrf_token = Utilities::generateCsrfToken(); ?>
@@ -447,7 +448,7 @@ if ($result) {
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
                         <p><strong>Telefon:</strong> <span id="view_phone"></span></p>
-                        <p><strong>İban:</strong> <span id="view_iban" style="font-family: monospace; text-align: left; display: inline-block;"></span></p>
+                        <p><strong>İban:</strong> <span id="view_iban" style="font-family: monospace !important; text-align: left !important; display: inline-block !important;"></span></p>
                         <p><strong>Kan Grubu:</strong> <span id="view_blood_type"></span></p>
                         <p><strong>Tema:</strong> <span id="view_theme"></span></p>
                         <div id="view_socialLinks"></div>
@@ -629,7 +630,14 @@ if ($result) {
                     
                     // IBAN'ı özel formatlama ile göster
                     const ibanValue = res.profile.iban || 'Belirtilmemiş';
-                    $('#view_iban').text(ibanValue).addClass('iban-display');
+                    $('#view_iban').text(ibanValue)
+                                   .addClass('iban-display')
+                                   .css({
+                                       'text-align': 'left',
+                                       'direction': 'ltr',
+                                       'font-family': 'Courier New, monospace',
+                                       'display': 'inline-block'
+                                   });
                     
                     $('#view_blood_type').text(res.profile.blood_type || 'Belirtilmemiş');
                     $('#view_theme').text(res.profile.theme);

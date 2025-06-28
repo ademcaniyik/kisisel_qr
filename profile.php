@@ -724,9 +724,9 @@ if (!$theme) {
                             </div>
 
                             <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #fff;">
-                                <div style="display: flex; flex-direction: column;">
-                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px;">IBAN</div>
-                                    <div class="info-value" style="font-weight: 600; font-family: monospace;">
+                                <div style="display: flex; flex-direction: column; text-align: left;">
+                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px; text-align: left;">IBAN</div>
+                                    <div class="info-value" style="font-weight: 600; font-family: monospace; text-align: left; direction: ltr;">
                                         <?php echo htmlspecialchars($profile['iban']); ?>
                                     </div>
                                 </div>
