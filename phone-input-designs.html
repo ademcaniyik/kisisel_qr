@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telefon Input Tasarım Seçenekleri</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .design-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .design-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .design-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .demo-area {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        /* Design 1: Klasik Dropdown + Input */
+        .design1 .input-group select {
+            max-width: 120px;
+            border-right: none;
+        }
+        
+        .design1 .input-group input {
+            border-left: none;
+        }
+        
+        /* Design 2: Sabit +90 Prefix */
+        .design2 .phone-input-container {
+            position: relative;
+        }
+        
+        .design2 .phone-prefix {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .design2 .phone-input {
+            padding-left: 60px !important;
+        }
+        
+        /* Design 3: Modern Flag + Dropdown */
+        .design3 .country-selector {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            padding: 0.5rem;
+            min-width: 80px;
+        }
+        
+        .design3 .phone-input {
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+        
+        /* Design 4: Minimalist Single Input */
+        .design4 .phone-input {
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .design4 .phone-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        /* Design 5: Material Design Style */
+        .design5 .form-floating label {
+            color: #666;
+        }
+        
+        .design5 .form-control:focus ~ label {
+            color: #3498db;
+        }
+        
+        /* Design 6: Animated Dropdown */
+        .design6 .animated-select {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px 0 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .design6 .animated-select:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: scale(1.05);
+        }
+        
+        /* Design 7: Neon/Gaming Style */
+        .design7 .neon-input {
+            background: #1a1a1a;
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        .design7 .neon-input:focus {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            border-color: #00ffff;
+            color: #00ffff;
+        }
+        
+        .design7 .neon-select {
+            background: #1a1a1a;
+            border: 2px solid #ff0080;
+            color: #ff0080;
+            font-weight: bold;
+        }
+        
+        /* Design 8: Glassmorphism */
+        .design8 .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+        }
+        
+        .design8 .glass-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #2c3e50;
+            backdrop-filter: blur(5px);
+        }
+        
+        .design8 .glass-input::placeholder {
+            color: rgba(44, 62, 80, 0.7);
+        }
+        
+        /* Design 9: Retro/Vintage */
+        .design9 .retro-input {
+            background: #f4f1e8;
+            border: 3px solid #8b4513;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #8b4513;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .design9 .retro-select {
+            background: #d2b48c;
+            border: 3px solid #8b4513;
+            color: #8b4513;
+            font-weight: bold;
+        }
+        
+        /* Design 10: Corporate/Professional */
+        .design10 .corporate-input {
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        
+        .design10 .corporate-input:focus {
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+        }
+        
+        .design10 .corporate-select {
+            background: #34495e;
+            color: white;
+            border: 1px solid #34495e;
+            font-size: 12px;
+        }
+        
+        .feature-list {
+            background: #e8f4fd;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .feature-list h6 {
+            color: #2980b9;
+            font-weight: 600;
+        }
+        
+        .select-btn {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .select-btn:hover {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="text-white mb-3">📱 Telefon Input Tasarım Seçenekleri</h1>
+            <p class="text-white-50">Beğendiğiniz tasarımı seçin, index.php'ye entegre edelim!</p>
+        </div>
+
+        <!-- Design 1: Klasik Dropdown + Input -->
+        <div class="design-card design1">
+            <h3 class="design-title">1️⃣ Klasik Dropdown + Input</h3>
+            <div class="demo-area">
+                <label class="form-label">Telefon Numarası</label>
+                <div class="input-group">
+                    <select class="form-select">
+                        <option value="+90">🇹🇷 +90</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+49">🇩🇪 +49</option>
+                    </select>
+                    <input type="tel" class="form-control" placeholder="534 933 46 31" id="phone1">
+                </div>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Çoklu ülke desteği</li>
+                    <li>✅ Esnek ülke kodu seçimi</li>
+                    <li>✅ Ayrı input alanları</li>
+                    <li>✅ Bootstrap uyumlu</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(1)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 2: Sabit +90 Prefix -->
+        <div class="design-card design2">
+            <h3 class="design-title">2️⃣ Sabit +90 Prefix (Mevcut)</h3>
+            <div class="demo-area">
+                <label class="form-label">Telefon Numarası</label>
+                <div class="phone-input-container">
+                    <span class="phone-prefix">+90</span>
+                    <input type="tel" class="form-control phone-input" placeholder="534 933 46 31" id="phone2">
+                </div>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Türkiye odaklı</li>
+                    <li>✅ Sabit +90 prefix</li>
+                    <li>✅ Temiz görünüm</li>
+                    <li>✅ Kolay kullanım</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(2)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 3: Modern Flag + Dropdown -->
+        <div class="design-card design3">
+            <h3 class="design-title">3️⃣ Modern Flag + Dropdown</h3>
+            <div class="demo-area">
+                <label class="form-label">Telefon Numarası</label>
+                <div class="input-group">
+                    <select class="form-select country-selector">
+                        <option value="+90">🇹🇷</option>
+                        <option value="+1">🇺🇸</option>
+                        <option value="+44">🇬🇧</option>
+                        <option value="+49">🇩🇪</option>
+                    </select>
+                    <input type="tel" class="form-control phone-input" placeholder="534 933 46 31" id="phone3">
+                </div>
+                <small class="text-muted">Modern gradient tasarım</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Gradient arka plan</li>
+                    <li>✅ Sadece bayrak gösterimi</li>
+                    <li>✅ Modern görünüm</li>
+                    <li>✅ Kompakt tasarım</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(3)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 4: Minimalist Single Input -->
+        <div class="design-card design4">
+            <h3 class="design-title">4️⃣ Minimalist Tek Input</h3>
+            <div class="demo-area">
+                <label class="form-label">Telefon Numarası</label>
+                <input type="tel" class="form-control phone-input" placeholder="+90 534 933 46 31" id="phone4">
+                <small class="text-muted">Tam format tek inputta</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Tek input alanı</li>
+                    <li>✅ Yuvarlak kenarlı</li>
+                    <li>✅ Focus animasyonu</li>
+                    <li>✅ Minimalist tasarım</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(4)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 5: Material Design Style -->
+        <div class="design-card design5">
+            <h3 class="design-title">5️⃣ Material Design</h3>
+            <div class="demo-area">
+                <div class="form-floating">
+                    <input type="tel" class="form-control" id="phone5" placeholder="+90 534 933 46 31">
+                    <label for="phone5">Telefon Numarası</label>
+                </div>
+                <small class="text-muted">Google Material Design tarzı</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Floating label</li>
+                    <li>✅ Material animasyon</li>
+                    <li>✅ Modern UX</li>
+                    <li>✅ Google tarzı</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(5)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 6: Animated Dropdown -->
+        <div class="design-card design6">
+            <h3 class="design-title">6️⃣ Animasyonlu Dropdown</h3>
+            <div class="demo-area">
+                <label class="form-label">Telefon Numarası</label>
+                <div class="input-group">
+                    <select class="form-select animated-select">
+                        <option value="+90">🇹🇷 +90</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                    </select>
+                    <input type="tel" class="form-control" placeholder="534 933 46 31" id="phone6">
+                </div>
+                <small class="text-muted">Hover animasyonu ile</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Hover animasyonu</li>
+                    <li>✅ Gradient geçiş</li>
+                    <li>✅ Etkileşimli tasarım</li>
+                    <li>✅ Dinamik görünüm</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(6)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 7: Neon/Gaming Style -->
+        <div class="design-card design7">
+            <h3 class="design-title">7️⃣ Neon/Gaming Style</h3>
+            <div class="demo-area" style="background: #0a0a0a; border-radius: 10px;">
+                <label class="form-label text-success">TELEFON NUMARASI</label>
+                <div class="input-group">
+                    <select class="form-select neon-select">
+                        <option value="+90">[TR] +90</option>
+                        <option value="+1">[US] +1</option>
+                        <option value="+44">[UK] +44</option>
+                    </select>
+                    <input type="tel" class="form-control neon-input" placeholder="534.933.46.31" id="phone7">
+                </div>
+                <small class="text-info">Gaming/Cyber tarzı tasarım</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Neon efektler</li>
+                    <li>✅ Gaming teması</li>
+                    <li>✅ Glow animasyonu</li>
+                    <li>✅ Cyber görünüm</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(7)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 8: Glassmorphism -->
+        <div class="design-card design8" style="background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); backdrop-filter: blur(10px);">
+            <h3 class="design-title" style="color: #2c3e50;">8️⃣ Glassmorphism</h3>
+            <div class="demo-area glass-container">
+                <label class="form-label" style="color: #2c3e50;">Telefon Numarası</label>
+                <input type="tel" class="form-control glass-input" placeholder="+90 534 933 46 31" id="phone8">
+                <small style="color: rgba(44,62,80,0.7);">Cam efekti ile modern tasarım</small>
+            </div>
+            <div class="feature-list" style="background: rgba(232,244,253,0.3); backdrop-filter: blur(5px);">
+                <h6 style="color: #2980b9;">🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Cam efekti</li>
+                    <li>✅ Blur backdrop</li>
+                    <li>✅ Şeffaf tasarım</li>
+                    <li>✅ Modern trend</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(8)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 9: Retro/Vintage -->
+        <div class="design-card design9">
+            <h3 class="design-title">9️⃣ Retro/Vintage</h3>
+            <div class="demo-area" style="background: #f5f5dc;">
+                <label class="form-label" style="color: #8b4513; font-family: 'Courier New', monospace; font-weight: bold;">TELEFON NUMARASI</label>
+                <div class="input-group">
+                    <select class="form-select retro-select">
+                        <option value="+90">TURKEY +90</option>
+                        <option value="+1">USA +1</option>
+                        <option value="+44">UK +44</option>
+                    </select>
+                    <input type="tel" class="form-control retro-input" placeholder="534-933-46-31" id="phone9">
+                </div>
+                <small style="color: #8b4513;">Vintage/Retro tasarım</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Retro renk paleti</li>
+                    <li>✅ Vintage tipografi</li>
+                    <li>✅ Klasik görünüm</li>
+                    <li>✅ Nostaljik his</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(9)">Bu Tasarımı Seç</button>
+        </div>
+
+        <!-- Design 10: Corporate/Professional -->
+        <div class="design-card design10">
+            <h3 class="design-title">🔟 Kurumsal/Profesyonel</h3>
+            <div class="demo-area" style="background: #f8f9fa;">
+                <label class="form-label" style="color: #34495e; font-weight: 600;">Telefon Numarası</label>
+                <div class="input-group">
+                    <select class="form-select corporate-select">
+                        <option value="+90">TR</option>
+                        <option value="+1">US</option>
+                        <option value="+44">UK</option>
+                    </select>
+                    <input type="tel" class="form-control corporate-input" placeholder="534 933 46 31" id="phone10">
+                </div>
+                <small class="text-muted">Kurumsal ve profesyonel görünüm</small>
+            </div>
+            <div class="feature-list">
+                <h6>🎯 Özellikler:</h6>
+                <ul class="mb-0">
+                    <li>✅ Profesyonel tasarım</li>
+                    <li>✅ Kurumsal renkler</li>
+                    <li>✅ Sade ve güvenilir</li>
+                    <li>✅ İş dünyası uygun</li>
+                </ul>
+            </div>
+            <button class="btn select-btn mt-3" onclick="selectDesign(10)">Bu Tasarımı Seç</button>
+        </div>
+
+        <div class="text-center mt-5">
+            <div class="design-card">
+                <h4 class="text-primary">🎨 Özel Tasarım İsteği</h4>
+                <p>Yukarıdaki tasarımlar beğenmediyseniz, istediğiniz özel tasarımı tanımlayın!</p>
+                <button class="btn btn-outline-primary" onclick="customDesign()">Özel Tasarım İste</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Demo telefon formatlama fonksiyonları
+        function formatPhoneDemo(input, designNumber) {
+            let value = input.value;
+            
+            switch(designNumber) {
+                case 2:
+                case 4:
+                case 5:
+                case 8:
+                    // +90 ile başlayacak formatlar
+                    if (!value.startsWith('+90')) {
+                        value = '+90 ' + value.replace(/\D/g, '');
+                    }
+                    let numbers = value.substring(3).replace(/\D/g, '');
+                    if (numbers.length > 10) numbers = numbers.substring(0, 10);
+                    
+                    let formatted = '+90';
+                    if (numbers.length > 0) {
+                        formatted += ' ' + numbers.substring(0, 3);
+                        if (numbers.length > 3) {
+                            formatted += ' ' + numbers.substring(3, 6);
+                            if (numbers.length > 6) {
+                                formatted += ' ' + numbers.substring(6, 8);
+                                if (numbers.length > 8) {
+                                    formatted += ' ' + numbers.substring(8, 10);
+                                }
+                            }
+                        }
+                    }
+                    input.value = formatted;
+                    break;
+                    
+                case 7:
+                    // Gaming style - nokta ile ayırma
+                    let nums = value.replace(/\D/g, '');
+                    if (nums.length > 10) nums = nums.substring(0, 10);
+                    
+                    let gamingFormat = '';
+                    if (nums.length > 0) {
+                        gamingFormat += nums.substring(0, 3);
+                        if (nums.length > 3) {
+                            gamingFormat += '.' + nums.substring(3, 6);
+                            if (nums.length > 6) {
+                                gamingFormat += '.' + nums.substring(6, 8);
+                                if (nums.length > 8) {
+                                    gamingFormat += '.' + nums.substring(8, 10);
+                                }
+                            }
+                        }
+                    }
+                    input.value = gamingFormat;
+                    break;
+                    
+                case 9:
+                    // Retro style - tire ile ayırma
+                    let retroNums = value.replace(/\D/g, '');
+                    if (retroNums.length > 10) retroNums = retroNums.substring(0, 10);
+                    
+                    let retroFormat = '';
+                    if (retroNums.length > 0) {
+                        retroFormat += retroNums.substring(0, 3);
+                        if (retroNums.length > 3) {
+                            retroFormat += '-' + retroNums.substring(3, 6);
+                            if (retroNums.length > 6) {
+                                retroFormat += '-' + retroNums.substring(6, 8);
+                                if (retroNums.length > 8) {
+                                    retroFormat += '-' + retroNums.substring(8, 10);
+                                }
+                            }
+                        }
+                    }
+                    input.value = retroFormat;
+                    break;
+                    
+                default:
+                    // Standart formatlama
+                    let standardNums = value.replace(/\D/g, '');
+                    if (standardNums.length > 10) standardNums = standardNums.substring(0, 10);
+                    
+                    let standardFormat = '';
+                    if (standardNums.length > 0) {
+                        standardFormat += standardNums.substring(0, 3);
+                        if (standardNums.length > 3) {
+                            standardFormat += ' ' + standardNums.substring(3, 6);
+                            if (standardNums.length > 6) {
+                                standardFormat += ' ' + standardNums.substring(6, 8);
+                                if (standardNums.length > 8) {
+                                    standardFormat += ' ' + standardNums.substring(8, 10);
+                                }
+                            }
+                        }
+                    }
+                    input.value = standardFormat;
+            }
+        }
+
+        // Input event listeners ekleme
+        for (let i = 1; i <= 10; i++) {
+            const input = document.getElementById(`phone${i}`);
+            if (input) {
+                input.addEventListener('input', function() {
+                    formatPhoneDemo(this, i);
+                });
+                
+                // İlk yüklemede +90 ekleme (tasarıma göre)
+                if ([2, 4, 5, 8].includes(i)) {
+                    input.value = '+90 ';
+                }
+            }
+        }
+
+        function selectDesign(designNumber) {
+            alert(`🎉 Tasarım ${designNumber} seçildi!\n\nBu tasarımı index.php dosyanıza entegre etmek için bana "${designNumber} numaralı tasarımı entegre et" yazın.`);
+            
+            // Seçilen tasarımı vurgula
+            document.querySelectorAll('.design-card').forEach(card => {
+                card.style.border = 'none';
+            });
+            
+            document.querySelectorAll('.design-card')[designNumber - 1].style.border = '3px solid #2ecc71';
+            document.querySelectorAll('.design-card')[designNumber - 1].scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+
+        function customDesign() {
+            const customRequest = prompt(`🎨 Özel Tasarım İsteği\n\nİstediğiniz telefon input tasarımını detaylı olarak açıklayın:\n\nÖrnek:\n- Renk şeması: Mavi-beyaz\n- Stil: Modern/minimalist\n- Özellikler: Dropdown + animasyon\n- Özel istekler: Glow efekti`);
+            
+            if (customRequest) {
+                alert(`✅ Özel tasarım isteğiniz alındı!\n\n"${customRequest}"\n\nBu özelliklere sahip özel bir tasarım hazırlayıp size sunacağım.`);
+            }
+        }
+
+        // Sayfa yüklenince bilgi mesajı
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                alert(`📱 Telefon Input Tasarım Seçenekleri\n\n✨ 10 farklı tasarım hazırladım\n🎯 Beğendiğinizi seçin\n🚀 Hemen entegre edelim!\n\n💡 Her tasarım farklı özellik ve görsel stil içeriyor.`);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

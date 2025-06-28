@@ -981,6 +981,74 @@
                 font-size: 0.7rem;
             }
         }
+
+        /* Telefon Input Tasarımı - Klasik Dropdown + Input */
+        .phone-input-container {
+            display: flex;
+            position: relative;
+        }
+
+        .country-dropdown {
+            flex: 0 0 120px;
+            border-right: none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            background: #f8f9fa;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .country-dropdown:hover {
+            background: #e9ecef;
+        }
+
+        .country-dropdown:focus {
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            outline: none;
+        }
+
+        .phone-number-input {
+            flex: 1;
+            border-left: none;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .phone-number-input:focus {
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            border-color: #3498db;
+        }
+
+        .phone-input-container .form-control:focus {
+            border-color: #3498db;
+        }
+
+        .country-flag {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .country-code {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Responsive düzenlemeler */
+        @media (max-width: 768px) {
+            .country-dropdown {
+                flex: 0 0 100px;
+                font-size: 0.85rem;
+            }
+            
+            .country-flag {
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 
@@ -1334,10 +1402,24 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="customerPhone" class="form-label">Telefon *</label>
-                                        <input type="tel" class="form-control" id="customerPhone" required 
-                                               placeholder="+90 534 933 46 31" maxlength="17" 
-                                               oninput="formatPhoneNumberTurkish(this)">
-                                        <small class="form-text text-muted">Türkiye telefon numarası formatında giriniz</small>
+                                        <div class="phone-input-container">
+                                            <select class="form-control country-dropdown" id="customerCountryCode">
+                                                <option value="+90" data-flag="🇹🇷">🇹🇷 +90</option>
+                                                <option value="+1" data-flag="🇺🇸">🇺🇸 +1</option>
+                                                <option value="+44" data-flag="🇬🇧">🇬🇧 +44</option>
+                                                <option value="+49" data-flag="🇩🇪">🇩🇪 +49</option>
+                                                <option value="+33" data-flag="🇫🇷">🇫🇷 +33</option>
+                                                <option value="+971" data-flag="🇦🇪">🇦🇪 +971</option>
+                                                <option value="+966" data-flag="🇸🇦">🇸🇦 +966</option>
+                                                <option value="+7" data-flag="🇷🇺">🇷🇺 +7</option>
+                                                <option value="+86" data-flag="🇨🇳">🇨🇳 +86</option>
+                                                <option value="+91" data-flag="🇮🇳">🇮🇳 +91</option>
+                                            </select>
+                                            <input type="tel" class="form-control phone-number-input" id="customerPhone" required 
+                                                   placeholder="534 933 46 31" 
+                                                   oninput="formatPhoneNumber('customer')">
+                                        </div>
+                                        <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                                     </div>
                                 </div>
                             </div>
@@ -1586,10 +1668,24 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="deliveryPhone" class="form-label">Alıcı Telefonu *</label>
-                                        <input type="tel" class="form-control" id="deliveryPhone" required 
-                                               placeholder="+90 534 933 46 31" maxlength="17" 
-                                               oninput="formatPhoneNumberTurkish(this)">
-                                        <small class="form-text text-muted">Kargo teslim için iletişim</small>
+                                        <div class="phone-input-container">
+                                            <select class="form-control country-dropdown" id="deliveryCountryCode">
+                                                <option value="+90" data-flag="🇹🇷">🇹🇷 +90</option>
+                                                <option value="+1" data-flag="🇺🇸">🇺🇸 +1</option>
+                                                <option value="+44" data-flag="🇬🇧">🇬🇧 +44</option>
+                                                <option value="+49" data-flag="🇩🇪">🇩🇪 +49</option>
+                                                <option value="+33" data-flag="🇫🇷">🇫🇷 +33</option>
+                                                <option value="+971" data-flag="🇦🇪">🇦🇪 +971</option>
+                                                <option value="+966" data-flag="🇸🇦">🇸🇦 +966</option>
+                                                <option value="+7" data-flag="🇷🇺">🇷🇺 +7</option>
+                                                <option value="+86" data-flag="🇨🇳">🇨🇳 +86</option>
+                                                <option value="+91" data-flag="🇮🇳">🇮🇳 +91</option>
+                                            </select>
+                                            <input type="tel" class="form-control phone-number-input" id="deliveryPhone" required 
+                                                   placeholder="534 933 46 31" 
+                                                   oninput="formatPhoneNumber('delivery')">
+                                        </div>
+                                        <small class="form-text text-muted">Kargo teslim için iletişim numarası</small>
                                     </div>
                                 </div>
                             </div>
@@ -2107,7 +2203,7 @@
         function generateWhatsAppMessage() {
             // Form data kontrolü
             const customerName = document.getElementById('customerName')?.value || '';
-            const customerPhone = document.getElementById('customerPhone')?.value || '';
+            const customerPhone = getFormattedPhoneNumber('customer');
             const customerBio = document.getElementById('customerBio')?.value || '';
 
             // Eğer form verileri yoksa genel mesaj oluştur
@@ -2316,22 +2412,6 @@
                 name: document.getElementById('deliveryName').value,
                 phone: getFormattedPhoneNumber('delivery')
             };
-        }
-
-        // Formatted phone number getter function
-        function getFormattedPhoneNumber(type) {
-            let phoneInput;
-            
-            if (type === 'customer') {
-                phoneInput = document.getElementById('customerPhone');
-            } else if (type === 'delivery') {
-                phoneInput = document.getElementById('deliveryPhone');
-            }
-            
-            if (!phoneInput) return '';
-            
-            // Input'tan telefon numarasını al (zaten +90 ile formatted)
-            return phoneInput.value || '';
         }
 
         // Social Media Management Functions
@@ -2596,125 +2676,145 @@
             return selectedSocialMedias.filter(item => item.username.trim() !== '');
         }
 
-        // Turkish phone number formatting function
-        function formatPhoneNumberTurkish(input) {
-            let value = input.value;
+        // Modern phone number formatting with country code dropdown
+        function formatPhoneNumber(type) {
+            const countrySelect = document.getElementById(type + 'CountryCode');
+            const phoneInput = document.getElementById(type + 'Phone');
             
-            // Her zaman +90 ile başlasın
-            if (!value.startsWith('+90')) {
-                value = '+90 ' + value.replace(/\D/g, '');
-            }
+            if (!countrySelect || !phoneInput) return;
             
-            // +90 sonrası sadece rakamları al
-            let numbers = value.substring(3).replace(/\D/g, '');
+            const countryCode = countrySelect.value;
+            let phoneValue = phoneInput.value.replace(/\D/g, ''); // Sadece rakamları al
             
-            // Maksimum 10 rakam (5XX XXX XX XX formatı için)
-            if (numbers.length > 10) {
-                numbers = numbers.substring(0, 10);
-            }
-            
-            // Formatı uygula: +90 5XX XXX XX XX
-            let formatted = '+90';
-            if (numbers.length > 0) {
-                formatted += ' ' + numbers.substring(0, 3);
-                if (numbers.length > 3) {
-                    formatted += ' ' + numbers.substring(3, 6);
-                    if (numbers.length > 6) {
-                        formatted += ' ' + numbers.substring(6, 8);
-                        if (numbers.length > 8) {
-                            formatted += ' ' + numbers.substring(8, 10);
-                        }
+            // Ülke koduna göre formatla
+            switch (countryCode) {
+                case '+90': // Türkiye
+                    if (phoneValue.length > 10) phoneValue = phoneValue.substring(0, 10);
+                    if (phoneValue.length > 0) {
+                        phoneValue = phoneValue.substring(0, 3) + 
+                                   (phoneValue.length > 3 ? ' ' + phoneValue.substring(3, 6) : '') +
+                                   (phoneValue.length > 6 ? ' ' + phoneValue.substring(6, 8) : '') +
+                                   (phoneValue.length > 8 ? ' ' + phoneValue.substring(8, 10) : '');
                     }
-                }
+                    break;
+                case '+1': // ABD/Kanada
+                    if (phoneValue.length > 10) phoneValue = phoneValue.substring(0, 10);
+                    if (phoneValue.length > 0) {
+                        phoneValue = '(' + phoneValue.substring(0, 3) + ')' +
+                                   (phoneValue.length > 3 ? ' ' + phoneValue.substring(3, 6) : '') +
+                                   (phoneValue.length > 6 ? '-' + phoneValue.substring(6, 10) : '');
+                    }
+                    break;
+                case '+44': // İngiltere
+                    if (phoneValue.length > 10) phoneValue = phoneValue.substring(0, 10);
+                    if (phoneValue.length > 0) {
+                        phoneValue = phoneValue.substring(0, 4) + 
+                                   (phoneValue.length > 4 ? ' ' + phoneValue.substring(4, 7) : '') +
+                                   (phoneValue.length > 7 ? ' ' + phoneValue.substring(7, 10) : '');
+                    }
+                    break;
+                default:
+                    // Diğer ülkeler için basit format
+                    if (phoneValue.length > 12) phoneValue = phoneValue.substring(0, 12);
+                    break;
             }
             
-            input.value = formatted;
+            phoneInput.value = phoneValue;
+        }
+
+        function getFormattedPhoneNumber(type) {
+            const countrySelect = document.getElementById(type + 'CountryCode');
+            const phoneInput = document.getElementById(type + 'Phone');
             
-            // Cursor pozisyonunu ayarla - +90 kısmını silmeye izin verme
-            if (input.selectionStart < 4) {
-                input.setSelectionRange(4, 4);
+            if (!countrySelect || !phoneInput) return '';
+            
+            const countryCode = countrySelect.value;
+            const phoneNumber = phoneInput.value.replace(/\D/g, '');
+            
+            return phoneNumber ? countryCode + phoneNumber : '';
+        }
+
+        // Ülke kodu değiştiğinde placeholder'ı güncelle
+        function updatePhonePlaceholder(type) {
+            const countrySelect = document.getElementById(type + 'CountryCode');
+            const phoneInput = document.getElementById(type + 'Phone');
+            
+            if (!countrySelect || !phoneInput) return;
+            
+            const countryCode = countrySelect.value;
+            
+            const placeholders = {
+                '+90': '534 933 46 31',
+                '+1': '(555) 123-4567',
+                '+44': '7700 900123',
+                '+49': '30 12345678',
+                '+33': '1 42 34 56 78',
+                '+971': '50 123 4567',
+                '+966': '50 123 4567',
+                '+7': '495 123 4567',
+                '+86': '138 0013 8000',
+                '+91': '98765 43210'
+            };
+            
+            phoneInput.placeholder = placeholders[countryCode] || 'Telefon numarası';
+            
+            // Mevcut numarayı yeni formata göre düzenle
+            if (phoneInput.value) {
+                formatPhoneNumber(type);
             }
         }
 
-        // WhatsApp seçildiğinde telefon inputlarını sıfırla ve +90 seç
+        // WhatsApp seçildiğinde telefon inputlarını güncelle
         function resetPhoneInputsForWhatsApp() {
-            // Müşteri telefonu
+            // Müşteri telefonu için +90 seç
+            const customerCountryCode = document.getElementById('customerCountryCode');
             const customerPhone = document.getElementById('customerPhone');
-            if (customerPhone) {
-                customerPhone.value = '+90 ';
+            
+            if (customerCountryCode && customerPhone) {
+                customerCountryCode.value = '+90';
+                updatePhonePlaceholder('customer');
                 customerPhone.focus();
-                customerPhone.setSelectionRange(4, 4);
             }
             
-            // Teslimat telefonu (eğer varsa)
+            // Teslimat telefonu için +90 seç (eğer varsa)
+            const deliveryCountryCode = document.getElementById('deliveryCountryCode');
             const deliveryPhone = document.getElementById('deliveryPhone');
-            if (deliveryPhone) {
-                deliveryPhone.value = '+90 ';
+            
+            if (deliveryCountryCode && deliveryPhone) {
+                deliveryCountryCode.value = '+90';
+                updatePhonePlaceholder('delivery');
             }
             
-            showToast('WhatsApp için telefon alanları +90 Türkiye olarak ayarlandı!', 'success');
+            showToast('WhatsApp için telefon alanları Türkiye (+90) olarak ayarlandı!', 'success');
         }
 
-        // Phone input focus event - Turkish phone system
+        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize social media handlers
             initSocialMediaHandlers();
             
-            // Initialize phone inputs with +90 prefix
-            const customerPhone = document.getElementById('customerPhone');
-            const deliveryPhone = document.getElementById('deliveryPhone');
+            // Initialize phone number dropdowns
+            const customerCountryCode = document.getElementById('customerCountryCode');
+            const deliveryCountryCode = document.getElementById('deliveryCountryCode');
             
-            if (customerPhone) {
-                customerPhone.value = '+90 ';
-                
-                customerPhone.addEventListener('focus', function() {
-                    if (this.value === '' || this.value === '+90') {
-                        this.value = '+90 ';
-                        this.setSelectionRange(4, 4);
-                    }
+            // Add event listeners for country code changes
+            if (customerCountryCode) {
+                customerCountryCode.addEventListener('change', function() {
+                    updatePhonePlaceholder('customer');
                 });
-
-                customerPhone.addEventListener('keydown', function(e) {
-                    // Backspace ile +90 kısmını silmeyi engelle
-                    if (e.key === 'Backspace' && this.selectionStart <= 4) {
-                        e.preventDefault();
-                        this.setSelectionRange(4, 4);
-                    }
-
-                    // Delete ile +90 kısmını silmeyi engelle
-                    if (e.key === 'Delete' && this.selectionStart < 4) {
-                        e.preventDefault();
-                        this.setSelectionRange(4, 4);
-                    }
-                });
+                // Set initial placeholder
+                updatePhonePlaceholder('customer');
             }
-
-            // Handle delivery phone input (will be available after step 2)
+            
+            // Handle delivery phone dropdown (will be available after step 2)
             setTimeout(() => {
-                const deliveryPhone = document.getElementById('deliveryPhone');
-                if (deliveryPhone) {
-                    deliveryPhone.value = '+90 ';
-                    
-                    deliveryPhone.addEventListener('focus', function() {
-                        if (this.value === '' || this.value === '+90') {
-                            this.value = '+90 ';
-                            this.setSelectionRange(4, 4);
-                        }
+                const deliveryCountryCode = document.getElementById('deliveryCountryCode');
+                if (deliveryCountryCode) {
+                    deliveryCountryCode.addEventListener('change', function() {
+                        updatePhonePlaceholder('delivery');
                     });
-
-                    deliveryPhone.addEventListener('keydown', function(e) {
-                        // Backspace ile +90 kısmını silmeyi engelle
-                        if (e.key === 'Backspace' && this.selectionStart <= 4) {
-                            e.preventDefault();
-                            this.setSelectionRange(4, 4);
-                        }
-
-                        // Delete ile +90 kısmını silmeyi engelle
-                        if (e.key === 'Delete' && this.selectionStart < 4) {
-                            e.preventDefault();
-                            this.setSelectionRange(4, 4);
-                        }
-                    });
+                    // Set initial placeholder
+                    updatePhonePlaceholder('delivery');
                 }
             }, 1000);
         });
