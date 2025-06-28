@@ -2665,9 +2665,7 @@
             
             if (customerCountryCode && customerPhone) {
                 customerCountryCode.value = '+90';
-                customerPhone.value = '';
-                customerPhone.placeholder = '534 933 46 31';
-                customerPhone.maxLength = '11';
+                updatePhoneInputByCountry('customer'); // Bu fonksiyon input'u sıfırlar ve placeholder'ı günceller
             }
             
             // Teslimat telefonu (eğer varsa)
@@ -2676,12 +2674,10 @@
             
             if (deliveryCountryCode && deliveryPhone) {
                 deliveryCountryCode.value = '+90';
-                deliveryPhone.value = '';
-                deliveryPhone.placeholder = '534 933 46 31';
-                deliveryPhone.maxLength = '11';
+                updatePhoneInputByCountry('delivery'); // Bu fonksiyon input'u sıfırlar ve placeholder'ı günceller
             }
             
-            showToast('Telefon alanları +90 Türkiye olarak ayarlandı!', 'success');
+            showToast('WhatsApp için telefon alanları +90 Türkiye olarak ayarlandı!', 'success');
         }
 
         // Phone number formatting function with country code
@@ -2710,7 +2706,7 @@
                 numbers = numbers.substring(0, maxDigits);
             }
             
-            // Türkiye için özel formatlama (5XX XXX XX XX)
+            // Türkiye için özel formatlama: XXX XXX XX XX (ülke kodu dropdown'da)
             if (countrySelect.value === '+90' && numbers.length > 0) {
                 let formatted = '';
                 if (numbers.length > 0) {
@@ -2732,47 +2728,7 @@
             }
         }
 
-        // Eski formatPhoneNumber fonksiyonunu koruyorum (geriye uyumluluk için)
-        function formatPhoneNumber(input) {
-            let value = input.value;
-
-            // Her zaman +90 ile başlasın
-            if (!value.startsWith('+90 ')) {
-                value = '+90 ';
-            }
-
-            // +90 sonrası sadece rakamları al
-            let numbers = value.substring(4).replace(/\D/g, '');
-
-            // Maksimum 10 rakam (5XX XXX XX XX formatı için)
-            if (numbers.length > 10) {
-                numbers = numbers.substring(0, 10);
-            }
-
-            // Formatı uygula: +90 5XX XXX XX XX
-            let formatted = '+90 ';
-            if (numbers.length > 0) {
-                formatted += numbers.substring(0, 3);
-                if (numbers.length > 3) {
-                    formatted += ' ' + numbers.substring(3, 6);
-                    if (numbers.length > 6) {
-                        formatted += ' ' + numbers.substring(6, 8);
-                        if (numbers.length > 8) {
-                            formatted += ' ' + numbers.substring(8, 10);
-                        }
-                    }
-                }
-            }
-
-            input.value = formatted;
-
-            // Cursor pozisyonunu ayarla
-            if (input.selectionStart < 4) {
-                input.setSelectionRange(4, 4);
-            }
-        }
-
-        // Phone input focus event - ensure +90 prefix
+        // Phone input focus event - modern country code system
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize social media handlers
             initSocialMediaHandlers();
@@ -2780,55 +2736,21 @@
             // Initialize country code change handlers
             initCountryCodeHandlers();
             
-            // Handle customer phone input
-            const phoneInput = document.getElementById('customerPhone');
-            if (phoneInput) {
-                phoneInput.addEventListener('focus', function() {
-                    if (this.value === '' || this.value === '+90') {
-                        this.value = '+90 ';
-                        this.setSelectionRange(4, 4);
-                    }
-                });
-
-                phoneInput.addEventListener('keydown', function(e) {
-                    // Backspace ile +90 kısmını silmeyi engelle
-                    if (e.key === 'Backspace' && this.selectionStart <= 4) {
-                        e.preventDefault();
-                        this.setSelectionRange(4, 4);
-                    }
-
-                    // Delete ile +90 kısmını silmeyi engelle
-                    if (e.key === 'Delete' && this.selectionStart < 4) {
-                        e.preventDefault();
-                        this.setSelectionRange(4, 4);
-                    }
-                });
+            // Remove old +90 prefix system - now using dropdown only
+            // Initialize default country code to +90 on page load
+            const customerCountryCode = document.getElementById('customerCountryCode');
+            const deliveryCountryCode = document.getElementById('deliveryCountryCode');
+            
+            if (customerCountryCode) {
+                customerCountryCode.value = '+90';
+                updatePhoneInputByCountry('customer');
             }
-
+            
             // Handle delivery phone input (will be available after step 2)
             setTimeout(() => {
-                const deliveryPhoneInput = document.getElementById('deliveryPhone');
-                if (deliveryPhoneInput) {
-                    deliveryPhoneInput.addEventListener('focus', function() {
-                        if (this.value === '' || this.value === '+90') {
-                            this.value = '+90 ';
-                            this.setSelectionRange(4, 4);
-                        }
-                    });
-
-                    deliveryPhoneInput.addEventListener('keydown', function(e) {
-                        // Backspace ile +90 kısmını silmeyi engelle
-                        if (e.key === 'Backspace' && this.selectionStart <= 4) {
-                            e.preventDefault();
-                            this.setSelectionRange(4, 4);
-                        }
-
-                        // Delete ile +90 kısmını silmeyi engelle
-                        if (e.key === 'Delete' && this.selectionStart < 4) {
-                            e.preventDefault();
-                            this.setSelectionRange(4, 4);
-                        }
-                    });
+                if (deliveryCountryCode) {
+                    deliveryCountryCode.value = '+90';
+                    updatePhoneInputByCountry('delivery');
                 }
             }, 1000);
         });
@@ -2872,10 +2794,8 @@
             const maxDigits = parseInt(selectedOption.getAttribute('data-max')) || 10;
             const countryCode = countrySelect.value;
             
-            // Update maxlength
+            // Update maxlength and clear input
             phoneInput.maxLength = maxDigits;
-            
-            // Clear input and update placeholder based on country
             phoneInput.value = '';
             
             // Update placeholder based on country
@@ -2892,6 +2812,10 @@
             } else {
                 phoneInput.placeholder = 'Telefon numarası';
             }
+            
+            // Show toast notification
+            const countryName = selectedOption.textContent.split(' ')[0];
+            showToast(`Ülke ${countryName} ${countryCode} olarak ayarlandı`, 'info');
         }
 
         // Initialize theme preview when modal opens
