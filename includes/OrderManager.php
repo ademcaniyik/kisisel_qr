@@ -50,9 +50,10 @@ class OrderManager {
                 quantity, 
                 price, 
                 special_requests,
+                shipping_address,
                 payment_method,
                 whatsapp_sent
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $this->connection->prepare($sql);
             if (!$stmt) {
@@ -61,9 +62,10 @@ class OrderManager {
             
             $whatsapp_sent = isset($data['whatsapp_sent']) ? $data['whatsapp_sent'] : true;
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : 'bank_transfer';
+            $shipping_address = isset($data['shipping_address']) ? $data['shipping_address'] : '';
             
             $stmt->bind_param(
-                "sssisssidsii",
+                "sssisssidsssi",
                 $data['customer_name'],
                 $data['customer_phone'],
                 $data['customer_email'],
@@ -74,6 +76,7 @@ class OrderManager {
                 $data['quantity'],
                 $data['price'],
                 $data['special_requests'],
+                $shipping_address,
                 $payment_method,
                 $whatsapp_sent
             );
@@ -121,8 +124,9 @@ class OrderManager {
             quantity, 
             price, 
             special_requests,
+            shipping_address,
             whatsapp_sent
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->connection->prepare($sql);
         if (!$stmt) {
@@ -130,9 +134,10 @@ class OrderManager {
         }
         
         $whatsapp_sent = isset($data['whatsapp_sent']) ? $data['whatsapp_sent'] : true;
+        $shipping_address = isset($data['shipping_address']) ? $data['shipping_address'] : '';
         
         $stmt->bind_param(
-            "sssssisd",
+            "sssssiissi",
             $data['customer_name'],
             $data['customer_phone'],
             $data['customer_email'],
@@ -141,6 +146,7 @@ class OrderManager {
             $data['quantity'],
             $data['price'],
             $data['special_requests'],
+            $shipping_address,
             $whatsapp_sent
         );
         

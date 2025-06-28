@@ -423,29 +423,27 @@ try {
                                             
                                             <!-- Shipping Address -->
                                             <?php 
-                                            // Extract address from special_requests
+                                            // Use the new shipping_address column if available, otherwise extract from special_requests
                                             $shippingAddress = '';
-                                            if ($order['special_requests'] && $order['special_requests'] !== '0') {
+                                            
+                                            // First check if we have the new shipping_address column
+                                            if (isset($order['shipping_address']) && !empty(trim($order['shipping_address']))) {
+                                                $shippingAddress = trim($order['shipping_address']);
+                                            } 
+                                            // Fallback to old method for backward compatibility
+                                            else if ($order['special_requests'] && $order['special_requests'] !== '0') {
                                                 $lines = explode("\n", $order['special_requests']);
                                                 foreach ($lines as $line) {
                                                     $line = trim($line);
-                                                    // Look for lines that start with "Adres:"
+                                                    // Look for lines that start with "Teslimat Adresi:"
+                                                    if (stripos($line, 'Teslimat Adresi:') === 0) {
+                                                        $shippingAddress = trim(substr($line, 16)); // Remove "Teslimat Adresi: " prefix
+                                                        break;
+                                                    }
+                                                    // Also look for lines that start with "Adres:"
                                                     if (stripos($line, 'Adres:') === 0) {
                                                         $shippingAddress = trim(substr($line, 6)); // Remove "Adres: " prefix
                                                         break;
-                                                    }
-                                                    // Also check for lines that might contain address info
-                                                    // (long lines that might be addresses)
-                                                    if (strlen($line) > 20 && 
-                                                        !stripos($line, 'Bio:') === 0 && 
-                                                        !stripos($line, 'Sosyal') === 0 &&
-                                                        !stripos($line, 'Tema:') === 0 &&
-                                                        !stripos($line, 'http') === 0 &&
-                                                        !stripos($line, 'www.') === 0) {
-                                                        // This might be an address line
-                                                        if (empty($shippingAddress)) {
-                                                            $shippingAddress = $line;
-                                                        }
                                                     }
                                                 }
                                             }

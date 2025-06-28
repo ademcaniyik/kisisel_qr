@@ -1961,11 +1961,11 @@
                     socialMedia.push(`${platform.name}: ${item.url}`);
                 });
 
-                // Create special requests text
+                // Create shipping address separately
+                const shippingAddress = `${fullAddress}\nAlıcı: ${deliveryData.name}\nTelefon: ${deliveryData.phone}`;
+
+                // Create special requests text (without shipping address)
                 let specialRequests = '';
-                specialRequests += `Teslimat Adresi: ${fullAddress}\n`;
-                specialRequests += `Alıcı: ${deliveryData.name}\n`;
-                specialRequests += `Alıcı Telefonu: ${deliveryData.phone}\n`;
                 if (customerBio) specialRequests += `Bio: ${customerBio}\n`;
                 if (customerIban) specialRequests += `İban: ${customerIban}\n`;
                 if (customerBloodType) specialRequests += `Kan Grubu: ${customerBloodType}\n`;
@@ -1986,6 +1986,7 @@
                     price: 200.00,
                     payment_method: paymentMethod,
                     special_requests: specialRequests,
+                    shipping_address: shippingAddress,
                     whatsapp_sent: true
                 };
 

@@ -54,6 +54,8 @@ try {
                 'price' => isset($input['price']) ? (float)$input['price'] : 200.00,
                 'special_requests' => (isset($input['special_requests']) && !empty(trim($input['special_requests']))) ? 
                     trim($input['special_requests']) : null,
+                'shipping_address' => (isset($input['shipping_address']) && !empty(trim($input['shipping_address']))) ? 
+                    trim($input['shipping_address']) : '',
                 'payment_method' => isset($input['payment_method']) ? htmlspecialchars(trim($input['payment_method'])) : 'bank_transfer',
                 'whatsapp_sent' => isset($input['whatsapp_sent']) ? (bool)$input['whatsapp_sent'] : true
             ];
