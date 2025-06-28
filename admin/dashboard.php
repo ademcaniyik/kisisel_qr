@@ -269,6 +269,7 @@ while ($row = $result->fetch_assoc()) {
                                                 </a>
                                                 <a href="<?= getBasePath() ?>/redirect.php?qr_id=<?= htmlspecialchars($qr['id']) ?>"
                                                     class="btn btn-sm btn-primary"
+                                                    target="_blank"
                                                     title="QR ile açılan sayfaya git">
                                                     <i class="fas fa-external-link-alt"></i>
                                                 </a>

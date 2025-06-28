@@ -4,6 +4,7 @@
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/utilities.php';
 require_once __DIR__ . '/../../includes/ImageOptimizer.php';
+require_once __DIR__ . '/../../includes/QRManager.php';
 
 // Session'ı güvenli şekilde başlat
 if (session_status() === PHP_SESSION_NONE) {
@@ -89,8 +90,40 @@ try {
             }
             $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, photo_data, slug, theme, iban, blood_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssssssss", $name, $bio, $phone, $socialLinksJson, $photoUrl, $photoData, $slug, $theme, $iban, $bloodType);
+            
             if ($stmt->execute()) {
-                echo json_encode(['success' => true, 'message' => 'Profil başarıyla oluşturuldu']);
+                $profileId = $connection->insert_id;
+                
+                // Profil oluşturulduktan sonra otomatik QR kodu oluştur
+                try {
+                    $qrManager = new QRManager();
+                    $qrResult = $qrManager->createQR($profileId);
+                    
+                    if ($qrResult['success']) {
+                        echo json_encode([
+                            'success' => true, 
+                            'message' => 'Profil ve QR kodu başarıyla oluşturuldu',
+                            'profile_id' => $profileId,
+                            'qr_id' => $qrResult['qr_id']
+                        ]);
+                    } else {
+                        // QR oluşturulamadı ama profil oluştu
+                        echo json_encode([
+                            'success' => true, 
+                            'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $qrResult['message'],
+                            'profile_id' => $profileId,
+                            'qr_error' => $qrResult['message']
+                        ]);
+                    }
+                } catch (Exception $e) {
+                    // QR oluşturma hatası
+                    echo json_encode([
+                        'success' => true, 
+                        'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $e->getMessage(),
+                        'profile_id' => $profileId,
+                        'qr_error' => $e->getMessage()
+                    ]);
+                }
             } else {
                 throw new Exception('Profil oluşturulurken bir hata oluştu');
             }

@@ -1502,7 +1502,16 @@ if ($result) {
             dataType: 'json',
             success: function(res) {
                 if (res.success) {
-                    showToast('Profil başarıyla oluşturuldu!', 'success');
+                    let message = 'Profil başarıyla oluşturuldu!';
+                    
+                    // QR kodu da oluşturulduysa mesaja ekle
+                    if (res.qr_id) {
+                        message += ' QR kodu da otomatik oluşturuldu.';
+                    } else if (res.qr_error) {
+                        message += ' (QR kodu oluşturulamadı: ' + res.qr_error + ')';
+                    }
+                    
+                    showToast(message, 'success');
                     $('#createProfileModal').modal('hide');
                     location.reload();
                 } else {
