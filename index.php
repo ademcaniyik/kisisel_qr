@@ -1322,10 +1322,6 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="customerAddress" class="form-label">Teslimat Adresi *</label>
-                                <textarea class="form-control" id="customerAddress" rows="3" required></textarea>
-                            </div>
-                            <div class="mb-3">
                                 <label for="customerPhoto" class="form-label">Profil Fotoğrafı (isteğe bağlı)</label>
                                 <input type="file" class="form-control" id="customerPhoto" accept="image/*">
                             </div>
@@ -1513,8 +1509,76 @@
                     </div>
 
                     <div id="step2" class="order-step" style="display: none;">
-                        <h6>2. Ödeme Yöntemi</h6>
+                        <h6>2. Teslimat & Ödeme Bilgileri</h6>
+                        
+                        <!-- Teslimat Bilgileri -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-map-marker-alt text-primary me-2"></i>Teslimat Adresi</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="deliveryCity" class="form-label">İl *</label>
+                                        <select class="form-select" id="deliveryCity" required onchange="updateDistricts()">
+                                            <option value="">İl seçiniz</option>
+                                            <option value="istanbul">İstanbul</option>
+                                            <option value="ankara">Ankara</option>
+                                            <option value="izmir">İzmir</option>
+                                            <option value="bursa">Bursa</option>
+                                            <option value="antalya">Antalya</option>
+                                            <option value="adana">Adana</option>
+                                            <option value="konya">Konya</option>
+                                            <option value="sanliurfa">Şanlıurfa</option>
+                                            <option value="gaziantep">Gaziantep</option>
+                                            <option value="kocaeli">Kocaeli</option>
+                                            <option value="mersin">Mersin</option>
+                                            <option value="diyarbakir">Diyarbakır</option>
+                                            <option value="hatay">Hatay</option>
+                                            <option value="manisa">Manisa</option>
+                                            <option value="kayseri">Kayseri</option>
+                                            <option value="samsun">Samsun</option>
+                                            <option value="balikesir">Balıkesir</option>
+                                            <option value="kahramanmaras">Kahramanmaraş</option>
+                                            <option value="van">Van</option>
+                                            <option value="denizli">Denizli</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="deliveryDistrict" class="form-label">İlçe *</label>
+                                        <select class="form-select" id="deliveryDistrict" required disabled>
+                                            <option value="">Önce il seçiniz</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="deliveryAddress" class="form-label">Detay Adres *</label>
+                                    <textarea class="form-control" id="deliveryAddress" rows="3" required 
+                                              placeholder="Mahalle, sokak, bina no, daire no vb. detayları yazınız..."></textarea>
+                                    <small class="form-text text-muted">QR sticker'ınızın gönderileceği tam adres</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="deliveryName" class="form-label">Alıcı Adı *</label>
+                                        <input type="text" class="form-control" id="deliveryName" required>
+                                        <small class="form-text text-muted">Paketi teslim alacak kişi</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="deliveryPhone" class="form-label">Alıcı Telefonu *</label>
+                                        <input type="tel" class="form-control" id="deliveryPhone" required 
+                                               placeholder="+90 534 933 46 31" value="+90 " maxlength="17" 
+                                               oninput="formatPhoneNumber(this)">
+                                        <small class="form-text text-muted">Kargo teslim için iletişim</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ödeme Yöntemi -->
                         <div class="card mb-3">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-credit-card text-success me-2"></i>Ödeme Yöntemi</h6>
+                            </div>
                             <div class="card-body">
                                 <h6 class="card-title">Ödeme Yöntemini Seçin</h6>
                                 <div class="row">
@@ -1874,13 +1938,20 @@
                 // Collect form data
                 const customerName = document.getElementById('customerName').value;
                 const customerPhone = document.getElementById('customerPhone').value;
-                const customerAddress = document.getElementById('customerAddress').value;
                 const customerBio = document.getElementById('customerBio').value;
                 const customerTheme = document.getElementById('customerTheme').value;
                 const customerIban = document.getElementById('customerIban').value;
                 const customerBloodType = document.getElementById('customerBloodType').value;
                 const themeText = document.getElementById('customerTheme').options[document.getElementById('customerTheme').selectedIndex].text;
                 const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+                // Collect delivery data
+                const deliveryData = getDeliveryData();
+                const citySelect = document.getElementById('deliveryCity');
+                const districtSelect = document.getElementById('deliveryDistrict');
+                const cityText = citySelect.options[citySelect.selectedIndex].text;
+                const districtText = districtSelect.options[districtSelect.selectedIndex].text;
+                const fullAddress = `${deliveryData.address}, ${districtText}/${cityText}`;
 
                 // Collect social media links from new dynamic system
                 const socialMedia = [];
@@ -1892,7 +1963,9 @@
 
                 // Create special requests text
                 let specialRequests = '';
-                if (customerAddress) specialRequests += `Adres: ${customerAddress}\n`;
+                specialRequests += `Teslimat Adresi: ${fullAddress}\n`;
+                specialRequests += `Alıcı: ${deliveryData.name}\n`;
+                specialRequests += `Alıcı Telefonu: ${deliveryData.phone}\n`;
                 if (customerBio) specialRequests += `Bio: ${customerBio}\n`;
                 if (customerIban) specialRequests += `İban: ${customerIban}\n`;
                 if (customerBloodType) specialRequests += `Kan Grubu: ${customerBloodType}\n`;
@@ -1955,7 +2028,10 @@
                     let message = `🏷️ *QR Sticker Siparişi* (#${result.order_id})\n\n`;
                     message += `👤 *Ad Soyad:* ${customerName}\n`;
                     message += `📱 *Telefon:* ${customerPhone}\n`;
-                    message += `📍 *Adres:* ${customerAddress}\n`;
+                    message += `\n� *Teslimat Bilgileri:*\n`;
+                    message += `�📍 *Adres:* ${fullAddress}\n`;
+                    message += `👨‍💼 *Alıcı:* ${deliveryData.name}\n`;
+                    message += `📞 *Alıcı Tel:* ${deliveryData.phone}\n`;
                     if (customerBio) message += `📝 *Bio:* ${customerBio}\n`;
                     message += `🎨 *Tema:* ${themeText}\n`;
                     if (socialMedia.length > 0) {
@@ -2004,7 +2080,6 @@
             // Form data kontrolü
             const customerName = document.getElementById('customerName')?.value || '';
             const customerPhone = document.getElementById('customerPhone')?.value || '';
-            const customerAddress = document.getElementById('customerAddress')?.value || '';
             const customerBio = document.getElementById('customerBio')?.value || '';
 
             // Eğer form verileri yoksa genel mesaj oluştur
@@ -2017,6 +2092,16 @@
             }
 
             // Form verileri varsa detaylı mesaj oluştur
+            const deliveryData = getDeliveryData();
+            const citySelect = document.getElementById('deliveryCity');
+            const districtSelect = document.getElementById('deliveryDistrict');
+            
+            let fullAddress = '';
+            if (citySelect && districtSelect && deliveryData.address) {
+                const cityText = citySelect.options[citySelect.selectedIndex]?.text || '';
+                const districtText = districtSelect.options[districtSelect.selectedIndex]?.text || '';
+                fullAddress = `${deliveryData.address}, ${districtText}/${cityText}`;
+            }
             const customerTheme = document.getElementById('customerTheme')?.value || 'default';
             const themeSelect = document.getElementById('customerTheme');
             const themeText = themeSelect ? themeSelect.options[themeSelect.selectedIndex].text : 'Varsayılan';
@@ -2033,7 +2118,12 @@
             let message = `🏷️ *QR Sticker Siparişi*\n\n`;
             message += `👤 *Ad Soyad:* ${customerName}\n`;
             message += `📱 *Telefon:* ${customerPhone}\n`;
-            message += `📍 *Adres:* ${customerAddress}\n`;
+            if (fullAddress) {
+                message += `\n� *Teslimat Bilgileri:*\n`;
+                message += `�📍 *Adres:* ${fullAddress}\n`;
+                if (deliveryData.name) message += `👨‍💼 *Alıcı:* ${deliveryData.name}\n`;
+                if (deliveryData.phone) message += `📞 *Alıcı Tel:* ${deliveryData.phone}\n`;
+            }
             if (customerBio) message += `📝 *Bio:* ${customerBio}\n`;
             message += `🎨 *Tema:* ${themeText}\n`;
             if (socialMedia.length > 0) {
@@ -2138,6 +2228,64 @@
             setTimeout(() => {
                 previewElement.style.transform = 'scale(1)';
             }, 150);
+        }
+
+        // City-District Management
+        const districtData = {
+            istanbul: ['Adalar', 'Arnavutköy', 'Ataşehir', 'Avcılar', 'Bağcılar', 'Bahçelievler', 'Bakırköy', 'Başakşehir', 'Bayrampaşa', 'Beşiktaş', 'Beykoz', 'Beylikdüzü', 'Beyoğlu', 'Büyükçekmece', 'Çatalca', 'Çekmeköy', 'Esenler', 'Esenyurt', 'Eyüpsultan', 'Fatih', 'Gaziosmanpaşa', 'Güngören', 'Kadıköy', 'Kağıthane', 'Kartal', 'Küçükçekmece', 'Maltepe', 'Pendik', 'Sancaktepe', 'Sarıyer', 'Silivri', 'Sultanbeyli', 'Sultangazi', 'Şile', 'Şişli', 'Tuzla', 'Ümraniye', 'Üsküdar', 'Zeytinburnu'],
+            ankara: ['Akyurt', 'Altındağ', 'Ayaş', 'Bala', 'Beypazarı', 'Çamlıdere', 'Çankaya', 'Çubuk', 'Elmadağ', 'Etimesgut', 'Evren', 'Gölbaşı', 'Güdül', 'Haymana', 'Kalecik', 'Kazan', 'Keçiören', 'Kızılcahamam', 'Mamak', 'Nallıhan', 'Polatlı', 'Pursaklar', 'Sincan', 'Şereflikoçhisar', 'Yenimahalle'],
+            izmir: ['Aliağa', 'Balçova', 'Bayındır', 'Bayraklı', 'Bergama', 'Beydağ', 'Bornova', 'Buca', 'Çeşme', 'Çiğli', 'Dikili', 'Foça', 'Gaziemir', 'Güzelbahçe', 'Karabağlar', 'Karaburun', 'Karşıyaka', 'Kemalpaşa', 'Kınık', 'Kiraz', 'Konak', 'Menderes', 'Menemen', 'Narlıdere', 'Ödemiş', 'Seferihisar', 'Selçuk', 'Tire', 'Torbalı', 'Urla'],
+            bursa: ['Büyükorhan', 'Gemlik', 'Gürsu', 'Harmancık', 'İnegöl', 'İznik', 'Karacabey', 'Keles', 'Kestel', 'Mudanya', 'Mustafakemalpaşa', 'Nilüfer', 'Orhaneli', 'Orhangazi', 'Osmangazi', 'Yenişehir', 'Yıldırım'],
+            antalya: ['Akseki', 'Aksu', 'Alanya', 'Demre', 'Döşemealtı', 'Elmalı', 'Finike', 'Gazipaşa', 'Gündoğmuş', 'İbradı', 'Kaş', 'Kemer', 'Kepez', 'Konyaaltı', 'Korkuteli', 'Kumluca', 'Manavgat', 'Muratpaşa', 'Serik'],
+            adana: ['Aladağ', 'Ceyhan', 'Çukurova', 'Feke', 'İmamoğlu', 'Karaisalı', 'Karataş', 'Kozan', 'Pozantı', 'Saimbeyli', 'Sarıçam', 'Seyhan', 'Tufanbeyli', 'Yumurtalık', 'Yüreğir'],
+            konya: ['Ahırlı', 'Akören', 'Akşehir', 'Altınekin', 'Beyşehir', 'Bozkır', 'Cihanbeyli', 'Çeltik', 'Çumra', 'Derbent', 'Derebucak', 'Doğanhisar', 'Emirgazi', 'Ereğli', 'Güneysinir', 'Hadim', 'Halkapınar', 'Hüyük', 'Ilgın', 'Kadınhanı', 'Karapınar', 'Karatay', 'Kulu', 'Meram', 'Selçuklu', 'Seydişehir', 'Taşkent', 'Tuzlukçu', 'Yalıhüyük', 'Yunak'],
+            sanliurfa: ['Akçakale', 'Birecik', 'Bozova', 'Ceylanpınar', 'Eyyübiye', 'Haliliye', 'Harran', 'Hilvan', 'Karaköprü', 'Siverek', 'Suruç', 'Viranşehir'],
+            gaziantep: ['Araban', 'İslahiye', 'Karkamış', 'Nizip', 'Nurdağı', 'Oğuzeli', 'Şahinbey', 'Şehitkamil', 'Yavuzeli'],
+            kocaeli: ['Başiskele', 'Çayırova', 'Darıca', 'Derince', 'Dilovası', 'Gebze', 'Gölcük', 'İzmit', 'Kandıra', 'Karamürsel', 'Kartepe', 'Körfez'],
+            mersin: ['Akdeniz', 'Anamur', 'Aydıncık', 'Bozyazı', 'Çamlıyayla', 'Erdemli', 'Gülnar', 'Mezitli', 'Mut', 'Silifke', 'Tarsus', 'Toroslar', 'Yenişehir'],
+            diyarbakir: ['Bağlar', 'Bismil', 'Çermik', 'Çınar', 'Çüngüş', 'Dicle', 'Eğil', 'Ergani', 'Hani', 'Hazro', 'Kayapınar', 'Kocaköy', 'Kulp', 'Lice', 'Silvan', 'Sur', 'Yenişehir'],
+            hatay: ['Altınözü', 'Antakya', 'Arsuz', 'Belen', 'Defne', 'Dörtyol', 'Erzin', 'Hassa', 'İskenderun', 'Kırıkhan', 'Kumlu', 'Payas', 'Reyhanlı', 'Samandağ', 'Yayladağı'],
+            manisa: ['Ahmetli', 'Akhisar', 'Alaşehir', 'Demirci', 'Gölmarmara', 'Gördes', 'Kırkağaç', 'Köprübaşı', 'Kula', 'Salihli', 'Sarıgöl', 'Saruhanlı', 'Selendi', 'Soma', 'Şehzadeler', 'Turgutlu', 'Yunusemre'],
+            kayseri: ['Akkışla', 'Bünyan', 'Develi', 'Felahiye', 'Hacılar', 'İncesu', 'Kocasinan', 'Melikgazi', 'Özvatan', 'Pınarbaşı', 'Sarıoğlan', 'Sarız', 'Talas', 'Tomarza', 'Yahyalı', 'Yeşilhisar'],
+            samsun: ['19 Mayıs', 'Alaçam', 'Asarcık', 'Atakum', 'Ayvacık', 'Bafra', 'Canik', 'Çarşamba', 'Havza', 'İlkadım', 'Kavak', 'Ladik', 'Ondokuzmayıs', 'Salıpazarı', 'Tekkeköy', 'Terme', 'Vezirköprü', 'Yakakent'],
+            balikesir: ['Ayvalık', 'Balya', 'Bandırma', 'Bigadiç', 'Burhaniye', 'Dursunbey', 'Edremit', 'Erdek', 'Gömeç', 'Gönen', 'Havran', 'İvrindi', 'Karesi', 'Kepsut', 'Manyas', 'Marmara', 'Susurluk', 'Şındırgı'],
+            kahramanmaras: ['Afşin', 'Andırın', 'Çağlayancerit', 'Dulkadiroğlu', 'Ekinözü', 'Elbistan', 'Göksun', 'Nurhak', 'Onikişubat', 'Pazarcık', 'Türkoğlu'],
+            van: ['Bahçesaray', 'Başkale', 'Çaldıran', 'Çatak', 'Edremit', 'Erciş', 'Gevaş', 'Gürpınar', 'İpekyolu', 'Muradiye', 'Özalp', 'Saray', 'Tuşba'],
+            denizli: ['Acıpayam', 'Babadağ', 'Baklan', 'Bekilli', 'Beyağaç', 'Bozkurt', 'Buldan', 'Çal', 'Çameli', 'Çardak', 'Çivril', 'Güney', 'Honaz', 'Kale', 'Merkezefendi', 'Pamukkale', 'Sarayköy', 'Serinhisar', 'Tavas']
+        };
+
+        function updateDistricts() {
+            const citySelect = document.getElementById('deliveryCity');
+            const districtSelect = document.getElementById('deliveryDistrict');
+            
+            const selectedCity = citySelect.value;
+            
+            // İlçe seçimini sıfırla
+            districtSelect.innerHTML = '<option value="">İlçe seçiniz</option>';
+            
+            if (selectedCity && districtData[selectedCity]) {
+                // İlçeleri ekle
+                districtData[selectedCity].forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.toLowerCase().replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c');
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+                
+                districtSelect.disabled = false;
+            } else {
+                districtSelect.disabled = true;
+            }
+        }
+
+        function getDeliveryData() {
+            return {
+                city: document.getElementById('deliveryCity').value,
+                district: document.getElementById('deliveryDistrict').value,
+                address: document.getElementById('deliveryAddress').value,
+                name: document.getElementById('deliveryName').value,
+                phone: document.getElementById('deliveryPhone').value
+            };
         }
 
         // Social Media Management Functions
@@ -2415,6 +2563,7 @@
             // Initialize social media handlers
             initSocialMediaHandlers();
             
+            // Handle customer phone input
             const phoneInput = document.getElementById('customerPhone');
             if (phoneInput) {
                 phoneInput.addEventListener('focus', function() {
@@ -2438,6 +2587,33 @@
                     }
                 });
             }
+
+            // Handle delivery phone input (will be available after step 2)
+            setTimeout(() => {
+                const deliveryPhoneInput = document.getElementById('deliveryPhone');
+                if (deliveryPhoneInput) {
+                    deliveryPhoneInput.addEventListener('focus', function() {
+                        if (this.value === '' || this.value === '+90') {
+                            this.value = '+90 ';
+                            this.setSelectionRange(4, 4);
+                        }
+                    });
+
+                    deliveryPhoneInput.addEventListener('keydown', function(e) {
+                        // Backspace ile +90 kısmını silmeyi engelle
+                        if (e.key === 'Backspace' && this.selectionStart <= 4) {
+                            e.preventDefault();
+                            this.setSelectionRange(4, 4);
+                        }
+
+                        // Delete ile +90 kısmını silmeyi engelle
+                        if (e.key === 'Delete' && this.selectionStart < 4) {
+                            e.preventDefault();
+                            this.setSelectionRange(4, 4);
+                        }
+                    });
+                }
+            }, 1000);
         });
 
         // Initialize theme preview when modal opens
