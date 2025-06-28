@@ -95,6 +95,19 @@ if ($result) {
             justify-content: center;
             color: #6c757d;
         }
+        
+        /* IBAN display formatting */
+        .iban-display {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: left !important;
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
     </style>
     <?php $csrf_token = Utilities::generateCsrfToken(); ?>
     <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token); ?>">
@@ -434,7 +447,7 @@ if ($result) {
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
                         <p><strong>Telefon:</strong> <span id="view_phone"></span></p>
-                        <p><strong>İban:</strong> <span id="view_iban"></span></p>
+                        <p><strong>İban:</strong> <span id="view_iban" style="font-family: monospace; text-align: left; display: inline-block;"></span></p>
                         <p><strong>Kan Grubu:</strong> <span id="view_blood_type"></span></p>
                         <p><strong>Tema:</strong> <span id="view_theme"></span></p>
                         <div id="view_socialLinks"></div>
@@ -613,7 +626,11 @@ if ($result) {
                     $('#view_name').text(res.profile.name);
                     $('#view_bio').text(res.profile.bio);
                     $('#view_phone').text(res.profile.phone);
-                    $('#view_iban').text(res.profile.iban || 'Belirtilmemiş');
+                    
+                    // IBAN'ı özel formatlama ile göster
+                    const ibanValue = res.profile.iban || 'Belirtilmemiş';
+                    $('#view_iban').text(ibanValue).addClass('iban-display');
+                    
                     $('#view_blood_type').text(res.profile.blood_type || 'Belirtilmemiş');
                     $('#view_theme').text(res.profile.theme);
                     
