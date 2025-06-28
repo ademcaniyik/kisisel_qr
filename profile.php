@@ -550,60 +550,39 @@ if (!$theme) {
                 <!-- Sosyal medya linkleri yok -->
             <?php endif; ?>
 
-            <!-- IBAN ve Kan Grubu Bilgileri - Sade Modern Tasarım -->
+            <!-- IBAN ve Kan Grubu - Ultra Minimal Siyah-Beyaz Tasarım -->
             <?php if ($profile['iban'] || $profile['blood_type']): ?>
-                <div class="additional-info" style="margin-top: 24px;">
+                <div class="minimal-info" style="margin-top: 20px; border-top: 1px solid #f0f0f0; padding-top: 20px;">
 
                     <?php if ($profile['iban']): ?>
-                        <!-- İban Bilgisi - Sade Tasarım -->
-                        <div class="info-card iban-card" style="background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; padding: 16px; margin-bottom: 16px; transition: all 0.2s ease; cursor: pointer;" 
-                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" 
-                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div style="flex: 1;">
-                                    <div style="color: #6c757d; font-size: 12px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-                                        <i class="fas fa-university" style="margin-right: 6px;"></i>IBAN
-                                    </div>
-                                    <div id="iban-number" style="color: #333; font-family: 'Courier New', monospace; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; word-break: break-all; line-height: 1.4;">
-                                        <?php 
-                                        $iban = $profile['iban'];
-                                        // İban'ı 4'lü gruplar halinde düzenle
-                                        if (strlen($iban) > 4) {
-                                            $formattedIban = implode(' ', str_split($iban, 4));
-                                            echo htmlspecialchars($formattedIban);
-                                        } else {
-                                            echo htmlspecialchars($iban);
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                                <button onclick="copyIban()" style="background: #007bff; color: white; border: none; border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.2s ease; margin-left: 12px; box-shadow: 0 2px 4px rgba(0,123,255,0.3);" 
-                                        onmouseover="this.style.background='#0056b3'; this.style.transform='scale(1.05)'" 
-                                        onmouseout="this.style.background='#007bff'; this.style.transform='scale(1)'"
-                                        title="IBAN'ı Kopyala">
-                                    <i class="fas fa-copy" style="font-size: 14px;"></i>
-                                </button>
+                        <!-- IBAN - Tek Satır Ultra Sade -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 12px 0; border-bottom: 1px solid #f8f8f8;">
+                            <div style="flex: 1; min-width: 0;">
+                                <span style="color: #888; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 8px;">IBAN</span>
+                                <span id="iban-number" style="color: #000; font-family: 'SF Mono', monospace; font-size: 14px; font-weight: 500;">
+                                    <?php echo htmlspecialchars($profile['iban']); ?>
+                                </span>
                             </div>
+                            <button onclick="copyIban()" style="background: none; border: 1px solid #ddd; color: #666; border-radius: 4px; padding: 6px 8px; cursor: pointer; transition: all 0.2s ease; font-size: 11px; margin-left: 12px;" 
+                                    onmouseover="this.style.color='#000'; this.style.borderColor='#999'" 
+                                    onmouseout="this.style.color='#666'; this.style.borderColor='#ddd'"
+                                    title="IBAN Kopyala">
+                                <i class="fas fa-copy" style="font-size: 10px;"></i>
+                            </button>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($profile['blood_type']): ?>
-                        <!-- Kan Grubu Bilgisi - Sade Tasarım -->
-                        <div class="info-card blood-card" style="background: #fff5f5; border: 2px solid #fed7d7; border-radius: 12px; padding: 16px; transition: all 0.2s ease;"
-                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(229,62,62,0.1)'" 
-                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                            <div style="display: flex; align-items: center;">
-                                <div style="background: #e53e3e; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
-                                    <i class="fas fa-heartbeat" style="font-size: 16px;"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="color: #a0a0a0; font-size: 12px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
-                                        Kan Grubu
-                                    </div>
-                                    <div style="color: #e53e3e; font-size: 20px; font-weight: 700; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;">
-                                        <?php echo htmlspecialchars($profile['blood_type']); ?>
-                                    </div>
-                                </div>
+                        <!-- Kan Grubu - Ultra Sade -->
+                        <div style="display: flex; align-items: center; margin-bottom: 16px; padding: 12px 0;">
+                            <div style="background: #f8f8f8; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                <i class="fas fa-tint" style="font-size: 12px; color: #666;"></i>
+                            </div>
+                            <div>
+                                <span style="color: #888; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 8px;">Kan Grubu</span>
+                                <span style="color: #000; font-size: 15px; font-weight: 600;">
+                                    <?php echo htmlspecialchars($profile['blood_type']); ?>
+                                </span>
                             </div>
                         </div>
                     <?php endif; ?>
