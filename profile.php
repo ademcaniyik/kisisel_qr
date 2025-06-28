@@ -473,6 +473,10 @@ if (!$theme) {
             color: var(--text-color);
             font-family: 'Courier New', monospace;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
         }
 
         .blood-info .info-label {
@@ -530,7 +534,11 @@ if (!$theme) {
             }
 
             .info-value {
-                font-size: 1rem;
+                font-size: 0.9rem;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .blood-info .info-label {
@@ -545,6 +553,32 @@ if (!$theme) {
                 width: 32px;
                 height: 32px;
                 font-size: 0.8rem;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .info-item {
+                padding: 0.75rem;
+            }
+
+            .info-icon {
+                width: 36px;
+                height: 36px;
+                margin-right: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .info-value {
+                font-size: 0.85rem;
+                letter-spacing: 0.2px;
+            }
+
+            .info-action {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -702,7 +736,7 @@ if (!$theme) {
                             </div>
 
                             <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #333;">
-                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">İban Numarası</div>
+                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">IBAN</div>
                                 <div class="info-value" style="display: flex; align-items: center; gap: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     <?php echo htmlspecialchars($profile['iban']); ?>
                                     <span class="info-action" style="cursor: pointer; color: #007bff; transition: color 0.3s;"
