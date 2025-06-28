@@ -929,7 +929,25 @@
 
         /* Platform specific colors */
         .platform-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
-        .platform-twitter { background: #1da1f2; }
+        .platform-twitter { 
+            background: #000000; 
+            color: #ffffff;
+        }
+        
+        .platform-twitter:hover { 
+            background: #333333; 
+        }
+        
+        .platform-twitter i {
+            position: relative;
+            font-style: normal;
+        }
+        
+        .platform-twitter i:before {
+            content: "𝕏";
+            font-weight: bold;
+            font-size: 1.1em;
+        }
         .platform-linkedin { background: #0077b5; }
         .platform-facebook { background: #1877f2; }
         .platform-youtube { background: #ff0000; }
@@ -2306,7 +2324,7 @@
             },
             twitter: {
                 name: 'X',
-                icon: 'fab fa-x-twitter',
+                icon: 'fas fa-times',
                 prefix: '@',
                 baseUrl: 'https://x.com/',
                 placeholder: 'kullanici_adi',
