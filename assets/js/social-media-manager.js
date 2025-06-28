@@ -7,7 +7,7 @@ const platforms = {
     },
     x: {
         name: 'X',
-        icon: 'fa-brands fa-x-twitter',
+        icon: 'fab fa-twitter',
         placeholder: 'https://x.com/username'
     },
     instagram: {

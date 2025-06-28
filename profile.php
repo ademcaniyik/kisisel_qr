@@ -70,7 +70,7 @@ function getSocialIcon($platform)
 {
     $icons = [
         'facebook' => 'fab fa-facebook-f',
-        'x' => 'fa-brands fa-x-twitter',
+        'x' => 'fab fa-twitter',
         'instagram' => 'fab fa-instagram',
         'linkedin' => 'fab fa-linkedin-in',
         'github' => 'fab fa-github',
@@ -413,12 +413,12 @@ if (!$theme) {
 
         /* X Platform Icon Styling */
         .social-link.x {
-            background: #000000 !important;
+            background: #1da1f2 !important;
             color: #ffffff !important;
         }
         
         .social-link.x:hover {
-            background: #333333 !important;
+            background: #0d8bd9 !important;
             color: #ffffff !important;
             transform: translateY(-2px);
         }

@@ -930,12 +930,22 @@
         /* Platform specific colors */
         .platform-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
         .platform-x { 
-            background: #000000; 
+            background: #1da1f2; 
             color: #ffffff;
         }
         
         .platform-x:hover { 
-            background: #333333; 
+            background: #0d8bd9; 
+        }
+
+        /* X Platform Icon Color */
+        .platform-x i {
+            color: #ffffff !important;
+        }
+
+        /* X Platform Button Icon Color */
+        .social-platform-btn[data-platform="x"] i {
+            color: #1da1f2 !important;
         }
         .platform-linkedin { background: #0077b5; }
         .platform-facebook { background: #1877f2; }
@@ -1352,7 +1362,7 @@
                                             </div>
                                             <div class="col-6 col-md-4 col-lg-3">
                                                 <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x">
-                                                    <i class="fa-brands fa-x-twitter text-dark"></i>
+                                                    <i class="fab fa-twitter" style="color: #1da1f2;"></i>
                                                     <span class="d-block small">X</span>
                                                 </button>
                                             </div>
@@ -1499,7 +1509,7 @@
                                                         <span>Instagram</span>
                                                     </div>
                                                     <div class="preview-social-btn">
-                                                        <i class="fa-brands fa-x-twitter"></i>
+                                                        <i class="fab fa-twitter"></i>
                                                         <span>X</span>
                                                     </div>
                                                     <div class="preview-social-btn">
@@ -1712,7 +1722,7 @@
                         <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="me-3"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -2313,7 +2323,7 @@
             },
             x: {
                 name: 'X',
-                icon: 'fa-brands fa-x-twitter',
+                icon: 'fab fa-twitter',
                 prefix: '@',
                 baseUrl: 'https://x.com/',
                 placeholder: 'kullanici_adi',

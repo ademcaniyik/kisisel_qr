@@ -109,6 +109,135 @@ if ($result) {
             border: 1px solid #dee2e6 !important;
             direction: ltr !important;
         }
+        
+        /* Modern Social Media Platform Buttons */
+        .social-platforms-grid .social-platform-btn {
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .social-platforms-grid .social-platform-btn:hover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.15);
+        }
+        
+        .social-platforms-grid .social-platform-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+        
+        .social-platforms-grid .social-platform-btn.selected {
+            border-color: #28a745;
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .social-platforms-grid .social-platform-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Selected Social Media Items */
+        .selected-social-medias .social-media-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .selected-social-medias .social-media-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .selected-social-medias .platform-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .selected-social-medias .platform-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .selected-social-medias .platform-name {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .selected-social-medias .remove-platform {
+            margin-left: auto;
+            border: none;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .selected-social-medias .remove-platform:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+        
+        .selected-social-medias .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.2s;
+        }
+        
+        .selected-social-medias .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+        }
+        
+        /* Platform specific colors */
+        .platform-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; }
+        .platform-x { background: #1da1f2; color: white; }
+        .platform-linkedin { background: #0077b5; color: white; }
+        .platform-facebook { background: #1877f2; color: white; }
+        .platform-youtube { background: #ff0000; color: white; }
+        .platform-tiktok { background: #000000; color: white; }
+        .platform-whatsapp { background: #25d366; color: white; }
+        .platform-website { background: #17a2b8; color: white; }
+        .platform-snapchat { background: #fffc00; color: #000; }
+        .platform-discord { background: #5865f2; color: white; }
+        .platform-telegram { background: #0088cc; color: white; }
+        .platform-twitch { background: #9146ff; color: white; }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .social-platforms-grid .social-platform-btn {
+                height: 70px;
+            }
+            
+            .social-platforms-grid .social-platform-btn i {
+                font-size: 1.3rem;
+            }
+        }
     </style>
     <?php $csrf_token = Utilities::generateCsrfToken(); ?>
     <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token); ?>">
@@ -243,13 +372,93 @@ if ($result) {
                             <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                         </div>
                         <div class="mb-3">
-                            <label for="socialLinks" class="form-label">Sosyal Medya Bağlantıları</label>
-                            <div id="socialLinksContainer">
-                                <!-- Sosyal medya bağlantıları buraya dinamik olarak eklenecek -->
+                            <label class="form-label">Sosyal Medya Hesapları (isteğe bağlı)</label>
+                            
+                            <!-- Sosyal Medya Platform Seçimi -->
+                            <div class="card border-0 bg-light mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
+                                    <div class="row g-2 social-platforms-grid">
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram" data-container="socialLinksContainer">
+                                                <i class="fab fa-instagram text-danger"></i>
+                                                <span class="d-block small">Instagram</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x" data-container="socialLinksContainer">
+                                                <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                                                <span class="d-block small">X</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin" data-container="socialLinksContainer">
+                                                <i class="fab fa-linkedin text-primary"></i>
+                                                <span class="d-block small">LinkedIn</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook" data-container="socialLinksContainer">
+                                                <i class="fab fa-facebook text-primary"></i>
+                                                <span class="d-block small">Facebook</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube" data-container="socialLinksContainer">
+                                                <i class="fab fa-youtube text-danger"></i>
+                                                <span class="d-block small">YouTube</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok" data-container="socialLinksContainer">
+                                                <i class="fab fa-tiktok text-dark"></i>
+                                                <span class="d-block small">TikTok</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp" data-container="socialLinksContainer">
+                                                <i class="fab fa-whatsapp text-success"></i>
+                                                <span class="d-block small">WhatsApp</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website" data-container="socialLinksContainer">
+                                                <i class="fas fa-globe text-info"></i>
+                                                <span class="d-block small">Website</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat" data-container="socialLinksContainer">
+                                                <i class="fab fa-snapchat text-warning"></i>
+                                                <span class="d-block small">Snapchat</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord" data-container="socialLinksContainer">
+                                                <i class="fab fa-discord text-primary"></i>
+                                                <span class="d-block small">Discord</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram" data-container="socialLinksContainer">
+                                                <i class="fab fa-telegram text-info"></i>
+                                                <span class="d-block small">Telegram</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch" data-container="socialLinksContainer">
+                                                <i class="fab fa-twitch text-purple"></i>
+                                                <span class="d-block small">Twitch</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addSocialLink()">
-                                <i class="fas fa-plus"></i> Bağlantı Ekle
-                            </button>
+
+                            <!-- Seçilen Sosyal Medya Hesapları -->
+                            <div id="socialLinksContainer" class="selected-social-medias">
+                                <!-- Dinamik olarak eklenecek -->
+                            </div>
                         </div>
                         
                         <!-- İban ve Kan Grubu Alanları -->
@@ -386,11 +595,93 @@ if ($result) {
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_socialLinks" class="form-label">Sosyal Medya Bağlantıları</label>
-                            <div id="edit_socialLinksContainer"></div>
-                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addSocialLink('edit_socialLinksContainer')">
-                                <i class="fas fa-plus"></i> Bağlantı Ekle
-                            </button>
+                            <label class="form-label">Sosyal Medya Hesapları (isteğe bağlı)</label>
+                            
+                            <!-- Sosyal Medya Platform Seçimi -->
+                            <div class="card border-0 bg-light mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
+                                    <div class="row g-2 social-platforms-grid">
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-instagram text-danger"></i>
+                                                <span class="d-block small">Instagram</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                                                <span class="d-block small">X</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-linkedin text-primary"></i>
+                                                <span class="d-block small">LinkedIn</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-facebook text-primary"></i>
+                                                <span class="d-block small">Facebook</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-youtube text-danger"></i>
+                                                <span class="d-block small">YouTube</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-tiktok text-dark"></i>
+                                                <span class="d-block small">TikTok</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-whatsapp text-success"></i>
+                                                <span class="d-block small">WhatsApp</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website" data-container="edit_socialLinksContainer">
+                                                <i class="fas fa-globe text-info"></i>
+                                                <span class="d-block small">Website</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-snapchat text-warning"></i>
+                                                <span class="d-block small">Snapchat</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-discord text-primary"></i>
+                                                <span class="d-block small">Discord</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-telegram text-info"></i>
+                                                <span class="d-block small">Telegram</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch" data-container="edit_socialLinksContainer">
+                                                <i class="fab fa-twitch text-purple"></i>
+                                                <span class="d-block small">Twitch</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seçilen Sosyal Medya Hesapları -->
+                            <div id="edit_socialLinksContainer" class="selected-social-medias">
+                                <!-- Dinamik olarak eklenecek -->
+                            </div>
                         </div>
                         
                         <!-- İban ve Kan Grubu Alanları - Düzenleme -->
@@ -551,17 +842,40 @@ if ($result) {
                         photoContainer.empty();
                     }
                     
-                    // Sosyal medya linklerini doldur
+                    // Sosyal medya linklerini doldur - Modern versiyon
                     let links = [];
-                    try { links = JSON.parse(res.profile.social_links); } catch(e) {}
+                    try { 
+                        links = JSON.parse(res.profile.social_links); 
+                    } catch(e) {
+                        console.log('Social links parse error:', e);
+                    }
+                    
                     // Dizi değilse objeden diziye çevir
                     if (!Array.isArray(links) && typeof links === 'object' && links !== null) {
                         links = Object.entries(links).map(([platform, url]) => ({ platform, url }));
                     }
+                    
+                    // Container'ı temizle
                     const container = $('#edit_socialLinksContainer');
                     container.html('');
+                    
+                    // Tüm platform butonlarını aktif yap
+                    $('.social-platform-btn[data-container="edit_socialLinksContainer"]')
+                        .removeClass('disabled')
+                        .prop('disabled', false);
+                    
+                    // Mevcut linkleri ekle
                     if (Array.isArray(links) && links.length > 0) {
-                        links.forEach(link => addSocialLink('edit_socialLinksContainer', link.platform, link.url));
+                        links.forEach(link => {
+                            if (link.platform && link.url && socialMediaPlatforms[link.platform]) {
+                                addModernSocialMediaItem(link.platform, link.url, 'edit_socialLinksContainer');
+                                
+                                // Bu platform butonunu disabled yap
+                                $(`.social-platform-btn[data-platform="${link.platform}"][data-container="edit_socialLinksContainer"]`)
+                                    .addClass('disabled')
+                                    .prop('disabled', true);
+                            }
+                        });
                     }
                     $('#editProfileModal').modal('show');
                 } else {
@@ -576,13 +890,17 @@ if ($result) {
     function updateProfile() {
         var form = document.getElementById('editProfileForm');
         var formData = new FormData(form);
-        // Sosyal medya linklerini topla
+        
+        // Modern sosyal medya linklerini topla
         let links = [];
-        $('#edit_socialLinksContainer .input-group').each(function() {
-            let platform = $(this).find('select').val();
+        $('#edit_socialLinksContainer .social-media-item').each(function() {
+            let platform = $(this).data('platform');
             let url = $(this).find('input').val();
-            if (platform && url) links.push({ platform, url });
+            if (platform && url) {
+                links.push({ platform, url });
+            }
         });
+        
         formData.append('social_links', JSON.stringify(links));
         formData.append('action', 'update');
         
@@ -815,6 +1133,253 @@ if ($result) {
             document.body.removeChild(tempInput);
         }
     }
+    
+    // Modern Social Media Management - Admin Panel
+    const socialMediaPlatforms = {
+        instagram: {
+            name: 'Instagram',
+            icon: 'fab fa-instagram',
+            prefix: '@',
+            baseUrl: 'https://instagram.com/',
+            placeholder: 'kullanici_adi',
+            color: 'platform-instagram'
+        },
+        x: {
+            name: 'X',
+            icon: 'fab fa-twitter',
+            prefix: '@',
+            baseUrl: 'https://x.com/',
+            placeholder: 'kullanici_adi',
+            color: 'platform-x'
+        },
+        linkedin: {
+            name: 'LinkedIn',
+            icon: 'fab fa-linkedin',
+            prefix: '',
+            baseUrl: 'https://linkedin.com/in/',
+            placeholder: 'profil-adi',
+            color: 'platform-linkedin'
+        },
+        facebook: {
+            name: 'Facebook',
+            icon: 'fab fa-facebook',
+            prefix: '',
+            baseUrl: 'https://facebook.com/',
+            placeholder: 'profil.adi',
+            color: 'platform-facebook'
+        },
+        youtube: {
+            name: 'YouTube',
+            icon: 'fab fa-youtube',
+            prefix: '',
+            baseUrl: 'https://youtube.com/@',
+            placeholder: 'kanal_adi',
+            color: 'platform-youtube'
+        },
+        tiktok: {
+            name: 'TikTok',
+            icon: 'fab fa-tiktok',
+            prefix: '@',
+            baseUrl: 'https://tiktok.com/@',
+            placeholder: 'kullanici_adi',
+            color: 'platform-tiktok'
+        },
+        whatsapp: {
+            name: 'WhatsApp',
+            icon: 'fab fa-whatsapp',
+            prefix: '+',
+            baseUrl: 'https://wa.me/',
+            placeholder: '905551234567',
+            color: 'platform-whatsapp'
+        },
+        website: {
+            name: 'Website',
+            icon: 'fas fa-globe',
+            prefix: '',
+            baseUrl: '',
+            placeholder: 'https://website.com',
+            color: 'platform-website'
+        },
+        snapchat: {
+            name: 'Snapchat',
+            icon: 'fab fa-snapchat',
+            prefix: '@',
+            baseUrl: 'https://snapchat.com/add/',
+            placeholder: 'kullanici_adi',
+            color: 'platform-snapchat'
+        },
+        discord: {
+            name: 'Discord',
+            icon: 'fab fa-discord',
+            prefix: '',
+            baseUrl: 'https://discord.gg/',
+            placeholder: 'sunucu_davet_kodu',
+            color: 'platform-discord'
+        },
+        telegram: {
+            name: 'Telegram',
+            icon: 'fab fa-telegram',
+            prefix: '@',
+            baseUrl: 'https://t.me/',
+            placeholder: 'kullanici_adi',
+            color: 'platform-telegram'
+        },
+        twitch: {
+            name: 'Twitch',
+            icon: 'fab fa-twitch',
+            prefix: '',
+            baseUrl: 'https://twitch.tv/',
+            placeholder: 'kanal_adi',
+            color: 'platform-twitch'
+        }
+    };
+
+    // Modern sosyal medya platform butonları için event listener
+    $(document).on('click', '.social-platform-btn', function() {
+        const platform = $(this).data('platform');
+        const container = $(this).data('container');
+        
+        // Platform zaten ekli mi kontrol et
+        if ($(`#${container} .social-media-item[data-platform="${platform}"]`).length > 0) {
+            showToast('Bu platform zaten eklenmiş!', 'warning');
+            return;
+        }
+        
+        addModernSocialMediaItem(platform, '', container);
+        
+        // Butonu disabled yap
+        $(this).addClass('disabled').prop('disabled', true);
+    });
+
+    // Modern sosyal medya item ekleme fonksiyonu
+    function addModernSocialMediaItem(platformKey, value = '', containerId = 'socialLinksContainer') {
+        const platform = socialMediaPlatforms[platformKey];
+        if (!platform) return;
+        
+        const container = $(`#${containerId}`);
+        const itemId = `social-${platformKey}-${Date.now()}`;
+        
+        const itemHtml = `
+            <div class="social-media-item" data-platform="${platformKey}" id="${itemId}">
+                <div class="platform-header">
+                    <div class="platform-icon ${platform.color}">
+                        <i class="${platform.icon}"></i>
+                    </div>
+                    <span class="platform-name">${platform.name}</span>
+                    <button type="button" class="remove-platform" onclick="removeModernSocialMediaItem('${itemId}', '${platformKey}', '${containerId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text">${platform.prefix}</span>
+                    <input type="text" class="form-control" 
+                           placeholder="${platform.placeholder}" 
+                           value="${value}"
+                           data-platform="${platformKey}">
+                </div>
+            </div>
+        `;
+        
+        container.append(itemHtml);
+    }
+
+    // Modern sosyal medya item silme fonksiyonu
+    function removeModernSocialMediaItem(itemId, platformKey, containerId) {
+        $(`#${itemId}`).remove();
+        
+        // Platform butonunu tekrar aktif yap
+        $(`.social-platform-btn[data-platform="${platformKey}"][data-container="${containerId}"]`)
+            .removeClass('disabled')
+            .prop('disabled', false);
+    }
+
+    // Profil oluşturma fonksiyonu güncelleme
+    function createProfile() {
+        var form = document.getElementById('createProfileForm');
+        var formData = new FormData(form);
+        
+        // Modern sosyal medya linklerini topla
+        let links = [];
+        $('#socialLinksContainer .social-media-item').each(function() {
+            let platform = $(this).data('platform');
+            let url = $(this).find('input').val();
+            if (platform && url) {
+                links.push({ platform, url });
+            }
+        });
+        
+        formData.append('social_links', JSON.stringify(links));
+        formData.append('action', 'create');
+        
+        $.ajax({
+            url: BASE_PATH + '/admin/api/profile.php',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+                    showToast('Profil başarıyla oluşturuldu!', 'success');
+                    $('#createProfileModal').modal('hide');
+                    location.reload();
+                } else {
+                    showToast('Profil oluşturulurken bir hata oluştu: ' + (res.message || ''), 'danger');
+                }
+            },
+            error: function() {
+                showToast('Sunucu hatası!', 'danger');
+            }
+        });
+    }        // Eski addSocialLink fonksiyonunu modern versiyonla değiştirme
+        function addSocialLink(containerId = 'socialLinksContainer', platform = '', url = '') {
+            // Eğer modern versiyon kullanılıyorsa, modern fonksiyonu çağır
+            if (platform && socialMediaPlatforms[platform]) {
+                addModernSocialMediaItem(platform, url, containerId);
+                return;
+            }
+            
+            // Eski versiyon için fallback - boş platform seçimi
+            const platforms = Object.keys(socialMediaPlatforms);
+            const defaultPlatform = platforms[0];
+            addModernSocialMediaItem(defaultPlatform, url, containerId);
+        }
+
+        // Modal temizleme fonksiyonları
+        $('#createProfileModal').on('hidden.bs.modal', function() {
+            // Form temizle
+            $('#createProfileForm')[0].reset();
+            
+            // Sosyal medya container'ını temizle
+            $('#socialLinksContainer').html('');
+            
+            // Tüm platform butonlarını aktif yap
+            $('.social-platform-btn[data-container="socialLinksContainer"]')
+                .removeClass('disabled')
+                .prop('disabled', false);
+        });
+
+        $('#editProfileModal').on('hidden.bs.modal', function() {
+            // Sosyal medya container'ını temizle
+            $('#edit_socialLinksContainer').html('');
+            
+            // Tüm platform butonlarını aktif yap
+            $('.social-platform-btn[data-container="edit_socialLinksContainer"]')
+                .removeClass('disabled')
+                .prop('disabled', false);
+        });
+
+        // Sayfa yüklendiğinde DataTable'ı başlat
+        $(document).ready(function() {
+            $('#profilesTable').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/tr.json'
+                },
+                order: [[4, 'desc']], // Son güncelleme tarihine göre sırala
+                pageLength: 25,
+                responsive: true
+            });
+        });
     </script>
 </body>
 </html>
