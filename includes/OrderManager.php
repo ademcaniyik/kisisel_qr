@@ -63,7 +63,7 @@ class OrderManager {
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : 'bank_transfer';
             
             $stmt->bind_param(
-                "sssisssiidsi",
+                "sssisssidsi",
                 $data['customer_name'],
                 $data['customer_phone'],
                 $data['customer_email'],
@@ -132,7 +132,7 @@ class OrderManager {
         $whatsapp_sent = isset($data['whatsapp_sent']) ? $data['whatsapp_sent'] : true;
         
         $stmt->bind_param(
-            "sssssiids",
+            "sssssisd",
             $data['customer_name'],
             $data['customer_phone'],
             $data['customer_email'],
