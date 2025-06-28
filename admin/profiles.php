@@ -1371,14 +1371,18 @@ if ($result) {
 
         // Sayfa yüklendiğinde DataTable'ı başlat
         $(document).ready(function() {
-            $('#profilesTable').DataTable({
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/tr.json'
-                },
-                order: [[4, 'desc']], // Son güncelleme tarihine göre sırala
-                pageLength: 25,
-                responsive: true
-            });
+            // DataTable'ı başlat - destroy seçeneği ile çakışmaları önle
+            if ($('#profilesTable').length) {
+                $('#profilesTable').DataTable({
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/tr.json'
+                    },
+                    order: [[4, 'desc']], // Son güncelleme tarihine göre sırala
+                    pageLength: 25,
+                    responsive: true,
+                    destroy: true // Çakışmaları önle
+                });
+            }
         });
     </script>
 </body>
