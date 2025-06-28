@@ -599,6 +599,85 @@ if (!$theme) {
                 font-size: 0.7rem;
             }
         }
+
+        /* İban ve Kan Grubu - Enhanced Mobile Responsive */
+        @media (max-width: 768px) {
+            .info-card {
+                padding: 16px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .iban-card .iban-content,
+            .blood-card .blood-content {
+                width: 100%;
+            }
+
+            .iban-number {
+                padding: 10px 12px !important;
+                font-size: 13px !important;
+                word-spacing: 2px !important;
+                letter-spacing: 0.5px !important;
+                line-height: 1.3 !important;
+                overflow-wrap: break-word;
+                word-break: break-all;
+            }
+
+            .blood-type-display {
+                padding: 12px 16px !important;
+                font-size: 24px !important;
+            }
+
+            .iban-icon,
+            .blood-icon {
+                margin-right: 12px !important;
+                padding: 10px !important;
+            }
+
+            .iban-header h4,
+            .blood-header h4 {
+                font-size: 14px !important;
+            }
+
+            .iban-header span,
+            .blood-header span {
+                font-size: 10px !important;
+                padding: 1px 6px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .additional-info {
+                margin-top: 16px !important;
+            }
+
+            .info-card {
+                padding: 14px !important;
+                border-radius: 12px !important;
+            }
+
+            .iban-number {
+                font-size: 12px !important;
+                padding: 8px 10px !important;
+                word-spacing: 1px !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            .blood-type-display {
+                font-size: 20px !important;
+                padding: 10px 12px !important;
+            }
+
+            .iban-icon,
+            .blood-icon {
+                padding: 8px !important;
+                margin-right: 10px !important;
+            }
+
+            .iban-icon i,
+            .blood-icon i {
+                font-size: 18px !important;
+            }
+        }
     </style>
 </head>
 
@@ -725,55 +804,99 @@ if (!$theme) {
                 <!-- Sosyal medya linkleri yok -->
             <?php endif; ?>
 
-            <!-- IBAN ve Kan Grubu Bilgileri - Modern Compact Design -->
+            <!-- IBAN ve Kan Grubu Bilgileri - Enhanced Modern Design -->
             <?php if ($profile['iban'] || $profile['blood_type']): ?>
-                <div class="additional-info">
+                <div class="additional-info" style="margin-top: 24px;">
 
                     <?php if ($profile['iban']): ?>
-                        <!-- İban Bilgisi -->
-                        <div class="info-item iban-info"
+                        <!-- İban Bilgisi - Geliştirilmiş Tasarım -->
+                        <div class="info-card iban-card"
                             onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', '✅ İban kopyalandı!')"
-                            style="display: flex; align-items: center; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25); margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease;"
-                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.35)'"
-                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.25)'">
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;"
+                            onmouseover="this.style.transform='translateY(-4px) scale(1.02)'; this.style.boxShadow='0 20px 40px rgba(102, 126, 234, 0.25)'"
+                            onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 32px rgba(102, 126, 234, 0.15)'">
 
-                            <div class="info-icon" style="margin-right: 12px; font-size: 20px; color: #fff; background: rgba(255,255,255,0.2); padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-credit-card"></i>
-                            </div>
+                            <!-- Background Pattern -->
+                            <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; pointer-events: none;"></div>
 
-                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #fff;">
-                                <div style="display: flex; flex-direction: column; text-align: left;">
-                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px; text-align: left;">IBAN</div>
-                                    <div class="info-value" style="font-weight: 600; font-family: monospace; text-align: left; direction: ltr;">
-                                        <?php echo htmlspecialchars($profile['iban']); ?>
-                                    </div>
+                            <div style="display: flex; align-items: center; position: relative; z-index: 1;">
+                                <div class="iban-icon" style="margin-right: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-university" style="font-size: 24px; color: #fff;"></i>
                                 </div>
-                                <div class="info-action" style="background: rgba(255,255,255,0.2); padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-copy" style="font-size: 12px;"></i>
+
+                                <div class="iban-content" style="flex: 1;">
+                                    <div class="iban-header" style="display: flex; align-items: center; margin-bottom: 8px;">
+                                        <h4 style="color: #fff; font-size: 16px; font-weight: 600; margin: 0; margin-right: 8px;">IBAN</h4>
+                                        <span style="background: rgba(255,255,255,0.3); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500;">Tıkla & Kopyala</span>
+                                    </div>
+                                    
+                                    <div class="iban-number" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 8px;">
+                                        <div style="color: #fff; font-family: 'Courier New', 'SF Mono', Consolas, monospace; font-size: 15px; font-weight: 600; letter-spacing: 1px; word-spacing: 4px; line-height: 1.4; text-align: left; direction: ltr;">
+                                            <?php 
+                                            $iban = $profile['iban'];
+                                            // İban'ı 4'lü gruplar halinde düzenle
+                                            if (strlen($iban) > 4) {
+                                                $formattedIban = chunk_split($iban, 4, ' ');
+                                                echo trim($formattedIban);
+                                            } else {
+                                                echo $iban;
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8); font-size: 12px;">
+                                            <i class="fas fa-shield-alt" style="margin-right: 4px;"></i>
+                                            Güvenli Banka Transferi
+                                        </span>
+                                        <div style="color: #fff; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 12px;">
+                                            <i class="fas fa-copy" style="margin-right: 4px;"></i>
+                                            Kopyala
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     <?php endif; ?>
+
                     <?php if ($profile['blood_type']): ?>
-                        <!-- Kan Grubu Bilgisi -->
-                        <div class="info-item blood-group-info"
-                            style="display: flex; align-items: center; padding: 12px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25); cursor: pointer; transition: all 0.3s ease;"
-                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 107, 0.35)'"
-                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 107, 0.25)'">
+                        <!-- Kan Grubu Bilgisi - Geliştirilmiş Tasarım -->
+                        <div class="info-card blood-card"
+                            style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.15); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;"
+                            onmouseover="this.style.transform='translateY(-4px) scale(1.02)'; this.style.boxShadow='0 20px 40px rgba(255, 107, 107, 0.25)'"
+                            onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 32px rgba(255, 107, 107, 0.15)'">
 
-                            <div class="info-icon" style="margin-right: 12px; font-size: 20px; color: #fff; background: rgba(255,255,255,0.2); padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-heartbeat"></i>
-                            </div>
+                            <!-- Background Pattern -->
+                            <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 15px 15px; pointer-events: none;"></div>
 
-                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #fff;">
-                                <div style="display: flex; flex-direction: column;">
-                                    <div class="info-label" style="font-size: 12px; opacity: 0.9; margin-bottom: 2px;">Kan Grubu</div>
-                                    <div class="info-value" style="font-weight: 600; font-size: 16px;">
-                                        <?php echo htmlspecialchars($profile['blood_type']); ?>
-                                    </div>
+                            <div style="display: flex; align-items: center; position: relative; z-index: 1;">
+                                <div class="blood-icon" style="margin-right: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-heartbeat" style="font-size: 24px; color: #fff;"></i>
                                 </div>
-                                <div style="background: rgba(255,255,255,0.2); padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-plus" style="font-size: 12px;"></i>
+
+                                <div class="blood-content" style="flex: 1;">
+                                    <div class="blood-header" style="display: flex; align-items: center; margin-bottom: 8px;">
+                                        <h4 style="color: #fff; font-size: 16px; font-weight: 600; margin: 0; margin-right: 8px;">Kan Grubu</h4>
+                                        <span style="background: rgba(255,255,255,0.3); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500;">Acil Durum</span>
+                                    </div>
+                                    
+                                    <div class="blood-type-display" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 8px; text-align: center;">
+                                        <div style="color: #fff; font-size: 32px; font-weight: 700; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">
+                                            <?php echo htmlspecialchars($profile['blood_type']); ?>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8); font-size: 12px;">
+                                            <i class="fas fa-plus-circle" style="margin-right: 4px;"></i>
+                                            Kan Grubu Bilgisi
+                                        </span>
+                                        <div style="color: #fff; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 12px;">
+                                            <i class="fas fa-heart" style="margin-right: 4px;"></i>
+                                            Sağlık
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

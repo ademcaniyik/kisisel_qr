@@ -30,6 +30,12 @@ class ProfileManager {
             // Temayı belirle (order'dan gelen tema adını profil tema koduna çevir)
             $theme = $this->convertThemeNameToCode($orderData);
             
+            // Fotoğraf işleme
+            $photoData = null;
+            if (isset($orderData['photo_file']) && $orderData['photo_file']['error'] === UPLOAD_ERR_OK) {
+                $photoData = $this->processUploadedPhoto($orderData['photo_file']);
+            }
+            
             // Profil verileri hazırla
             $profileData = [
                 'name' => $orderData['customer_name'],
@@ -39,7 +45,8 @@ class ProfileManager {
                 'slug' => $slug,
                 'iban' => $this->extractIbanFromOrder($orderData),
                 'blood_type' => $this->extractBloodTypeFromOrder($orderData),
-                'social_links' => json_encode($socialLinks, JSON_UNESCAPED_UNICODE)
+                'social_links' => json_encode($socialLinks, JSON_UNESCAPED_UNICODE),
+                'photo_data' => $photoData ? json_encode($photoData, JSON_UNESCAPED_UNICODE) : null
             ];
             
             // Profili oluştur
@@ -71,7 +78,7 @@ class ProfileManager {
      * Profil oluştur
      */
     private function createProfile($data) {
-        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, iban, blood_type, social_links) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, iban, blood_type, social_links, photo_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connection->prepare($sql);
         
         if (!$stmt) {
@@ -79,7 +86,7 @@ class ProfileManager {
         }
         
         $stmt->bind_param(
-            "ssssssss",
+            "sssssssss",
             $data['name'],
             $data['bio'],
             $data['phone'],
@@ -87,7 +94,8 @@ class ProfileManager {
             $data['slug'],
             $data['iban'],
             $data['blood_type'],
-            $data['social_links']
+            $data['social_links'],
+            $data['photo_data']
         );
         
         if ($stmt->execute()) {
@@ -343,6 +351,40 @@ class ProfileManager {
         }
         
         return null;
+    }
+    
+    /**
+     * Yüklenen fotoğrafı işle ve kaydet
+     */
+    private function processUploadedPhoto($file) {
+        try {
+            // ImageOptimizer'ı yükle
+            require_once __DIR__ . '/ImageOptimizer.php';
+            $imageOptimizer = new ImageOptimizer();
+            
+            // Dosya kontrolü
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception("Dosya yükleme hatası: " . $file['error']);
+            }
+            
+            // ImageOptimizer ile fotoğrafı yükle ve optimize et
+            $result = $imageOptimizer->uploadAndOptimize($file);
+            
+            if ($result['success']) {
+                return [
+                    'filename' => $result['filename'],
+                    'original_name' => $file['name'],
+                    'size' => $file['size'],
+                    'mime_type' => $result['mime_type'] ?? 'image/jpeg',
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            } else {
+                throw new Exception("Fotoğraf işleme hatası: " . $result['message']);
+            }
+            
+        } catch (Exception $e) {
+            throw new Exception("Fotoğraf işleme hatası: " . $e->getMessage());
+        }
     }
 }
 ?>

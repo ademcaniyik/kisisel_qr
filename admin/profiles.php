@@ -110,6 +110,90 @@ if ($result) {
             direction: ltr !important;
         }
         
+        /* Admin Panel İnfo Kartları */
+        .admin-info-card {
+            margin-bottom: 1rem;
+        }
+        
+        .admin-info-card .card {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-info-card .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .admin-info-card .card-body {
+            padding: 1.25rem;
+        }
+        
+        .admin-info-card .icon-container {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+        
+        .admin-info-card .info-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .admin-info-card .info-value {
+            line-height: 1.2;
+            word-break: break-all;
+        }
+        
+        /* İban özel formatı */
+        .iban-card .info-value {
+            font-family: 'Segoe UI', 'Roboto', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.8px;
+            word-spacing: 3px;
+        }
+        
+        /* Kan grubu özel formatı */
+        .blood-type-card .info-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+        }
+        
+        /* Responsive tasarım */
+        @media (max-width: 768px) {
+            .admin-info-card .card-body {
+                padding: 1rem;
+            }
+            
+            .admin-info-card .icon-container {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .admin-info-card .icon-container i {
+                font-size: 1.2rem !important;
+            }
+            
+            .iban-card .info-value {
+                font-size: 0.85rem;
+                letter-spacing: 0.5px;
+                word-spacing: 2px;
+            }
+            
+            .blood-type-card .info-value {
+                font-size: 1.3rem;
+            }
+        }
+        
         /* Modern Social Media Platform Buttons */
         .social-platforms-grid .social-platform-btn {
             height: 80px;
@@ -739,8 +823,55 @@ if ($result) {
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
                         <p><strong>Telefon:</strong> <span id="view_phone"></span></p>
-                        <p><strong>İban:</strong> <span id="view_iban" style="font-family: monospace !important; text-align: left !important; display: inline-block !important;"></span></p>
-                        <p><strong>Kan Grubu:</strong> <span id="view_blood_type"></span></p>
+                        
+                        <!-- İban Bilgisi - Modern Kart Tasarımı -->
+                        <div class="mb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="view_iban_container" class="admin-info-card iban-card" style="display: none;">
+                                        <div class="card shadow-sm h-100" style="border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="icon-container me-3">
+                                                    <i class="fas fa-university" style="color: #fff; font-size: 1.5rem;"></i>
+                                                </div>
+                                                <div class="info-content flex-grow-1">
+                                                    <div class="info-label" style="color: rgba(255,255,255,0.8); font-size: 0.85rem; font-weight: 500; margin-bottom: 4px;">
+                                                        İBAN
+                                                    </div>
+                                                    <div id="view_iban" class="info-value" style="font-family: 'Segoe UI', 'Roboto', monospace; color: #fff; font-weight: 600; font-size: 1rem; letter-spacing: 0.5px; line-height: 1.2;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span id="view_iban_empty" class="text-muted fst-italic">İban bilgisi belirtilmemiş</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Kan Grubu Bilgisi - Modern Kart Tasarımı -->
+                        <div class="mb-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="view_blood_type_container" class="admin-info-card blood-type-card" style="display: none;">
+                                        <div class="card shadow-sm h-100" style="border: none; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+                                            <div class="card-body d-flex align-items-center">
+                                                <div class="icon-container me-3">
+                                                    <i class="fas fa-heartbeat" style="color: #fff; font-size: 1.5rem;"></i>
+                                                </div>
+                                                <div class="info-content flex-grow-1">
+                                                    <div class="info-label" style="color: rgba(255,255,255,0.8); font-size: 0.85rem; font-weight: 500; margin-bottom: 4px;">
+                                                        Kan Grubu
+                                                    </div>
+                                                    <div id="view_blood_type" class="info-value" style="color: #fff; font-weight: 700; font-size: 1.4rem; line-height: 1;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span id="view_blood_type_empty" class="text-muted fst-italic">Kan grubu bilgisi belirtilmemiş</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <p><strong>Tema:</strong> <span id="view_theme"></span></p>
                         <div id="view_socialLinks"></div>
                     </div>
@@ -946,18 +1077,28 @@ if ($result) {
                     $('#view_bio').text(res.profile.bio);
                     $('#view_phone').text(res.profile.phone);
                     
-                    // IBAN'ı özel formatlama ile göster
-                    const ibanValue = res.profile.iban || 'Belirtilmemiş';
-                    $('#view_iban').text(ibanValue)
-                                   .addClass('iban-display')
-                                   .css({
-                                       'text-align': 'left',
-                                       'direction': 'ltr',
-                                       'font-family': 'Courier New, monospace',
-                                       'display': 'inline-block'
-                                   });
+                    // İban gösterimi - Modern ve okunabilir
+                    if (res.profile.iban && res.profile.iban.trim() !== '') {
+                        const iban = res.profile.iban.trim().replace(/\s/g, ''); // Boşlukları temizle
+                        // İban'ı 4'lü gruplar halinde formatla
+                        const formattedIban = iban.length > 4 ? iban.match(/.{1,4}/g).join(' ') : iban;
+                        $('#view_iban').text(formattedIban);
+                        $('#view_iban_container').show();
+                        $('#view_iban_empty').hide();
+                    } else {
+                        $('#view_iban_container').hide();
+                        $('#view_iban_empty').show();
+                    }
                     
-                    $('#view_blood_type').text(res.profile.blood_type || 'Belirtilmemiş');
+                    // Kan grubu gösterimi - Modern ve büyük font
+                    if (res.profile.blood_type && res.profile.blood_type.trim() !== '') {
+                        $('#view_blood_type').text(res.profile.blood_type.trim());
+                        $('#view_blood_type_container').show();
+                        $('#view_blood_type_empty').hide();
+                    } else {
+                        $('#view_blood_type_container').hide();
+                        $('#view_blood_type_empty').show();
+                    }
                     $('#view_theme').text(res.profile.theme);
                     
                     // Profil fotoğrafı gösterimi (photo_data kullanarak)

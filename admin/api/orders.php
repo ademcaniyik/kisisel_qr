@@ -28,11 +28,19 @@ try {
     switch ($method) {
         case 'POST':
             // Yeni sipariş oluştur
-            $input = json_decode(file_get_contents('php://input'), true);
+            $input = null;
+            
+            // FormData (multipart/form-data) kontrolü
+            if (!empty($_POST)) {
+                $input = $_POST;
+            } else {
+                // JSON verisi
+                $input = json_decode(file_get_contents('php://input'), true);
+            }
             
             // POST verisini kontrol et
             if (!$input) {
-                $input = $_POST;
+                throw new Exception("Veri alınamadı");
             }
             
             // Zorunlu alanları kontrol et
@@ -59,6 +67,11 @@ try {
                 'payment_method' => isset($input['payment_method']) ? htmlspecialchars(trim($input['payment_method'])) : 'bank_transfer',
                 'whatsapp_sent' => isset($input['whatsapp_sent']) ? (bool)$input['whatsapp_sent'] : true
             ];
+            
+            // Fotoğraf dosyası varsa ekle
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                $orderData['photo_file'] = $_FILES['photo'];
+            }
             
             // Siparişi oluştur
             $result = $orderManager->createOrder($orderData);

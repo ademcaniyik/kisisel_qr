@@ -1953,6 +1953,9 @@
 
         async function completeOrder() {
             try {
+                // Prepare form data for file upload
+                const formData = new FormData();
+                
                 // Collect form data
                 const customerName = document.getElementById('customerName').value;
                 const customerPhone = document.getElementById('customerPhone').value;
@@ -1995,28 +1998,29 @@
                 specialRequests += `Ödeme Yöntemi: ${paymentMethod === 'bank_transfer' ? 'Banka Havalesi' : 'Kapıda Ödeme'}\n`;
                 specialRequests += `Tema: ${themeText}`;
 
-                // Prepare order data
-                const orderData = {
-                    customer_name: customerName,
-                    customer_phone: customerPhone,
-                    customer_email: '', // Email alanı yoksa boş bırak
-                    product_type: 'personal_qr',
-                    product_name: '10x10 cm Şeffaf QR Sticker',
-                    quantity: 1,
-                    price: 200.00,
-                    payment_method: paymentMethod,
-                    special_requests: specialRequests,
-                    shipping_address: shippingAddress,
-                    whatsapp_sent: true
-                };
+                // Add form data to FormData
+                formData.append('customer_name', customerName);
+                formData.append('customer_phone', customerPhone);
+                formData.append('customer_email', '');
+                formData.append('product_type', 'personal_qr');
+                formData.append('product_name', '10x10 cm Şeffaf QR Sticker');
+                formData.append('quantity', '1');
+                formData.append('price', '200.00');
+                formData.append('payment_method', paymentMethod);
+                formData.append('special_requests', specialRequests);
+                formData.append('shipping_address', shippingAddress);
+                formData.append('whatsapp_sent', 'true');
+                
+                // Add photo file if selected
+                const photoFile = document.getElementById('customerPhoto').files[0];
+                if (photoFile) {
+                    formData.append('photo', photoFile);
+                }
 
-                // Save order to database
+                // Save order to database with file upload support
                 const response = await fetch('admin/api/orders.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
+                    body: formData // FormData kullanarak dosya gönderimi
                 });
 
                 const result = await response.json();
