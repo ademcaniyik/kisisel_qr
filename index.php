@@ -1351,9 +1351,9 @@
                                                 </button>
                                             </div>
                                             <div class="col-6 col-md-4 col-lg-3">
-                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitter">
-                                                    <i class="fab fa-twitter text-info"></i>
-                                                    <span class="d-block small">Twitter</span>
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x">
+                                                    <i class="fa-brands fa-x-twitter text-dark"></i>
+                                                    <span class="d-block small">X</span>
                                                 </button>
                                             </div>
 
@@ -1499,8 +1499,8 @@
                                                         <span>Instagram</span>
                                                     </div>
                                                     <div class="preview-social-btn">
-                                                        <i class="fab fa-twitter"></i>
-                                                        <span>Twitter</span>
+                                                        <i class="fa-brands fa-x-twitter"></i>
+                                                        <span>X</span>
                                                     </div>
                                                     <div class="preview-social-btn">
                                                         <i class="fab fa-linkedin"></i>
@@ -1712,7 +1712,7 @@
                         <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fa-brands fa-x-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -2413,6 +2413,9 @@
         }
 
         function addSocialMediaPlatform(platformKey) {
+            console.log('Platform ekleniyor:', platformKey);
+            console.log('Mevcut platforms:', Object.keys(socialMediaPlatforms));
+            
             // Check if already added
             if (selectedSocialMedias.find(item => item.platform === platformKey)) {
                 showToast('Bu platform zaten eklenmiş!', 'warning');
@@ -2420,7 +2423,12 @@
             }
 
             const platform = socialMediaPlatforms[platformKey];
-            if (!platform) return;
+            console.log('Platform bulundu:', platform);
+            
+            if (!platform) {
+                console.error('Platform bulunamadı:', platformKey);
+                return;
+            }
 
             const socialMediaItem = {
                 platform: platformKey,
