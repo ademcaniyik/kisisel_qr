@@ -531,6 +531,10 @@
             background: linear-gradient(135deg, #dc3545, #e74c3c);
         }
 
+        .toast-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+
         .toast-content {
             display: flex;
             align-items: center;
@@ -782,6 +786,183 @@
         .theme-preview.theme-neon .preview-social-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
+        }
+
+        /* Dynamic Social Media Styles */
+        .social-platforms-grid .social-platform-btn {
+            border: 2px solid #e9ecef;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            background: white;
+            border-radius: 12px;
+            text-decoration: none;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-platform-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .social-platform-btn.selected {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white !important;
+        }
+
+        .social-platform-btn.selected i {
+            color: white !important;
+        }
+
+        .social-platform-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .social-platform-btn span {
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .selected-social-medias .social-media-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .selected-social-medias .social-media-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1);
+        }
+
+        .social-media-item .platform-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .social-media-item .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .social-media-item .platform-name {
+            font-weight: 600;
+            color: var(--secondary-color);
+            flex: 1;
+        }
+
+        .social-media-item .remove-btn {
+            border: none;
+            background: #dc3545;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-media-item .remove-btn:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .social-media-item .input-group {
+            gap: 8px;
+        }
+
+        .social-media-item .form-control {
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .social-media-item .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15);
+        }
+
+        .username-prefix {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            padding: 10px 12px;
+            color: #6c757d;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .url-preview {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #6c757d;
+            word-break: break-all;
+        }
+
+        /* Platform specific colors */
+        .platform-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); }
+        .platform-twitter { background: #1da1f2; }
+        .platform-linkedin { background: #0077b5; }
+        .platform-facebook { background: #1877f2; }
+        .platform-youtube { background: #ff0000; }
+        .platform-tiktok { background: #000000; }
+        .platform-whatsapp { background: #25d366; }
+        .platform-website { background: #17a2b8; }
+        .platform-snapchat { background: #fffc00; color: #000 !important; }
+        .platform-discord { background: #5865f2; }
+        .platform-telegram { background: #0088cc; }
+        .platform-twitch { background: #9146ff; }
+
+        .text-purple {
+            color: #9146ff !important;
+        }
+
+        @media (max-width: 768px) {
+            .social-platforms-grid .col-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            
+            .social-platform-btn {
+                height: 70px;
+                padding: 10px 5px;
+            }
+            
+            .social-platform-btn i {
+                font-size: 1.2rem;
+            }
+            
+            .social-platform-btn span {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -1141,6 +1322,10 @@
                                 </div>
                             </div>
                             <div class="mb-3">
+                                <label for="customerAddress" class="form-label">Teslimat Adresi *</label>
+                                <textarea class="form-control" id="customerAddress" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
                                 <label for="customerPhoto" class="form-label">Profil Fotoğrafı (isteğe bağlı)</label>
                                 <input type="file" class="form-control" id="customerPhoto" accept="image/*">
                             </div>
@@ -1150,17 +1335,91 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Sosyal Medya Hesapları (isteğe bağlı)</label>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="url" class="form-control mb-2" id="instagram" placeholder="Instagram URL">
-                                        <input type="url" class="form-control mb-2" id="twitter" placeholder="Twitter URL">
-                                        <input type="url" class="form-control mb-2" id="linkedin" placeholder="LinkedIn URL">
+                                
+                                <!-- Sosyal Medya Platform Seçimi -->
+                                <div class="card border-0 bg-light mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
+                                        <div class="row g-2 social-platforms-grid">
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram">
+                                                    <i class="fab fa-instagram text-danger"></i>
+                                                    <span class="d-block small">Instagram</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitter">
+                                                    <i class="fab fa-twitter text-info"></i>
+                                                    <span class="d-block small">Twitter</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin">
+                                                    <i class="fab fa-linkedin text-primary"></i>
+                                                    <span class="d-block small">LinkedIn</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook">
+                                                    <i class="fab fa-facebook text-primary"></i>
+                                                    <span class="d-block small">Facebook</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube">
+                                                    <i class="fab fa-youtube text-danger"></i>
+                                                    <span class="d-block small">YouTube</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok">
+                                                    <i class="fab fa-tiktok text-dark"></i>
+                                                    <span class="d-block small">TikTok</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp">
+                                                    <i class="fab fa-whatsapp text-success"></i>
+                                                    <span class="d-block small">WhatsApp</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website">
+                                                    <i class="fas fa-globe text-info"></i>
+                                                    <span class="d-block small">Website</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat">
+                                                    <i class="fab fa-snapchat text-warning"></i>
+                                                    <span class="d-block small">Snapchat</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord">
+                                                    <i class="fab fa-discord text-primary"></i>
+                                                    <span class="d-block small">Discord</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram">
+                                                    <i class="fab fa-telegram text-info"></i>
+                                                    <span class="d-block small">Telegram</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch">
+                                                    <i class="fab fa-twitch text-purple"></i>
+                                                    <span class="d-block small">Twitch</span>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input type="url" class="form-control mb-2" id="facebook" placeholder="Facebook URL">
-                                        <input type="url" class="form-control mb-2" id="youtube" placeholder="YouTube URL">
-                                        <input type="url" class="form-control mb-2" id="website" placeholder="Website URL">
-                                    </div>
+                                </div>
+
+                                <!-- Seçilen Sosyal Medya Hesapları -->
+                                <div id="selectedSocialMedias" class="selected-social-medias">
+                                    <!-- Dinamik olarak eklenecek -->
                                 </div>
                             </div>
 
@@ -1254,118 +1513,7 @@
                     </div>
 
                     <div id="step2" class="order-step" style="display: none;">
-                        <h6>2. Teslimat Adresi ve Ödeme Yöntemi</h6>
-                        
-                        <!-- Teslimat Adresi Bölümü -->
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h6 class="card-title">Teslimat Adresi*</h6>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="customerCity" class="form-label">Şehir *</label>
-                                            <select class="form-select" id="customerCity" required onchange="loadDistricts()">
-                                                <option value="">Şehir Seçiniz</option>
-                                                <option value="01">Adana</option>
-                                                <option value="02">Adıyaman</option>
-                                                <option value="03">Afyonkarahisar</option>
-                                                <option value="04">Ağrı</option>
-                                                <option value="05">Amasya</option>
-                                                <option value="06">Ankara</option>
-                                                <option value="07">Antalya</option>
-                                                <option value="08">Artvin</option>
-                                                <option value="09">Aydın</option>
-                                                <option value="10">Balıkesir</option>
-                                                <option value="11">Bilecik</option>
-                                                <option value="12">Bingöl</option>
-                                                <option value="13">Bitlis</option>
-                                                <option value="14">Bolu</option>
-                                                <option value="15">Burdur</option>
-                                                <option value="16">Bursa</option>
-                                                <option value="17">Çanakkale</option>
-                                                <option value="18">Çankırı</option>
-                                                <option value="19">Çorum</option>
-                                                <option value="20">Denizli</option>
-                                                <option value="21">Diyarbakır</option>
-                                                <option value="22">Edirne</option>
-                                                <option value="23">Elazığ</option>
-                                                <option value="24">Erzincan</option>
-                                                <option value="25">Erzurum</option>
-                                                <option value="26">Eskişehir</option>
-                                                <option value="27">Gaziantep</option>
-                                                <option value="28">Giresun</option>
-                                                <option value="29">Gümüşhane</option>
-                                                <option value="30">Hakkâri</option>
-                                                <option value="31">Hatay</option>
-                                                <option value="32">Isparta</option>
-                                                <option value="33">Mersin</option>
-                                                <option value="34">İstanbul</option>
-                                                <option value="35">İzmir</option>
-                                                <option value="36">Kars</option>
-                                                <option value="37">Kastamonu</option>
-                                                <option value="38">Kayseri</option>
-                                                <option value="39">Kırklareli</option>
-                                                <option value="40">Kırşehir</option>
-                                                <option value="41">Kocaeli</option>
-                                                <option value="42">Konya</option>
-                                                <option value="43">Kütahya</option>
-                                                <option value="44">Malatya</option>
-                                                <option value="45">Manisa</option>
-                                                <option value="46">Kahramanmaraş</option>
-                                                <option value="47">Mardin</option>
-                                                <option value="48">Muğla</option>
-                                                <option value="49">Muş</option>
-                                                <option value="50">Nevşehir</option>
-                                                <option value="51">Niğde</option>
-                                                <option value="52">Ordu</option>
-                                                <option value="53">Rize</option>
-                                                <option value="54">Sakarya</option>
-                                                <option value="55">Samsun</option>
-                                                <option value="56">Siirt</option>
-                                                <option value="57">Sinop</option>
-                                                <option value="58">Sivas</option>
-                                                <option value="59">Tekirdağ</option>
-                                                <option value="60">Tokat</option>
-                                                <option value="61">Trabzon</option>
-                                                <option value="62">Tunceli</option>
-                                                <option value="63">Şanlıurfa</option>
-                                                <option value="64">Uşak</option>
-                                                <option value="65">Van</option>
-                                                <option value="66">Yozgat</option>
-                                                <option value="67">Zonguldak</option>
-                                                <option value="68">Aksaray</option>
-                                                <option value="69">Bayburt</option>
-                                                <option value="70">Karaman</option>
-                                                <option value="71">Kırıkkale</option>
-                                                <option value="72">Batman</option>
-                                                <option value="73">Şırnak</option>
-                                                <option value="74">Bartın</option>
-                                                <option value="75">Ardahan</option>
-                                                <option value="76">Iğdır</option>
-                                                <option value="77">Yalova</option>
-                                                <option value="78">Karabük</option>
-                                                <option value="79">Kilis</option>
-                                                <option value="80">Osmaniye</option>
-                                                <option value="81">Düzce</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="customerDistrict" class="form-label">İlçe *</label>
-                                            <select class="form-select" id="customerDistrict" required disabled>
-                                                <option value="">Önce şehir seçiniz</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="customerDetailAddress" class="form-label">Detay Adres *</label>
-                                    <textarea class="form-control" id="customerDetailAddress" rows="3" required placeholder="Mahalle, sokak, cadde, apt. no, kat, daire no gibi detay bilgilerinizi yazınız..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
+                        <h6>2. Ödeme Yöntemi</h6>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h6 class="card-title">Ödeme Yöntemini Seçin</h6>
@@ -1723,18 +1871,10 @@
 
         async function completeOrder() {
             try {
-                // Validate address fields first
-                if (!validateAddressFields()) {
-                    alert('Lütfen tüm adres bilgilerini eksiksiz doldurun.');
-                    return;
-                }
-                
-                // Get full address
-                const customerAddress = getFullAddress();
-                
                 // Collect form data
                 const customerName = document.getElementById('customerName').value;
                 const customerPhone = document.getElementById('customerPhone').value;
+                const customerAddress = document.getElementById('customerAddress').value;
                 const customerBio = document.getElementById('customerBio').value;
                 const customerTheme = document.getElementById('customerTheme').value;
                 const customerIban = document.getElementById('customerIban').value;
@@ -1742,12 +1882,12 @@
                 const themeText = document.getElementById('customerTheme').options[document.getElementById('customerTheme').selectedIndex].text;
                 const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-                // Collect social media links
+                // Collect social media links from new dynamic system
                 const socialMedia = [];
-                const platforms = ['instagram', 'twitter', 'linkedin', 'facebook', 'youtube', 'website'];
-                platforms.forEach(platform => {
-                    const url = document.getElementById(platform).value;
-                    if (url) socialMedia.push(`${platform.charAt(0).toUpperCase() + platform.slice(1)}: ${url}`);
+                const socialMediaData = getSocialMediaData();
+                socialMediaData.forEach(item => {
+                    const platform = socialMediaPlatforms[item.platform];
+                    socialMedia.push(`${platform.name}: ${item.url}`);
                 });
 
                 // Create special requests text
@@ -1864,7 +2004,7 @@
             // Form data kontrolü
             const customerName = document.getElementById('customerName')?.value || '';
             const customerPhone = document.getElementById('customerPhone')?.value || '';
-            const customerAddress = getFullAddress() || '';
+            const customerAddress = document.getElementById('customerAddress')?.value || '';
             const customerBio = document.getElementById('customerBio')?.value || '';
 
             // Eğer form verileri yoksa genel mesaj oluştur
@@ -1883,12 +2023,10 @@
 
             // Sosyal medya linklerini topla
             const socialMedia = [];
-            const platforms = ['instagram', 'twitter', 'linkedin', 'facebook', 'youtube', 'website'];
-            platforms.forEach(platform => {
-                const element = document.getElementById(platform);
-                if (element && element.value) {
-                    socialMedia.push(`${platform.charAt(0).toUpperCase() + platform.slice(1)}: ${element.value}`);
-                }
+            const socialMediaData = getSocialMediaData();
+            socialMediaData.forEach(item => {
+                const platform = socialMediaPlatforms[item.platform];
+                socialMedia.push(`${platform.name}: ${item.url}`);
             });
 
             // WhatsApp mesajını oluştur
@@ -1954,9 +2092,15 @@
             // Create toast element
             const toast = document.createElement('div');
             toast.className = `toast-notification toast-${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            else if (type === 'error') icon = 'fa-exclamation-circle';
+            else if (type === 'warning') icon = 'fa-exclamation-triangle';
+            
             toast.innerHTML = `
                 <div class="toast-content">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <i class="fas ${icon}"></i>
                     <span>${message}</span>
                 </div>
             `;
@@ -1994,6 +2138,236 @@
             setTimeout(() => {
                 previewElement.style.transform = 'scale(1)';
             }, 150);
+        }
+
+        // Social Media Management Functions
+        const socialMediaPlatforms = {
+            instagram: {
+                name: 'Instagram',
+                icon: 'fab fa-instagram',
+                prefix: '@',
+                baseUrl: 'https://instagram.com/',
+                placeholder: 'kullanici_adi',
+                color: 'platform-instagram'
+            },
+            twitter: {
+                name: 'Twitter',
+                icon: 'fab fa-twitter',
+                prefix: '@',
+                baseUrl: 'https://twitter.com/',
+                placeholder: 'kullanici_adi',
+                color: 'platform-twitter'
+            },
+            linkedin: {
+                name: 'LinkedIn',
+                icon: 'fab fa-linkedin',
+                prefix: '',
+                baseUrl: 'https://linkedin.com/in/',
+                placeholder: 'profil-adi',
+                color: 'platform-linkedin'
+            },
+            facebook: {
+                name: 'Facebook',
+                icon: 'fab fa-facebook',
+                prefix: '',
+                baseUrl: 'https://facebook.com/',
+                placeholder: 'profil.adi',
+                color: 'platform-facebook'
+            },
+            youtube: {
+                name: 'YouTube',
+                icon: 'fab fa-youtube',
+                prefix: '',
+                baseUrl: 'https://youtube.com/@',
+                placeholder: 'kanal_adi',
+                color: 'platform-youtube'
+            },
+            tiktok: {
+                name: 'TikTok',
+                icon: 'fab fa-tiktok',
+                prefix: '@',
+                baseUrl: 'https://tiktok.com/@',
+                placeholder: 'kullanici_adi',
+                color: 'platform-tiktok'
+            },
+            whatsapp: {
+                name: 'WhatsApp',
+                icon: 'fab fa-whatsapp',
+                prefix: '+90',
+                baseUrl: 'https://wa.me/',
+                placeholder: '5xxxxxxxxx',
+                color: 'platform-whatsapp'
+            },
+            website: {
+                name: 'Website',
+                icon: 'fas fa-globe',
+                prefix: 'https://',
+                baseUrl: '',
+                placeholder: 'ornek.com',
+                color: 'platform-website'
+            },
+            snapchat: {
+                name: 'Snapchat',
+                icon: 'fab fa-snapchat',
+                prefix: '',
+                baseUrl: 'https://snapchat.com/add/',
+                placeholder: 'kullanici_adi',
+                color: 'platform-snapchat'
+            },
+            discord: {
+                name: 'Discord',
+                icon: 'fab fa-discord',
+                prefix: '#',
+                baseUrl: '',
+                placeholder: 'kullanici#1234',
+                color: 'platform-discord'
+            },
+            telegram: {
+                name: 'Telegram',
+                icon: 'fab fa-telegram',
+                prefix: '@',
+                baseUrl: 'https://t.me/',
+                placeholder: 'kullanici_adi',
+                color: 'platform-telegram'
+            },
+            twitch: {
+                name: 'Twitch',
+                icon: 'fab fa-twitch',
+                prefix: '',
+                baseUrl: 'https://twitch.tv/',
+                placeholder: 'kanal_adi',
+                color: 'platform-twitch'
+            }
+        };
+
+        let selectedSocialMedias = [];
+
+        function initSocialMediaHandlers() {
+            document.querySelectorAll('.social-platform-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const platform = this.dataset.platform;
+                    addSocialMediaPlatform(platform);
+                });
+            });
+        }
+
+        function addSocialMediaPlatform(platformKey) {
+            // Check if already added
+            if (selectedSocialMedias.find(item => item.platform === platformKey)) {
+                showToast('Bu platform zaten eklenmiş!', 'warning');
+                return;
+            }
+
+            const platform = socialMediaPlatforms[platformKey];
+            if (!platform) return;
+
+            const socialMediaItem = {
+                platform: platformKey,
+                username: '',
+                url: ''
+            };
+
+            selectedSocialMedias.push(socialMediaItem);
+            renderSocialMediaItem(socialMediaItem, selectedSocialMedias.length - 1);
+            updatePlatformButton(platformKey, true);
+        }
+
+        function renderSocialMediaItem(item, index) {
+            const platform = socialMediaPlatforms[item.platform];
+            const container = document.getElementById('selectedSocialMedias');
+            
+            const itemHtml = `
+                <div class="social-media-item" data-index="${index}">
+                    <div class="platform-header">
+                        <div class="platform-icon ${platform.color}">
+                            <i class="${platform.icon}"></i>
+                        </div>
+                        <span class="platform-name">${platform.name}</span>
+                        <button type="button" class="remove-btn" onclick="removeSocialMediaPlatform(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        ${platform.prefix ? `<span class="username-prefix">${platform.prefix}</span>` : ''}
+                        <input type="text" 
+                               class="form-control social-username-input" 
+                               data-platform="${item.platform}"
+                               data-index="${index}"
+                               placeholder="${platform.placeholder}"
+                               oninput="updateSocialMediaUrl(${index})"
+                               value="${item.username}">
+                    </div>
+                    <div class="url-preview" id="urlPreview${index}">
+                        ${generateSocialMediaUrl(item.platform, item.username)}
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', itemHtml);
+        }
+
+        function updateSocialMediaUrl(index) {
+            const item = selectedSocialMedias[index];
+            const input = document.querySelector(`input[data-index="${index}"]`);
+            const platform = socialMediaPlatforms[item.platform];
+            
+            item.username = input.value;
+            item.url = generateSocialMediaUrl(item.platform, item.username);
+            
+            const preview = document.getElementById(`urlPreview${index}`);
+            preview.textContent = item.url || 'URL oluşturulacak...';
+        }
+
+        function generateSocialMediaUrl(platformKey, username) {
+            if (!username) return '';
+            
+            const platform = socialMediaPlatforms[platformKey];
+            
+            switch(platformKey) {
+                case 'whatsapp':
+                    // WhatsApp için sadece numara
+                    return platform.baseUrl + username.replace(/\D/g, '');
+                case 'website':
+                    // Website için direkt URL
+                    return username.startsWith('http') ? username : 'https://' + username;
+                case 'discord':
+                    // Discord için sadece username#tag
+                    return username;
+                default:
+                    return platform.baseUrl + username;
+            }
+        }
+
+        function removeSocialMediaPlatform(index) {
+            const item = selectedSocialMedias[index];
+            selectedSocialMedias.splice(index, 1);
+            
+            // Re-render all items with updated indices
+            const container = document.getElementById('selectedSocialMedias');
+            container.innerHTML = '';
+            
+            selectedSocialMedias.forEach((socialItem, newIndex) => {
+                renderSocialMediaItem(socialItem, newIndex);
+            });
+            
+            updatePlatformButton(item.platform, false);
+        }
+
+        function updatePlatformButton(platformKey, selected) {
+            const btn = document.querySelector(`[data-platform="${platformKey}"]`);
+            if (btn) {
+                if (selected) {
+                    btn.classList.add('selected');
+                    btn.disabled = true;
+                } else {
+                    btn.classList.remove('selected');
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function getSocialMediaData() {
+            return selectedSocialMedias.filter(item => item.username.trim() !== '');
         }
 
         // Phone number formatting function
@@ -2038,6 +2412,9 @@
 
         // Phone input focus event - ensure +90 prefix
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize social media handlers
+            initSocialMediaHandlers();
+            
             const phoneInput = document.getElementById('customerPhone');
             if (phoneInput) {
                 phoneInput.addEventListener('focus', function() {
@@ -2063,172 +2440,10 @@
             }
         });
 
-        // City districts data
-        const cityDistricts = {
-            '01': ['Aladağ', 'Ceyhan', 'Çukurova', 'Feke', 'İmamoğlu', 'Karaisalı', 'Karataş', 'Kozan', 'Pozantı', 'Saimbeyli', 'Sarıçam', 'Seyhan', 'Tufanbeyli', 'Yumurtalık', 'Yüreğir'],
-            '02': ['Besni', 'Çelikhan', 'Gerger', 'Gölbaşı', 'Kahta', 'Merkez', 'Samsat', 'Sincik', 'Tut'],
-            '03': ['Afyonkarahisar Merkez', 'Başmakçı', 'Bayat', 'Bolvadin', 'Çay', 'Çobanlar', 'Dazkırı', 'Dinar', 'Emirdağ', 'Evciler', 'Hocalar', 'İhsaniye', 'İscehisar', 'Kızılören', 'Sandıklı', 'Sinanpaşa', 'Sultandağı', 'Şuhut'],
-            '06': ['Akyurt', 'Altındağ', 'Ayaş', 'Bala', 'Beypazarı', 'Çamlıdere', 'Çankaya', 'Çubuk', 'Elmadağ', 'Etimesgut', 'Evren', 'Gölbaşı', 'Güdül', 'Haymana', 'Kalecik', 'Kazan', 'Keçiören', 'Kızılcahamam', 'Mamak', 'Nallıhan', 'Polatlı', 'Pursaklar', 'Sincan', 'Şereflikoçhisar', 'Yenimahalle'],
-            '07': ['Akseki', 'Aksu', 'Alanya', 'Demre', 'Döşemealtı', 'Elmalı', 'Finike', 'Gazipaşa', 'Gündoğmuş', 'İbradı', 'Kaş', 'Kemer', 'Kepez', 'Konyaaltı', 'Korkuteli', 'Kumluca', 'Manavgat', 'Muratpaşa', 'Serik'],
-            '16': ['Büyükorhan', 'Gemlik', 'Gürsu', 'Harmancık', 'İnegöl', 'İznik', 'Karacabey', 'Keles', 'Kestel', 'Mudanya', 'Mustafakemalpaşa', 'Nilüfer', 'Orhaneli', 'Orhangazi', 'Osmangazi', 'Yenişehir', 'Yıldırım'],
-            '34': ['Adalar', 'Arnavutköy', 'Ataşehir', 'Avcılar', 'Bağcılar', 'Bahçelievler', 'Bakırköy', 'Başakşehir', 'Bayrampaşa', 'Beşiktaş', 'Beykoz', 'Beylikdüzü', 'Beyoğlu', 'Büyükçekmece', 'Çatalca', 'Çekmeköy', 'Esenler', 'Esenyurt', 'Eyüpsultan', 'Fatih', 'Gaziosmanpaşa', 'Güngören', 'Kadıköy', 'Kağıthane', 'Kartal', 'Küçükçekmece', 'Maltepe', 'Pendik', 'Sancaktepe', 'Sarıyer', 'Silivri', 'Sultanbeyli', 'Sultangazi', 'Şile', 'Şişli', 'Tuzla', 'Ümraniye', 'Üsküdar', 'Zeytinburnu'],
-            '35': ['Aliağa', 'Balçova', 'Bayındır', 'Bayraklı', 'Bergama', 'Beydağ', 'Bornova', 'Buca', 'Çeşme', 'Çiğli', 'Dikili', 'Foça', 'Gaziemir', 'Güzelbahçe', 'Karabağlar', 'Karaburun', 'Karşıyaka', 'Kemalpaşa', 'Kınık', 'Kiraz', 'Konak', 'Menderes', 'Menemen', 'Narlıdere', 'Ödemiş', 'Seferihisar', 'Selçuk', 'Tire', 'Torbalı', 'Urla'],
-            '41': ['Başiskele', 'Çayırova', 'Darıca', 'Derince', 'Dilovası', 'Gebze', 'Gölcük', 'İzmit', 'Kandıra', 'Karamürsel', 'Kartepe', 'Körfez'],
-            '10': ['Altıeylül', 'Ayvalık', 'Balya', 'Bandırma', 'Bigadiç', 'Burhaniye', 'Dursunbey', 'Edremit', 'Erdek', 'Gömeç', 'Gönen', 'Havran', 'İvrindi', 'Karesi', 'Kepsut', 'Manyas', 'Marmara', 'Savaştepe', 'Sındırgı', 'Susurluk'],
-            '42': ['Ahırlı', 'Akören', 'Akşehir', 'Altınekin', 'Beyşehir', 'Bozkır', 'Cihanbeyli', 'Çeltik', 'Çumra', 'Derbent', 'Derebucak', 'Doğanhisar', 'Emirgazi', 'Ereğli', 'Güneysınır', 'Hadim', 'Halkapınar', 'Hüyük', 'Ilgın', 'Kadınhanı', 'Karapınar', 'Karatay', 'Kulu', 'Meram', 'Sarayönü', 'Selçuklu', 'Seydişehir', 'Taşkent', 'Tuzlukçu', 'Yalıhüyük', 'Yunak'],
-            '54': ['Adapazarı', 'Akyazı', 'Arifiye', 'Erenler', 'Ferizli', 'Geyve', 'Hendek', 'Karapürçek', 'Karasu', 'Kaynarca', 'Kocaali', 'Pamukova', 'Sapanca', 'Serdivan', 'Söğütlü', 'Taraklı'],
-            // Diğer şehirler için basit ilçe listesi
-            '04': ['Ağrı Merkez', 'Diyadin', 'Doğubayazıt', 'Eleşkirt', 'Hamur', 'Patnos', 'Taşlıçay', 'Tutak'],
-            '05': ['Amasya Merkez', 'Göynücek', 'Gümüşhacıköy', 'Hamamözü', 'Merzifon', 'Suluova', 'Taşova'],
-            '08': ['Artvin Merkez', 'Ardanuç', 'Arhavi', 'Borçka', 'Hopa', 'Murgul', 'Şavşat', 'Yusufeli'],
-            '09': ['Aydın Merkez', 'Bozdoğan', 'Buharkent', 'Çine', 'Didim', 'Germencik', 'İncirliova', 'Karacasu', 'Karpuzlu', 'Koçarlı', 'Köşk', 'Kuşadası', 'Kuyucak', 'Nazilli', 'Söke', 'Sultanhisar', 'Yenipazar'],
-            // Default districts for other cities
-            '11': ['Bilecik Merkez', 'Bozüyük', 'Gölpazarı', 'İnhisar', 'Osmaneli', 'Pazaryeri', 'Söğüt', 'Yenipazar'],
-            '12': ['Bingöl Merkez', 'Adaklı', 'Genç', 'Karlıova', 'Kiğı', 'Solhan', 'Yayladere', 'Yedisu'],
-            '13': ['Bitlis Merkez', 'Adilcevaz', 'Ahlat', 'Güroymak', 'Hizan', 'Mutki', 'Tatvan'],
-            '14': ['Bolu Merkez', 'Dörtdivan', 'Gerede', 'Göynük', 'Kıbrıscık', 'Mengen', 'Mudurnu', 'Seben', 'Yeniçağa'],
-            '15': ['Burdur Merkez', 'Ağlasun', 'Altınyayla', 'Bucak', 'Çavdır', 'Çeltikçi', 'Gölhisar', 'Karamanlı', 'Kemer', 'Tefenni', 'Yeşilova'],
-            '17': ['Çanakkale Merkez', 'Ayvacık', 'Bayramiç', 'Biga', 'Bozcaada', 'Çan', 'Eceabat', 'Ezine', 'Gelibolu', 'Gökçeada', 'Lapseki', 'Yenice'],
-            '18': ['Çankırı Merkez', 'Atkaracalar', 'Bayramören', 'Çerkeş', 'Eldivan', 'Ilgaz', 'Kızılırmak', 'Korgun', 'Kurşunlu', 'Orta', 'Şabanözü', 'Yapraklı'],
-            '19': ['Çorum Merkez', 'Alaca', 'Bayat', 'Boğazkale', 'Dodurga', 'İskilip', 'Kargı', 'Laçin', 'Mecitözü', 'Oğuzlar', 'Ortaköy', 'Osmancık', 'Sungurlu', 'Uğurludağ'],
-            '20': ['Denizli Merkez', 'Acıpayam', 'Babadağ', 'Baklan', 'Bekilli', 'Beyağaç', 'Bozkurt', 'Buldan', 'Çal', 'Çameli', 'Çardak', 'Çivril', 'Güney', 'Honaz', 'Kale', 'Merkezefendi', 'Pamukkale', 'Sarayköy', 'Serinhisar', 'Tavas'],
-            '21': ['Diyarbakır Merkez', 'Bağlar', 'Bismil', 'Çermik', 'Çınar', 'Çüngüş', 'Dicle', 'Eğil', 'Ergani', 'Hani', 'Hazro', 'Kayapınar', 'Kocaköy', 'Kulp', 'Lice', 'Silvan', 'Sur', 'Yenişehir'],
-            '22': ['Edirne Merkez', 'Enez', 'Havsa', 'İpsala', 'Keşan', 'Lalapaşa', 'Meriç', 'Süloğlu', 'Uzunköprü'],
-            '23': ['Elazığ Merkez', 'Ağın', 'Alacakaya', 'Arıcak', 'Baskil', 'Karakoçan', 'Keban', 'Kovancılar', 'Maden', 'Palu', 'Sivrice'],
-            '24': ['Erzincan Merkez', 'Çayırlı', 'İliç', 'Kemah', 'Kemaliye', 'Otlukbeli', 'Refahiye', 'Tercan', 'Üzümlü'],
-            '25': ['Erzurum Merkez', 'Aşkale', 'Aziziye', 'Çat', 'Hınıs', 'Horasan', 'İspir', 'Karaçoban', 'Karayazı', 'Köprüköy', 'Narman', 'Oltu', 'Olur', 'Palandöken', 'Pasinler', 'Pazaryolu', 'Şenkaya', 'Tekman', 'Tortum', 'Uzundere', 'Yakutiye'],
-            '26': ['Eskişehir Merkez', 'Alpu', 'Beylikova', 'Çifteler', 'Günyüzü', 'Han', 'İnönü', 'Mahmudiye', 'Mihalgazi', 'Mihalıççık', 'Odunpazarı', 'Sarıcakaya', 'Seyitgazi', 'Sivrihisar', 'Tepebaşı'],
-            '27': ['Gaziantep Merkez', 'Araban', 'İslahiye', 'Karkamış', 'Nizip', 'Nurdağı', 'Oğuzeli', 'Şahinbey', 'Şehitkamil', 'Yavuzeli'],
-            '28': ['Giresun Merkez', 'Alucra', 'Bulancak', 'Çamoluk', 'Çanakçı', 'Dereli', 'Doğankent', 'Espiye', 'Eynesil', 'Görele', 'Güce', 'Keşap', 'Piraziz', 'Şebinkarahisar', 'Tirebolu', 'Yağlıdere'],
-            '29': ['Gümüşhane Merkez', 'Kelkit', 'Köse', 'Kürtün', 'Şiran', 'Torul'],
-            '30': ['Hakkâri Merkez', 'Çukurca', 'Derecik', 'Şemdinli', 'Yüksekova'],
-            '31': ['Hatay Merkez', 'Altınözü', 'Antakya', 'Arsuz', 'Belen', 'Defne', 'Dörtyol', 'Erzin', 'Hassa', 'İskenderun', 'Kırıkhan', 'Kumlu', 'Payas', 'Reyhanlı', 'Samandağ', 'Yayladağı'],
-            '32': ['Isparta Merkez', 'Aksu', 'Atabey', 'Eğirdir', 'Gelendost', 'Gönen', 'Keçiborlu', 'Senirkent', 'Sütçüler', 'Şarkikaraağaç', 'Uluborlu', 'Yalvaç', 'Yenişarbademli'],
-            '33': ['Mersin Merkez', 'Akdeniz', 'Anamur', 'Aydıncık', 'Bozyazı', 'Çamlıyayla', 'Erdemli', 'Gülnar', 'Mezitli', 'Mut', 'Silifke', 'Tarsus', 'Toroslar', 'Yenişehir'],
-            '36': ['Kars Merkez', 'Akyaka', 'Arpaçay', 'Digor', 'Kağızman', 'Sarıkamış', 'Selim', 'Susuz'],
-            '37': ['Kastamonu Merkez', 'Abana', 'Ağlı', 'Araç', 'Azdavay', 'Bozkurt', 'Cide', 'Çatalzeytin', 'Daday', 'Devrekani', 'Doğanyurt', 'Hanönü', 'İhsangazi', 'İnebolu', 'Küre', 'Pınarbaşı', 'Seydiler', 'Şenpazar', 'Taşköprü', 'Tosya'],
-            '38': ['Kayseri Merkez', 'Akkışla', 'Bünyan', 'Develi', 'Felahiye', 'Hacılar', 'İncesu', 'Kocasinan', 'Melikgazi', 'Özvatan', 'Pınarbaşı', 'Sarıoğlan', 'Sarız', 'Talas', 'Tomarza', 'Yahyalı', 'Yeşilhisar'],
-            '39': ['Kırklareli Merkez', 'Babaeski', 'Demirköy', 'Kofçaz', 'Lüleburgaz', 'Pehlivanköy', 'Pınarhisar', 'Vize'],
-            '40': ['Kırşehir Merkez', 'Akçakent', 'Akpınar', 'Boztepe', 'Çiçekdağı', 'Kaman', 'Mucur'],
-            '43': ['Kütahya Merkez', 'Altıntaş', 'Aslanapa', 'Çavdarhisar', 'Domaniç', 'Dumlupınar', 'Emet', 'Gediz', 'Hisarcık', 'Pazarlar', 'Simav', 'Şaphane', 'Tavşanlı'],
-            '44': ['Malatya Merkez', 'Akçadağ', 'Arapgir', 'Arguvan', 'Battalgazi', 'Darende', 'Doğanşehir', 'Doğanyol', 'Hekimhan', 'Kale', 'Kuluncak', 'Pütürge', 'Yazıhan', 'Yeşilyurt'],
-            '45': ['Manisa Merkez', 'Ahmetli', 'Akhisar', 'Alaşehir', 'Demirci', 'Gölmarmara', 'Gördes', 'Kırkağaç', 'Köprübaşı', 'Kula', 'Salihli', 'Sarıgöl', 'Saruhanlı', 'Selendi', 'Soma', 'Şehzadeler', 'Turgutlu', 'Yunusemre'],
-            '46': ['Kahramanmaraş Merkez', 'Afşin', 'Andırın', 'Çağlayancerit', 'Dulkadiroğlu', 'Ekinözü', 'Elbistan', 'Göksun', 'Nurhak', 'Onikişubat', 'Pazarcık', 'Türkoğlu'],
-            '47': ['Mardin Merkez', 'Artuklu', 'Dargeçit', 'Derik', 'Kızıltepe', 'Mazıdağı', 'Midyat', 'Nusaybin', 'Ömerli', 'Savur', 'Yeşilli'],
-            '48': ['Muğla Merkez', 'Bodrum', 'Dalaman', 'Datça', 'Fethiye', 'Kavaklıdere', 'Köyceğiz', 'Marmaris', 'Menteşe', 'Milas', 'Ortaca', 'Seydikemer', 'Ula', 'Yatağan'],
-            '49': ['Muş Merkez', 'Bulanık', 'Hasköy', 'Korkut', 'Malazgirt', 'Varto'],
-            '50': ['Nevşehir Merkez', 'Acıgöl', 'Avanos', 'Derinkuyu', 'Gülşehir', 'Hacıbektaş', 'Kozaklı', 'Ürgüp'],
-            '51': ['Niğde Merkez', 'Altunhisar', 'Bor', 'Çamardı', 'Çiftlik', 'Ulukışla'],
-            '52': ['Ordu Merkez', 'Akkuş', 'Altınordu', 'Aybastı', 'Çamaş', 'Çatalpınar', 'Çaybaşı', 'Fatsa', 'Gölköy', 'Gülyalı', 'Gürgentepe', 'İkizce', 'Kabadüz', 'Kabataş', 'Korgan', 'Kumru', 'Mesudiye', 'Perşembe', 'Ulubey', 'Ünye'],
-            '53': ['Rize Merkez', 'Ardeşen', 'Çamlıhemşin', 'Çayeli', 'Derepazarı', 'Fındıklı', 'Güneysu', 'Hemşin', 'İkizdere', 'İyidere', 'Kalkandere', 'Pazar'],
-            '55': ['Samsun Merkez', 'Alaçam', 'Asarcık', 'Atakum', 'Ayvacık', 'Bafra', 'Canik', 'Çarşamba', 'Havza', 'İlkadım', 'Kavak', 'Ladik', 'Ondokuzmayıs', 'Salıpazarı', 'Tekkeköy', 'Terme', 'Vezirköprü', 'Yakakent'],
-            '56': ['Siirt Merkez', 'Baykan', 'Eruh', 'Kurtalan', 'Pervari', 'Şirvan', 'Tillo'],
-            '57': ['Sinop Merkez', 'Ayancık', 'Boyabat', 'Dikmen', 'Durağan', 'Erfelek', 'Gerze', 'Saraydüzü', 'Türkeli'],
-            '58': ['Sivas Merkez', 'Akıncılar', 'Altınyayla', 'Divriği', 'Doğanşar', 'Gemerek', 'Gölova', 'Gürün', 'Hafik', 'İmranlı', 'Kangal', 'Koyulhisar', 'Merkez', 'Suşehri', 'Şarkışla', 'Ulaş', 'Yıldızeli', 'Zara'],
-            '59': ['Tekirdağ Merkez', 'Çerkezköy', 'Çorlu', 'Ergene', 'Hayrabolu', 'Kapaklı', 'Malkara', 'Marmaraereğlisi', 'Muratlı', 'Saray', 'Süleymanpaşa', 'Şarköy'],
-            '60': ['Tokat Merkez', 'Almus', 'Artova', 'Başçiftlik', 'Erbaa', 'Niksar', 'Pazar', 'Reşadiye', 'Sulusaray', 'Turhal', 'Yeşilyurt', 'Zile'],
-            '61': ['Trabzon Merkez', 'Akçaabat', 'Araklı', 'Arsin', 'Beşikdüzü', 'Çarşıbaşı', 'Çaykara', 'Dernekpazarı', 'Düzköy', 'Hayrat', 'Köprübaşı', 'Maçka', 'Of', 'Ortahisar', 'Şalpazarı', 'Sürmene', 'Tonya', 'Vakfıkebir', 'Yomra'],
-            '62': ['Tunceli Merkez', 'Çemişgezek', 'Hozat', 'Mazgirt', 'Nazımiye', 'Ovacık', 'Pertek', 'Pülümür'],
-            '63': ['Şanlıurfa Merkez', 'Akçakale', 'Birecik', 'Bozova', 'Ceylanpınar', 'Eyyübiye', 'Halfeti', 'Haliliye', 'Harran', 'Hilvan', 'Karaköprü', 'Siverek', 'Suruç', 'Viranşehir'],
-            '64': ['Uşak Merkez', 'Banaz', 'Eşme', 'Karahallı', 'Sivaslı', 'Ulubey'],
-            '65': ['Van Merkez', 'Bahçesaray', 'Başkale', 'Çaldıran', 'Çatak', 'Edremit', 'Erciş', 'Gevaş', 'Gürpınar', 'İpekyolu', 'Muradiye', 'Özalp', 'Saray', 'Tuşba'],
-            '66': ['Yozgat Merkez', 'Akdağmadeni', 'Aydıncık', 'Boğazlıyan', 'Çandır', 'Çayıralan', 'Çekerek', 'Kadışehri', 'Saraykent', 'Sarıkaya', 'Şefaatli', 'Sorgun', 'Yenifakılı', 'Yerköy'],
-            '67': ['Zonguldak Merkez', 'Alaplı', 'Çaycuma', 'Devrek', 'Gökçebey', 'Kilimli', 'Kozlu'],
-            '68': ['Aksaray Merkez', 'Ağaçören', 'Eskil', 'Gülağaç', 'Güzelyurt', 'Ortaköy', 'Sarıyahşi'],
-            '69': ['Bayburt Merkez', 'Aydıntepe', 'Demirözü'],
-            '70': ['Karaman Merkez', 'Ayrancı', 'Başyayla', 'Ermenek', 'Kazımkarabekir', 'Sarıveliler'],
-            '71': ['Kırıkkale Merkez', 'Bahşılı', 'Balışeyh', 'Çelebi', 'Delice', 'Karakeçili', 'Keskin', 'Sulakyurt', 'Yahşihan'],
-            '72': ['Batman Merkez', 'Beşiri', 'Gercüş', 'Hasankeyf', 'Kozluk', 'Sason'],
-            '73': ['Şırnak Merkez', 'Beytüşşebap', 'Cizre', 'Güçlükonak', 'İdil', 'Silopi', 'Uludere'],
-            '74': ['Bartın Merkez', 'Amasra', 'Kurucaşile', 'Ulus'],
-            '75': ['Ardahan Merkez', 'Çıldır', 'Damal', 'Göle', 'Hanak', 'Posof'],
-            '76': ['Iğdır Merkez', 'Aralık', 'Karakoyunlu', 'Tuzluca'],
-            '77': ['Yalova Merkez', 'Altınova', 'Armutlu', 'Çınarcık', 'Çiftlikköy', 'Termal'],
-            '78': ['Karabük Merkez', 'Eflani', 'Eskipazar', 'Ovacık', 'Safranbolu', 'Yenice'],
-            '79': ['Kilis Merkez', 'Elbeyli', 'Musabeyli', 'Polateli'],
-            '80': ['Osmaniye Merkez', 'Bahçe', 'Düziçi', 'Hasanbeyli', 'Kadirli', 'Sumbas', 'Toprakkale'],
-            '81': ['Düzce Merkez', 'Akçakoca', 'Cumayeri', 'Çilimli', 'Gölyaka', 'Gümüşova', 'Kaynaşlı', 'Yığılca']
-        };
-
-        // Load districts based on selected city
-        function loadDistricts() {
-            const citySelect = document.getElementById('customerCity');
-            const districtSelect = document.getElementById('customerDistrict');
-            const selectedCity = citySelect.value;
-
-            // Clear districts
-            districtSelect.innerHTML = '<option value="">İlçe Seçiniz</option>';
-
-            if (selectedCity && cityDistricts[selectedCity]) {
-                // Enable district select
-                districtSelect.disabled = false;
-                
-                // Add districts
-                cityDistricts[selectedCity].forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district;
-                    option.textContent = district;
-                    districtSelect.appendChild(option);
-                });
-            } else {
-                // Disable district select
-                districtSelect.disabled = true;
-                districtSelect.innerHTML = '<option value="">Önce şehir seçiniz</option>';
-            }
-        }
-
-        // Get full address text
-        function getFullAddress() {
-            const citySelect = document.getElementById('customerCity');
-            const districtSelect = document.getElementById('customerDistrict');
-            const detailAddress = document.getElementById('customerDetailAddress').value;
-            
-            if (!citySelect.value || !districtSelect.value || !detailAddress.trim()) {
-                return null;
-            }
-            
-            const cityText = citySelect.options[citySelect.selectedIndex].text;
-            const districtText = districtSelect.value;
-            
-            return `${detailAddress.trim()}, ${districtText}, ${cityText}`;
-        }
-
-        // Validate address fields
-        function validateAddressFields() {
-            const citySelect = document.getElementById('customerCity');
-            const districtSelect = document.getElementById('customerDistrict');
-            const detailAddress = document.getElementById('customerDetailAddress');
-            
-            let isValid = true;
-            
-            // Validate city
-            if (!citySelect.value) {
-                citySelect.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                citySelect.classList.remove('is-invalid');
-            }
-            
-            // Validate district
-            if (!districtSelect.value) {
-                districtSelect.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                districtSelect.classList.remove('is-invalid');
-            }
-            
-            // Validate detail address
-            if (!detailAddress.value.trim()) {
-                detailAddress.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                detailAddress.classList.remove('is-invalid');
-            }
-            
-            return isValid;
-        }
-
-        // ...existing code...
+        // Initialize theme preview when modal opens
+        document.getElementById('orderModal').addEventListener('shown.bs.modal', function() {
+            updateThemePreview();
+        });
     </script>
 </body>
 
