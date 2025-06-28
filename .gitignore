@@ -1,5 +1,8 @@
-# Çevre Değişkenleri ve Konfigürasyon
+# Çevre Değişkenleri ve Konfigürasyon - GÜVENLİK KRİTİK!
 .env
+.env.*
+!.env.example
+*.env
 .env.local
 .env.production
 .env.staging
