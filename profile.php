@@ -70,8 +70,7 @@ function getSocialIcon($platform)
 {
     $icons = [
         'facebook' => 'fab fa-facebook-f',
-        'twitter' => 'fab fa-twitter',
-        'x' => 'fab fa-x-twitter', // Yeni X logosu
+        'x' => 'fab fa-x-twitter',
         'instagram' => 'fab fa-instagram',
         'linkedin' => 'fab fa-linkedin-in',
         'github' => 'fab fa-github',
@@ -132,7 +131,6 @@ function formatSocialUrl($platform, $url)
     // Platform'a göre base URL'leri belirle
     $baseUrls = [
         'facebook' => 'https://facebook.com/',
-        'twitter' => 'https://twitter.com/',
         'x' => 'https://x.com/',
         'instagram' => 'https://instagram.com/',
         'linkedin' => 'https://linkedin.com/in/',
@@ -669,7 +667,7 @@ if (!$theme) {
                             // Platform isimlerini Türkçe'ye çevir
                             $platformNames = [
                                 'facebook' => 'Facebook',
-                                'twitter' => 'Twitter',
+                                'x' => 'X',
                                 'instagram' => 'Instagram',
                                 'linkedin' => 'LinkedIn',
                                 'github' => 'GitHub',

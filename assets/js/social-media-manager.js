@@ -5,10 +5,10 @@ const platforms = {
         icon: 'fab fa-facebook',
         placeholder: 'https://facebook.com/username'
     },
-    twitter: {
-        name: 'Twitter',
-        icon: 'fab fa-twitter',
-        placeholder: 'https://twitter.com/username'
+    x: {
+        name: 'X',
+        icon: 'fab fa-x-twitter',
+        placeholder: 'https://x.com/username'
     },
     instagram: {
         name: 'Instagram',
@@ -47,8 +47,8 @@ function validateURL(url, platform) {
         switch (platform) {
             case 'facebook':
                 return url.includes('facebook.com');
-            case 'twitter':
-                return url.includes('twitter.com');
+            case 'x':
+                return url.includes('x.com');
             case 'instagram':
                 return url.includes('instagram.com');
             case 'linkedin':

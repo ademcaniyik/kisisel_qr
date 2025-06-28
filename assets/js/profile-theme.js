@@ -13,7 +13,7 @@ function applyTheme() {
     const socialLinks = document.querySelectorAll('.social-link');
     socialLinks.forEach(link => {
         if (!link.classList.contains('facebook') && 
-            !link.classList.contains('twitter') && 
+            !link.classList.contains('x') && 
             !link.classList.contains('instagram') && 
             !link.classList.contains('linkedin') && 
             !link.classList.contains('github') && 

@@ -1,8 +1,7 @@
 // Sosyal medya platform tanımları
 const socialPlatforms = {
     facebook: { name: 'Facebook', placeholder: 'facebook.com/kullaniciadi' },
-    twitter: { name: 'Twitter', placeholder: 'twitter.com/kullaniciadi' },
-    x: { name: 'X (Twitter)', placeholder: 'x.com/kullaniciadi' },
+    x: { name: 'X', placeholder: 'x.com/kullaniciadi' },
     instagram: { name: 'Instagram', placeholder: 'instagram.com/kullaniciadi' },
     linkedin: { name: 'LinkedIn', placeholder: 'linkedin.com/in/kullaniciadi' },
     github: { name: 'GitHub', placeholder: 'github.com/kullaniciadi' },

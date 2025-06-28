@@ -1349,7 +1349,7 @@
                                                     <span class="d-block small">Twitter</span>
                                                 </button>
                                             </div>
-                                            
+
                                             <div class="col-6 col-md-4 col-lg-3">
                                                 <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin">
                                                     <i class="fab fa-linkedin text-primary"></i>
@@ -2305,10 +2305,10 @@
                 color: 'platform-instagram'
             },
             twitter: {
-                name: 'Twitter',
-                icon: 'fab fa-twitter',
+                name: 'X',
+                icon: 'fab fa-x-twitter',
                 prefix: '@',
-                baseUrl: 'https://twitter.com/',
+                baseUrl: 'https://x.com/',
                 placeholder: 'kullanici_adi',
                 color: 'platform-twitter'
             },
