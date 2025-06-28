@@ -63,7 +63,7 @@ class OrderManager {
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : 'bank_transfer';
             
             $stmt->bind_param(
-                "sssisssidsi",
+                "sssisssidsii",
                 $data['customer_name'],
                 $data['customer_phone'],
                 $data['customer_email'],
