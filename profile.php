@@ -45,11 +45,11 @@ $result = $stmt->get_result();
 if ($result->num_rows === 0) {
     // Hata logla - detaylı debug
     error_log('Geçersiz profil erişimi: qr_id=' . ($qrId ?? 'null') . ' slug=' . ($slug ?? 'null') . ' IP=' . $_SERVER['REMOTE_ADDR'] . ' URI=' . $_SERVER['REQUEST_URI']);
-    
+
     // Debug için SQL query'i de logla
     $debugQuery = $qrId ? "QR query for ID: $qrId" : ($slug ? "Slug query for: $slug" : "No QR ID or slug provided");
     error_log('Profile lookup debug: ' . $debugQuery);
-    
+
     header("HTTP/1.0 404 Not Found");
     echo "Profil bulunamadı.";
     exit();
@@ -104,12 +104,12 @@ function formatSocialUrl($platform, $url)
     if (is_array($url)) {
         $url = isset($url[0]) && !empty($url[0]) ? $url[0] : '';
     }
-    
+
     // Boş URL kontrolü
     if (empty($url) || $url === 'undefined' || is_numeric($url)) {
         return '#';
     }
-    
+
     // URL zaten http:// veya https:// ile başlıyorsa olduğu gibi döndür
     if (preg_match('/^https?:\/\//i', $url)) {
         return $url;
@@ -120,7 +120,7 @@ function formatSocialUrl($platform, $url)
         // Email için mailto: protokolü ekle
         return 'mailto:' . $url;
     }
-    
+
     if ($platform === 'website') {
         // Website için http/https yoksa ekle
         if (!preg_match('/^https?:\/\//i', $url)) {
@@ -185,19 +185,20 @@ function adjustColor($color, $amount)
     return sprintf('#%02x%02x%02x', $r, $g, $b);
 }
 
-function getThemeClass($themeName) {
+function getThemeClass($themeName)
+{
     $themeMapping = [
         // Varsayılan
         'default' => 'default',
         'klasik' => 'default',
-        
+
         // Karanlık/Neon
         'dark' => 'dark',
         'karanlık' => 'dark',
         'neon' => 'neon',
         'cyberpunk' => 'neon',
         'siber' => 'neon',
-        
+
         // Yeşil/Doğa
         'zarif' => 'green',
         'doğa' => 'green',
@@ -205,7 +206,7 @@ function getThemeClass($themeName) {
         'green' => 'green',
         'orman' => 'green',
         'forest' => 'green',
-        
+
         // Mor/Elegant
         'minimalist' => 'purple',
         'minimal' => 'purple',
@@ -214,7 +215,7 @@ function getThemeClass($themeName) {
         'purple' => 'purple',
         'elegant' => 'purple',
         'şık' => 'purple',
-        
+
         // Mavi/Okyanus
         'okyanus' => 'blue',
         'mavi' => 'blue',
@@ -222,42 +223,42 @@ function getThemeClass($themeName) {
         'blue' => 'blue',
         'corporate' => 'blue',
         'kurumsal' => 'blue',
-        
+
         // Turuncu/Günbatımı
         'sunset' => 'orange',
         'günbatımı' => 'orange',
         'turuncu' => 'orange',
         'orange' => 'orange',
-        
+
         // Pembe
         'sakura' => 'pink',
         'pembe' => 'pink',
         'pink' => 'pink',
-        
+
         // Altın
         'altın' => 'gold',
         'gold' => 'gold',
         'lüks' => 'gold',
-        
+
         // Pastel
         'pastel' => 'pastel',
         'rüya' => 'pastel',
-        
+
         // Retro
         'retro' => 'retro',
         'synthwave' => 'retro',
         'nostaljik' => 'retro',
-        
+
         // Minimal Beyaz
         'sade' => 'minimal',
         'beyaz' => 'minimal',
-        
+
         // Sade Temiz
         'clean' => 'clean',
         'temiz' => 'clean',
         'sade temiz' => 'clean'
     ];
-    
+
     $lowerTheme = strtolower(trim($themeName));
     return $themeMapping[$lowerTheme] ?? 'clean';
 }
@@ -288,23 +289,23 @@ if (!$theme) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($profile['name']); ?> - Kişisel QR Profil</title>
-    
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti. <?php echo htmlspecialchars(substr(strip_tags($profile['bio']), 0, 150)); ?>...">
     <meta name="keywords" content="<?php echo htmlspecialchars($profile['name']); ?>, dijital kartvizit, QR kod, profil, iletişim bilgileri, sosyal medya">
     <meta name="author" content="<?php echo htmlspecialchars($profile['name']); ?>">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>">
-    
+
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="<?php echo htmlspecialchars($profile['name']); ?> - Kişisel QR Profil">
     <meta property="og:description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti ve iletişim bilgileri.">
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>">
     <?php if (!empty($profile['photo_url'])): ?>
-    <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr<?php echo htmlspecialchars($profile['photo_url']); ?>">
+        <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr<?php echo htmlspecialchars($profile['photo_url']); ?>">
     <?php else: ?>
-    <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr/assets/images/default-profile.jpg">
+        <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr/assets/images/default-profile.jpg">
     <?php endif; ?>
     <meta property="og:image:width" content="400">
     <meta property="og:image:height" content="400">
@@ -312,95 +313,91 @@ if (!$theme) {
     <meta property="og:locale" content="tr_TR">
     <meta property="profile:first_name" content="<?php echo htmlspecialchars(explode(' ', $profile['name'])[0]); ?>">
     <?php if (str_word_count($profile['name']) > 1): ?>
-    <meta property="profile:last_name" content="<?php echo htmlspecialchars(substr($profile['name'], strpos($profile['name'], ' ') + 1)); ?>">
+        <meta property="profile:last_name" content="<?php echo htmlspecialchars(substr($profile['name'], strpos($profile['name'], ' ') + 1)); ?>">
     <?php endif; ?>
-    
+
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<?php echo htmlspecialchars($profile['name']); ?> - Kişisel QR Profil">
     <meta name="twitter:description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti ve iletişim bilgileri.">
     <?php if (!empty($profile['photo'])): ?>
-    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/<?php echo htmlspecialchars($profile['photo_url'] ?? ''); ?>">
+        <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/<?php echo htmlspecialchars($profile['photo_url'] ?? ''); ?>">
     <?php else: ?>
-    <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/assets/images/default-profile.jpg">
+        <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/assets/images/default-profile.jpg">
     <?php endif; ?>
-    
+
     <!-- Additional Meta Tags -->
     <meta name="application-name" content="Kişisel QR">
     <meta name="msapplication-TileColor" content="#3498db">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/kisisel_qr/assets/images/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="/kisisel_qr/assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/kisisel_qr/assets/images/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/kisisel_qr/assets/images/apple-touch-icon.png">
     <meta name="theme-color" content="#3498db">
-    
+
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "<?php echo addslashes(htmlspecialchars($profile['name'])); ?>",
-        "description": "<?php echo addslashes(htmlspecialchars(substr(strip_tags($profile['bio']), 0, 200))); ?>",
-        "url": "https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>",
-        <?php if (!empty($profile['photo'])): ?>
-        "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
-        <?php endif; ?>
-        <?php if (!empty($profile['phone'])): ?>
-        "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
-        <?php endif; ?>
-        <?php if (!empty($profile['email'])): ?>
-        "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>",
-        <?php endif; ?>
-        "sameAs": [
-            <?php
-            $socialLinksArray = [];
-            if (!empty($profile['social_links'])) {
-                $socialLinks = json_decode($profile['social_links'], true);
-                if (is_array($socialLinks)) {
-                    foreach ($socialLinks as $platform => $url) {
-                        // Eğer URL array ise, ilk elemanı al
-                        if (is_array($url)) {
-                            $url = isset($url[0]) && !empty($url[0]) ? $url[0] : '';
-                        }
-                        
-                        if (!empty($url) && is_string($url)) {
-                            $formattedUrl = formatSocialUrl($platform, $url);
-                            if ($formattedUrl !== '#') {
-                                $socialLinksArray[] = '"' . addslashes(htmlspecialchars($formattedUrl)) . '"';
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "<?php echo addslashes(htmlspecialchars($profile['name'])); ?>",
+            "description": "<?php echo addslashes(htmlspecialchars(substr(strip_tags($profile['bio']), 0, 200))); ?>",
+            "url": "https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>",
+            <?php if (!empty($profile['photo'])): ?> "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
+            <?php endif; ?>
+            <?php if (!empty($profile['phone'])): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
+            <?php endif; ?>
+            <?php if (!empty($profile['email'])): ?> "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>",
+            <?php endif; ?> "sameAs": [
+                <?php
+                $socialLinksArray = [];
+                if (!empty($profile['social_links'])) {
+                    $socialLinks = json_decode($profile['social_links'], true);
+                    if (is_array($socialLinks)) {
+                        foreach ($socialLinks as $platform => $url) {
+                            // Eğer URL array ise, ilk elemanı al
+                            if (is_array($url)) {
+                                $url = isset($url[0]) && !empty($url[0]) ? $url[0] : '';
+                            }
+
+                            if (!empty($url) && is_string($url)) {
+                                $formattedUrl = formatSocialUrl($platform, $url);
+                                if ($formattedUrl !== '#') {
+                                    $socialLinksArray[] = '"' . addslashes(htmlspecialchars($formattedUrl)) . '"';
+                                }
                             }
                         }
                     }
                 }
+                echo implode(',', $socialLinksArray);
+                ?>
+            ],
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "personal"
+                <?php if (!empty($profile['phone'])): ?>,
+                    "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>"
+                <?php endif; ?>
+                <?php if (!empty($profile['email'])): ?>,
+                    "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>"
+                <?php endif; ?>
             }
-            echo implode(',', $socialLinksArray);
-            ?>
-        ],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "personal"
-            <?php if (!empty($profile['phone'])): ?>
-            ,"telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>"
-            <?php endif; ?>
-            <?php if (!empty($profile['email'])): ?>
-            ,"email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>"
-            <?php endif; ?>
         }
-    }
     </script>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Styles -->
     <link href="/kisisel_qr/assets/css/profile-themes.css" rel="stylesheet">
     <link href="/kisisel_qr/assets/css/image-enhancements.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         :root {
             --background-color: <?php echo htmlspecialchars($profile['background_color'] ?? '#f8f9fa'); ?>;
@@ -409,112 +406,145 @@ if (!$theme) {
             --card-background: <?php echo htmlspecialchars($profile['card_background'] ?? '#ffffff'); ?>;
             --font-family: <?php echo htmlspecialchars($profile['font_family'] ?? "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"); ?>;
         }
-        
-        /* Additional Info Styles */
+
+        /* Additional Info Styles - Modern Compact Design */
         .additional-info {
             margin-top: 2rem;
-            padding: 1.5rem;
+            padding: 0;
+        }
+
+        .info-item {
             background: var(--card-background);
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+            padding: 1.25rem;
             margin-bottom: 1rem;
-            color: var(--text-color);
-        }
-        
-        .info-grid {
-            display: grid;
-            gap: 1rem;
-        }
-        
-        .info-item {
             display: flex;
             align-items: center;
-            padding: 1rem;
-            background: rgba(var(--accent-color), 0.05);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
         .info-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--accent-color);
-            color: white;
-            border-radius: 10px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
         }
-        
-        .info-icon.blood-type {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+
+        .blood-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3) !important;
         }
-        
+
         .info-content {
             flex: 1;
-            position: relative;
         }
-        
+
         .info-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--accent-color);
+            font-size: 0.9rem;
+            color: #666;
             margin-bottom: 0.25rem;
+            font-weight: 500;
         }
-        
+
         .info-value {
-            display: block;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
         }
-        
-        .copy-btn {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            width: 32px;
-            height: 32px;
+
+        .blood-info .info-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+
+        .blood-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-action {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            font-size: 0.85rem;
         }
-        
-        .copy-btn:hover {
-            background: rgba(var(--accent-color), 0.8);
-            transform: translateY(-50%) scale(1.1);
+
+        .info-item:hover .info-action {
+            background: #3498db;
+            color: white;
+            transform: scale(1.1);
         }
-        
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .additional-info {
                 margin-top: 1.5rem;
-                padding: 1rem;
+                padding: 0 0.5rem;
             }
-            
+
             .info-item {
-                padding: 0.75rem;
+                padding: 1rem;
+                margin-bottom: 0.75rem;
             }
-            
+
             .info-icon {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 margin-right: 0.75rem;
+                font-size: 1rem;
+            }
+
+            .info-value {
+                font-size: 1rem;
+            }
+
+            .blood-info .info-label {
+                font-size: 1rem;
+            }
+
+            .blood-value {
+                font-size: 1.2rem;
+            }
+
+            .info-action {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -570,9 +600,9 @@ if (!$theme) {
                                 <i class="fas fa-chevron-right"></i>
                             </div>
                         </a>
-                        
-                        <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $profile['phone']); ?>" 
-                           target="_blank" class="contact-btn whatsapp-btn">
+
+                        <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $profile['phone']); ?>"
+                            target="_blank" class="contact-btn whatsapp-btn">
                             <div class="btn-icon">
                                 <i class="fab fa-whatsapp"></i>
                             </div>
@@ -587,41 +617,8 @@ if (!$theme) {
                     </div>
                 </div>
             <?php endif; ?>
-            
-            <!-- İban ve Kan Grubu Bilgileri -->
-            <?php if ($profile['iban'] || $profile['blood_type']): ?>
-                <div class="additional-info">
-                    <h3 class="section-title">Ek Bilgiler</h3>
-                    <div class="info-grid">
-                        <?php if ($profile['iban']): ?>
-                            <div class="info-item">
-                                <div class="info-icon">
-                                    <i class="fas fa-university"></i>
-                                </div>
-                                <div class="info-content">
-                                    <span class="info-label">İban</span>
-                                    <span class="info-value" id="iban-text"><?php echo htmlspecialchars($profile['iban']); ?></span>
-                                    <button class="copy-btn" onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', 'İban kopyalandı!')">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if ($profile['blood_type']): ?>
-                            <div class="info-item">
-                                <div class="info-icon blood-type">
-                                    <i class="fas fa-tint"></i>
-                                </div>
-                                <div class="info-content">
-                                    <span class="info-label">Kan Grubu</span>
-                                    <span class="info-value"><?php echo htmlspecialchars($profile['blood_type']); ?></span>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endif; ?>            <?php if ($profile['social_links']): ?>
+
+            <?php if ($profile['social_links']): ?>
                 <div class="social-links">
                     <?php
                     $links = json_decode($profile['social_links'], true);
@@ -640,15 +637,15 @@ if (!$theme) {
                             else {
                                 continue;
                             }
-                            
+
                             // Boş URL'leri atla
                             if (empty($url) || $url === 'undefined' || is_numeric($url)) {
                                 continue;
                             }
-                            
+
                             $formattedUrl = formatSocialUrl($platform, $url);
                             $platformLower = strtolower($platform);
-                            
+
                             // Platform isimlerini Türkçe'ye çevir
                             $platformNames = [
                                 'facebook' => 'Facebook',
@@ -669,18 +666,18 @@ if (!$theme) {
                                 'email' => 'E-posta',
                                 'website' => 'Website'
                             ];
-                            
+
                             $displayName = $platformNames[$platformLower] ?? ucfirst($platform);
                     ?>
-                        <a href="<?php echo htmlspecialchars($formattedUrl); ?>"
-                           target="_blank"
-                           class="social-link <?php echo $platformLower; ?>"
-                           rel="noopener noreferrer">
-                            <i class="<?php echo getSocialIcon($platform); ?>"></i>
-                            <span><?php echo htmlspecialchars($displayName); ?></span>
-                        </a>
-                    <?php 
-                        endforeach; 
+                            <a href="<?php echo htmlspecialchars($formattedUrl); ?>"
+                                target="_blank"
+                                class="social-link <?php echo $platformLower; ?>"
+                                rel="noopener noreferrer">
+                                <i class="<?php echo getSocialIcon($platform); ?>"></i>
+                                <span><?php echo htmlspecialchars($displayName); ?></span>
+                            </a>
+                    <?php
+                        endforeach;
                     } else {
                         echo "<!-- Sosyal medya linkleri bulunamadı veya geçersiz JSON -->";
                     }
@@ -689,26 +686,76 @@ if (!$theme) {
             <?php else: ?>
                 <!-- Sosyal medya linkleri yok -->
             <?php endif; ?>
+
+            <!-- IBAN ve Kan Grubu Bilgileri - Modern Compact Design -->
+            <?php if ($profile['iban'] || $profile['blood_type']): ?>
+                <div class="additional-info">
+
+                    <?php if ($profile['iban']): ?>
+                        <!-- İban Bilgisi -->
+                        <div class="info-item iban-info"
+                            onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', '✅ İban kopyalandı!')"
+                            style="display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 10px;">
+
+                            <div class="info-icon" style="margin-right: 10px; font-size: 18px; color: #333;">
+                                <i class="fas fa-university"></i>
+                            </div>
+
+                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #333;">
+                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">İban Numarası</div>
+                                <div class="info-value" style="display: flex; align-items: center; gap: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <?php echo htmlspecialchars($profile['iban']); ?>
+                                    <span class="info-action" style="cursor: pointer; color: #007bff; transition: color 0.3s;"
+                                        onmouseover="this.style.color='#0056b3'"
+                                        onmouseout="this.style.color='#007bff'">
+                                        <i class="fas fa-copy"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($profile['blood_type']): ?>
+                        <!-- Kan Grubu Bilgisi -->
+                        <div class="info-item blood-group-info"
+                            style="display: flex; align-items: center; padding: 10px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+
+                            <div class="info-icon" style="margin-right: 10px; font-size: 18px; color: #333;">
+                                <i class="fas fa-tint"></i>
+                            </div>
+
+                            <div class="info-content" style="flex: 1; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #333;">
+                                <div class="info-label" style="margin-right: 10px; white-space: nowrap;">Kan Grubu</div>
+                                <div class="info-value" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <?php echo htmlspecialchars($profile['blood_type']); ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif; ?>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/kisisel_qr/assets/js/image-cleanup.js"></script>
     <script>
-        // Copy to clipboard function
-        function copyToClipboard(text, message = 'Kopyalandı!') {
+        // Copy to clipboard function with feedback
+        function copyToClipboard(text, message = 'Kopyalandı!', feedbackId = null) {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(function() {
-                    showToast(message);
+                    showCopyFeedback(message, feedbackId);
                 }).catch(function() {
-                    fallbackCopyText(text, message);
+                    fallbackCopyText(text, message, feedbackId);
                 });
             } else {
-                fallbackCopyText(text, message);
+                fallbackCopyText(text, message, feedbackId);
             }
         }
-        
-        function fallbackCopyText(text, message) {
+
+        function fallbackCopyText(text, message, feedbackId) {
             const textArea = document.createElement('textarea');
             textArea.value = text;
             textArea.style.position = 'fixed';
@@ -719,13 +766,31 @@ if (!$theme) {
             textArea.select();
             try {
                 document.execCommand('copy');
-                showToast(message);
+                showCopyFeedback(message, feedbackId);
             } catch (err) {
-                showToast('Kopyalama başarısız!');
+                showCopyFeedback('Kopyalama başarısız!', feedbackId);
             }
             textArea.remove();
         }
-        
+
+        function showCopyFeedback(message, feedbackId) {
+            if (feedbackId) {
+                // Use specific feedback element
+                const feedback = document.getElementById(feedbackId);
+                if (feedback) {
+                    feedback.querySelector('span').textContent = message;
+                    feedback.classList.add('show');
+                    setTimeout(() => {
+                        feedback.classList.remove('show');
+                    }, 2000);
+                    return;
+                }
+            }
+
+            // Fallback to general toast
+            showToast(message);
+        }
+
         function showToast(message) {
             // Create toast element
             const toast = document.createElement('div');
@@ -745,14 +810,14 @@ if (!$theme) {
                 transition: transform 0.3s ease;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             `;
-            
+
             document.body.appendChild(toast);
-            
+
             // Animate in
             setTimeout(() => {
                 toast.style.transform = 'translateX(0)';
             }, 100);
-            
+
             // Remove after 3 seconds
             setTimeout(() => {
                 toast.style.transform = 'translateX(100%)';
@@ -761,7 +826,7 @@ if (!$theme) {
                 }, 300);
             }, 3000);
         }
-        
+
         // Profile page specific image enhancements
         document.addEventListener('DOMContentLoaded', function() {
             // WebP support detection
@@ -772,14 +837,14 @@ if (!$theme) {
                     webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
                 });
             }
-            
+
             // Add no-webp class if WebP is not supported
             supportsWebP().then((supported) => {
                 if (!supported) {
                     document.documentElement.classList.add('no-webp');
                 }
             });
-            
+
             // Enhanced error handling for profile photo
             const profilePhoto = document.querySelector('.profile-photo');
             if (profilePhoto) {
@@ -790,13 +855,13 @@ if (!$theme) {
                         this.src = '/kisisel_qr/assets/images/default-profile.svg';
                     }
                 });
-                
+
                 profilePhoto.addEventListener('load', function() {
                     this.classList.add('loaded');
                     this.classList.remove('error');
                 });
             }
-            
+
             // Intersection Observer for additional lazy loading
             if ('IntersectionObserver' in window) {
                 const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -808,14 +873,14 @@ if (!$theme) {
                         }
                     });
                 });
-                
+
                 document.querySelectorAll('img[loading="lazy"]').forEach(img => {
                     imageObserver.observe(img);
                 });
             }
         });
     </script>
-    
+
     <!-- Kişisel QR Reklam Footer -->
     <footer class="qr-footer-ad" onclick="window.open('https://acdisoftware.com.tr/kisisel_qr', '_blank')" style="
         position: fixed;
@@ -836,31 +901,32 @@ if (!$theme) {
     ">
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4z"/>
-                <path d="M15 13h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm4 0h2v2h-2z"/>
+                <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4z" />
+                <path d="M15 13h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm4 0h2v2h-2z" />
             </svg>
             <span>Siz de kendi Kişisel QR kodunuzu oluşturun!</span>
             <span style="font-size: 12px; opacity: 0.8;">→</span>
         </div>
     </footer>
-    
+
     <style>
         .qr-footer-ad:hover {
             transform: translateY(-2px);
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         /* Mobil responsive */
         @media (max-width: 768px) {
             .qr-footer-ad {
                 font-size: 13px;
                 padding: 10px 15px;
             }
+
             .qr-footer-ad span:last-child {
                 display: none;
             }
         }
-        
+
         /* Body'ye alt padding ekle ki footer content'i kapatmasın */
         body {
             padding-bottom: 60px;

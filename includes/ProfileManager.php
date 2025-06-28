@@ -37,6 +37,8 @@ class ProfileManager {
                 'phone' => $orderData['customer_phone'],
                 'theme' => $theme,
                 'slug' => $slug,
+                'iban' => $this->extractIbanFromOrder($orderData),
+                'blood_type' => $this->extractBloodTypeFromOrder($orderData),
                 'social_links' => json_encode($socialLinks, JSON_UNESCAPED_UNICODE)
             ];
             
@@ -69,7 +71,7 @@ class ProfileManager {
      * Profil oluştur
      */
     private function createProfile($data) {
-        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, social_links) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, iban, blood_type, social_links) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connection->prepare($sql);
         
         if (!$stmt) {
@@ -77,12 +79,14 @@ class ProfileManager {
         }
         
         $stmt->bind_param(
-            "ssssss",
+            "ssssssss",
             $data['name'],
             $data['bio'],
             $data['phone'],
             $data['theme'],
             $data['slug'],
+            $data['iban'],
+            $data['blood_type'],
             $data['social_links']
         );
         
@@ -296,6 +300,40 @@ class ProfileManager {
         $stmt->close();
         
         return $profile;
+    }
+    
+    /**
+     * Sipariş verisinden IBAN bilgisini çıkar
+     */
+    private function extractIbanFromOrder($orderData) {
+        if (isset($orderData['special_requests']) && $orderData['special_requests']) {
+            $lines = explode("\n", $orderData['special_requests']);
+            
+            foreach ($lines as $line) {
+                if (strpos($line, 'İban:') !== false) {
+                    return trim(str_replace('İban:', '', $line));
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Sipariş verisinden kan grubu bilgisini çıkar
+     */
+    private function extractBloodTypeFromOrder($orderData) {
+        if (isset($orderData['special_requests']) && $orderData['special_requests']) {
+            $lines = explode("\n", $orderData['special_requests']);
+            
+            foreach ($lines as $line) {
+                if (strpos($line, 'Kan Grubu:') !== false) {
+                    return trim(str_replace('Kan Grubu:', '', $line));
+                }
+            }
+        }
+        
+        return null;
     }
 }
 ?>

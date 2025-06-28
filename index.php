@@ -1140,6 +1140,40 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- İban ve Kan Grubu Alanları -->
+                            <div class="mb-3">
+                                <label class="form-label">Ek Bilgiler (isteğe bağlı)</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="customerIban" class="form-label">İban</label>
+                                            <input type="text" class="form-control" id="customerIban" 
+                                                   placeholder="TR00 0000 0000 0000 0000 0000 00" 
+                                                   pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$"
+                                                   maxlength="32">
+                                            <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="customerBloodType" class="form-label">Kan Grubu</label>
+                                            <select class="form-select" id="customerBloodType">
+                                                <option value="">Seçiniz</option>
+                                                <option value="A+">A Rh+</option>
+                                                <option value="A-">A Rh-</option>
+                                                <option value="B+">B Rh+</option>
+                                                <option value="B-">B Rh-</option>
+                                                <option value="AB+">AB Rh+</option>
+                                                <option value="AB-">AB Rh-</option>
+                                                <option value="0+">0 Rh+</option>
+                                                <option value="0-">0 Rh-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="mb-3">
                                 <label for="customerTheme" class="form-label">Tema Seçimi</label>
                                 <div class="row">
@@ -1561,6 +1595,8 @@
                 const customerAddress = document.getElementById('customerAddress').value;
                 const customerBio = document.getElementById('customerBio').value;
                 const customerTheme = document.getElementById('customerTheme').value;
+                const customerIban = document.getElementById('customerIban').value;
+                const customerBloodType = document.getElementById('customerBloodType').value;
                 const themeText = document.getElementById('customerTheme').options[document.getElementById('customerTheme').selectedIndex].text;
                 const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
                 
@@ -1576,6 +1612,8 @@
                 let specialRequests = '';
                 if (customerAddress) specialRequests += `Adres: ${customerAddress}\n`;
                 if (customerBio) specialRequests += `Bio: ${customerBio}\n`;
+                if (customerIban) specialRequests += `İban: ${customerIban}\n`;
+                if (customerBloodType) specialRequests += `Kan Grubu: ${customerBloodType}\n`;
                 if (socialMedia.length > 0) {
                     specialRequests += `Sosyal Medya:\n${socialMedia.join('\n')}\n`;
                 }
