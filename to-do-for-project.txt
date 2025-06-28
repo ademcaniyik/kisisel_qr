@@ -1,0 +1,26 @@
+COMPLETED ✅:
+
+1- ✅ Profillerin gösterildiği sayfanın en alt kısmına footer gibi bir reklam eklendi.
+   - Modern gradient tasarımla fixed footer eklendi
+   - Tıklanabilir ve https://acdisoftware.com.tr/kisisel_qr'ye yönlendiriyor
+   - Responsive tasarım (mobil uyumlu)
+   - Hover efektleri eklendi
+
+2- ✅ QR'lar .online yerine .com.tr domain'ine yönlendiriyor.
+   - QRManager.php dosyasında domain güncellendi
+   - https://acdisoftware.com.tr/kisisel_qr/qr/ formatına çevrildi
+
+3- ✅ Profil bilgilerine İban ve Kan Grubu alanları eklendi (Opsiyonel).
+   - Veritabanı tablosuna yeni alanlar eklendi (add_iban_blood_type.sql)
+   - Admin panelinde ekleme/düzenleme formlarına alanlar eklendi
+   - Profil görüntüleme sayfasında modern kartlar halinde gösteriliyor
+   - İban için kopyalama butonu eklendi
+   - Kan grubu için özel ikon ve renk
+
+TECHNICAL DETAILS:
+- SQL Script: database/add_iban_blood_type.sql (sunucuda çalıştırılacak)
+- Form validasyonları eklendi (İban format kontrolü)
+- Responsive tasarım tüm ekran boyutları için optimize edildi
+- JavaScript kopyalama fonksiyonu ve toast bildirimleri eklendi
+- Modern CSS stilleri ve animasyonlar
+- Accessibility (erişilebilirlik) standartlarına uygun

@@ -31,7 +31,7 @@ class QRManager {
 
         if ($stmt->execute()) {            // QR kod görselini oluştur
             $qrImagePath = __DIR__ . "/../public/qr_codes/{$qrId}.png";
-            $qrUrl = "https://acdisoftware.online/kisisel_qr/qr/" . $qrId;
+            $qrUrl = "https://acdisoftware.com.tr/kisisel_qr/qr/" . $qrId;
             
             if (!file_exists(__DIR__ . "/../public/qr_codes/")) {
                 mkdir(__DIR__ . "/../public/qr_codes/", 0777, true);

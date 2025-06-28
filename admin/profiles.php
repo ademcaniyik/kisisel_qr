@@ -237,6 +237,37 @@ if ($result) {
                                 <i class="fas fa-plus"></i> Bağlantı Ekle
                             </button>
                         </div>
+                        
+                        <!-- İban ve Kan Grubu Alanları -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="iban" class="form-label">İban <small class="text-muted">(Opsiyonel)</small></label>
+                                    <input type="text" class="form-control" id="iban" name="iban" 
+                                           placeholder="TR00 0000 0000 0000 0000 0000 00" 
+                                           pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$"
+                                           maxlength="32">
+                                    <div class="form-text">TR ile başlayan 26 haneli İban numarası</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="blood_type" class="form-label">Kan Grubu <small class="text-muted">(Opsiyonel)</small></label>
+                                    <select class="form-select" id="blood_type" name="blood_type">
+                                        <option value="">Seçiniz</option>
+                                        <option value="A+">A Rh+</option>
+                                        <option value="A-">A Rh-</option>
+                                        <option value="B+">B Rh+</option>
+                                        <option value="B-">B Rh-</option>
+                                        <option value="AB+">AB Rh+</option>
+                                        <option value="AB-">AB Rh-</option>
+                                        <option value="0+">0 Rh+</option>
+                                        <option value="0-">0 Rh-</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="mb-3">
                             <label for="theme" class="form-label">Profil Teması</label>
                             <select class="form-select" id="theme" name="theme">
@@ -347,6 +378,36 @@ if ($result) {
                                 <i class="fas fa-plus"></i> Bağlantı Ekle
                             </button>
                         </div>
+                        
+                        <!-- İban ve Kan Grubu Alanları - Düzenleme -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_iban" class="form-label">İban <small class="text-muted">(Opsiyonel)</small></label>
+                                    <input type="text" class="form-control" id="edit_iban" name="iban" 
+                                           placeholder="TR00 0000 0000 0000 0000 0000 00" 
+                                           pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$"
+                                           maxlength="32">
+                                    <div class="form-text">TR ile başlayan 26 haneli İban numarası</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_blood_type" class="form-label">Kan Grubu <small class="text-muted">(Opsiyonel)</small></label>
+                                    <select class="form-select" id="edit_blood_type" name="blood_type">
+                                        <option value="">Seçiniz</option>
+                                        <option value="A+">A Rh+</option>
+                                        <option value="A-">A Rh-</option>
+                                        <option value="B+">B Rh+</option>
+                                        <option value="B-">B Rh-</option>
+                                        <option value="AB+">AB Rh+</option>
+                                        <option value="AB-">AB Rh-</option>
+                                        <option value="0+">0 Rh+</option>
+                                        <option value="0-">0 Rh-</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -373,6 +434,8 @@ if ($result) {
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
                         <p><strong>Telefon:</strong> <span id="view_phone"></span></p>
+                        <p><strong>İban:</strong> <span id="view_iban"></span></p>
+                        <p><strong>Kan Grubu:</strong> <span id="view_blood_type"></span></p>
                         <p><strong>Tema:</strong> <span id="view_theme"></span></p>
                         <div id="view_socialLinks"></div>
                     </div>
@@ -424,6 +487,10 @@ if ($result) {
                     $('#edit_phone').val(res.profile.phone);
                     $('#edit_theme').val(res.profile.theme);
                     $('#edit_current_photo_url').val(res.profile.photo_url);
+                    
+                    // İban ve Kan Grubu değerlerini doldur
+                    $('#edit_iban').val(res.profile.iban || '');
+                    $('#edit_blood_type').val(res.profile.blood_type || '');
                     
                     // Mevcut foto gösterimi (photo_data kullanarak)
                     const photoContainer = $('#edit_current_photo_container');
@@ -546,6 +613,8 @@ if ($result) {
                     $('#view_name').text(res.profile.name);
                     $('#view_bio').text(res.profile.bio);
                     $('#view_phone').text(res.profile.phone);
+                    $('#view_iban').text(res.profile.iban || 'Belirtilmemiş');
+                    $('#view_blood_type').text(res.profile.blood_type || 'Belirtilmemiş');
                     $('#view_theme').text(res.profile.theme);
                     
                     // Profil fotoğrafı gösterimi (photo_data kullanarak)

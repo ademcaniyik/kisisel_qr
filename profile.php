@@ -409,6 +409,114 @@ if (!$theme) {
             --card-background: <?php echo htmlspecialchars($profile['card_background'] ?? '#ffffff'); ?>;
             --font-family: <?php echo htmlspecialchars($profile['font_family'] ?? "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"); ?>;
         }
+        
+        /* Additional Info Styles */
+        .additional-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--card-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(var(--accent-color), 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .info-icon.blood-type {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .info-content {
+            flex: 1;
+            position: relative;
+        }
+        
+        .info-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .info-value {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(var(--accent-color), 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .additional-info {
+                margin-top: 1.5rem;
+                padding: 1rem;
+            }
+            
+            .info-item {
+                padding: 0.75rem;
+            }
+            
+            .info-icon {
+                width: 35px;
+                height: 35px;
+                margin-right: 0.75rem;
+            }
+        }
     </style>
 </head>
 
@@ -476,6 +584,41 @@ if (!$theme) {
                                 <i class="fas fa-chevron-right"></i>
                             </div>
                         </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <!-- İban ve Kan Grubu Bilgileri -->
+            <?php if ($profile['iban'] || $profile['blood_type']): ?>
+                <div class="additional-info">
+                    <h3 class="section-title">Ek Bilgiler</h3>
+                    <div class="info-grid">
+                        <?php if ($profile['iban']): ?>
+                            <div class="info-item">
+                                <div class="info-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">İban</span>
+                                    <span class="info-value" id="iban-text"><?php echo htmlspecialchars($profile['iban']); ?></span>
+                                    <button class="copy-btn" onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', 'İban kopyalandı!')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($profile['blood_type']): ?>
+                            <div class="info-item">
+                                <div class="info-icon blood-type">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="info-content">
+                                    <span class="info-label">Kan Grubu</span>
+                                    <span class="info-value"><?php echo htmlspecialchars($profile['blood_type']); ?></span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>            <?php if ($profile['social_links']): ?>
@@ -552,6 +695,73 @@ if (!$theme) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/kisisel_qr/assets/js/image-cleanup.js"></script>
     <script>
+        // Copy to clipboard function
+        function copyToClipboard(text, message = 'Kopyalandı!') {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showToast(message);
+                }).catch(function() {
+                    fallbackCopyText(text, message);
+                });
+            } else {
+                fallbackCopyText(text, message);
+            }
+        }
+        
+        function fallbackCopyText(text, message) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast(message);
+            } catch (err) {
+                showToast('Kopyalama başarısız!');
+            }
+            textArea.remove();
+        }
+        
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--accent-color);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-weight: 500;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
         // Profile page specific image enhancements
         document.addEventListener('DOMContentLoaded', function() {
             // WebP support detection
@@ -605,6 +815,57 @@ if (!$theme) {
             }
         });
     </script>
+    
+    <!-- Kişisel QR Reklam Footer -->
+    <footer class="qr-footer-ad" onclick="window.open('https://acdisoftware.com.tr/kisisel_qr', '_blank')" style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+        z-index: 1000;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-top: 2px solid rgba(255,255,255,0.2);
+    ">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4z"/>
+                <path d="M15 13h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm4 0h2v2h-2z"/>
+            </svg>
+            <span>Siz de kendi Kişisel QR kodunuzu oluşturun!</span>
+            <span style="font-size: 12px; opacity: 0.8;">→</span>
+        </div>
+    </footer>
+    
+    <style>
+        .qr-footer-ad:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Mobil responsive */
+        @media (max-width: 768px) {
+            .qr-footer-ad {
+                font-size: 13px;
+                padding: 10px 15px;
+            }
+            .qr-footer-ad span:last-child {
+                display: none;
+            }
+        }
+        
+        /* Body'ye alt padding ekle ki footer content'i kapatmasın */
+        body {
+            padding-bottom: 60px;
+        }
+    </style>
 </body>
 
 </html>

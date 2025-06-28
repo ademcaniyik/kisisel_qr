@@ -55,6 +55,8 @@ try {
             $bio = Utilities::sanitizeInput($_POST['bio']);
             $phone = Utilities::sanitizeInput($_POST['phone']);
             $theme = Utilities::sanitizeInput($_POST['theme'] ?? 'default');
+            $iban = Utilities::sanitizeInput($_POST['iban'] ?? '');
+            $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
             $isDynamic = isset($_POST['is_dynamic']) ? 1 : 0;
             $redirectUrl = $isDynamic ? Utilities::sanitizeInput($_POST['redirect_url']) : null;
             $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
@@ -85,8 +87,8 @@ try {
                     throw new Exception($uploadResult['message']);
                 }
             }
-            $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, photo_data, slug, theme) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssss", $name, $bio, $phone, $socialLinksJson, $photoUrl, $photoData, $slug, $theme);
+            $stmt = $connection->prepare("INSERT INTO profiles (name, bio, phone, social_links, photo_url, photo_data, slug, theme, iban, blood_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssss", $name, $bio, $phone, $socialLinksJson, $photoUrl, $photoData, $slug, $theme, $iban, $bloodType);
             if ($stmt->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Profil başarıyla oluşturuldu']);
             } else {
@@ -276,6 +278,8 @@ try {
             $bio = Utilities::sanitizeInput($_POST['bio']);
             $phone = Utilities::sanitizeInput($_POST['phone']);
             $theme = Utilities::sanitizeInput($_POST['theme'] ?? 'default');
+            $iban = Utilities::sanitizeInput($_POST['iban'] ?? '');
+            $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
             $socialLinks = isset($_POST['social_links']) ? json_decode($_POST['social_links'], true) : [];
             $socialLinksJson = json_encode($socialLinks);
             
@@ -317,8 +321,8 @@ try {
             
             // Veritabanını güncelle - mevcut photo_data'yı koru
             $photoDataJson = $photoData ? json_encode($photoData) : $currentProfile['photo_data'];
-            $stmt = $connection->prepare("UPDATE profiles SET name=?, bio=?, phone=?, social_links=?, photo_url=?, photo_data=?, theme=?, updated_at=NOW() WHERE id=?");
-            $stmt->bind_param("sssssssi", $name, $bio, $phone, $socialLinksJson, $photoUrl, $photoDataJson, $theme, $id);
+            $stmt = $connection->prepare("UPDATE profiles SET name=?, bio=?, phone=?, social_links=?, photo_url=?, photo_data=?, theme=?, iban=?, blood_type=?, updated_at=NOW() WHERE id=?");
+            $stmt->bind_param("sssssssssi", $name, $bio, $phone, $socialLinksJson, $photoUrl, $photoDataJson, $theme, $iban, $bloodType, $id);
             
             if ($stmt->execute()) {
                 echo json_encode([
@@ -343,7 +347,7 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Geçersiz profil ID']);
                 exit();
             }
-            $stmt = $connection->prepare("SELECT id, name, bio, phone, theme, photo_url, social_links FROM profiles WHERE id = ?");
+            $stmt = $connection->prepare("SELECT id, name, bio, phone, theme, photo_url, social_links, iban, blood_type FROM profiles WHERE id = ?");
             $stmt->bind_param("i", $profileId);
             $stmt->execute();
             $result = $stmt->get_result();
