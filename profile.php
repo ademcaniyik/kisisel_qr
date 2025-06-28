@@ -70,7 +70,7 @@ function getSocialIcon($platform)
 {
     $icons = [
         'facebook' => 'fab fa-facebook-f',
-        'x' => 'fas fa-times', // Alternatif X ikonu
+        'x' => 'fa-brands fa-x-twitter',
         'instagram' => 'fab fa-instagram',
         'linkedin' => 'fab fa-linkedin-in',
         'github' => 'fab fa-github',
@@ -412,17 +412,6 @@ if (!$theme) {
         }
 
         /* X Platform Icon Styling */
-        .social-link.x i {
-            position: relative;
-            font-style: normal;
-        }
-        
-        .social-link.x i:before {
-            content: "𝕏";
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        
         .social-link.x {
             background: #000000 !important;
             color: #ffffff !important;
@@ -430,7 +419,16 @@ if (!$theme) {
         
         .social-link.x:hover {
             background: #333333 !important;
+            color: #ffffff !important;
             transform: translateY(-2px);
+        }
+        
+        .social-link.x i {
+            color: #ffffff !important;
+        }
+        
+        .social-link.x:hover i {
+            color: #ffffff !important;
         }
 
         .info-item {
