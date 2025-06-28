@@ -348,19 +348,34 @@ if (!$theme) {
             <?php if (!empty($profile['phone'])): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
             <?php endif; ?>
             <?php if (!empty($profile['email'])): ?> "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>",
-            <?php endif; ?> "sameAs": [
+            <?php endif; ?>
+            "sameAs": [
                 <?php
                 $socialLinksArray = [];
                 if (!empty($profile['social_links'])) {
                     $socialLinks = json_decode($profile['social_links'], true);
                     if (is_array($socialLinks)) {
-                        foreach ($socialLinks as $platform => $url) {
-                            // Eğer URL array ise, ilk elemanı al
-                            if (is_array($url)) {
-                                $url = isset($url[0]) && !empty($url[0]) ? $url[0] : '';
+                        foreach ($socialLinks as $key => $value) {
+                            $platform = '';
+                            $url = '';
+                            
+                            // Yeni JSON format: {"platform": "url"}
+                            if (is_string($key) && is_string($value)) {
+                                $platform = $key;
+                                $url = $value;
+                            }
+                            // Eski array format: [{"platform":"facebook","url":"..."}]
+                            else if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
+                                $platform = $value['platform'];
+                                $url = $value['url'];
+                            }
+                            // Geçersiz format
+                            else {
+                                continue;
                             }
 
-                            if (!empty($url) && is_string($url)) {
+                            // Boş URL kontrolü
+                            if (!empty($url) && is_string($url) && $url !== 'undefined') {
                                 $formattedUrl = formatSocialUrl($platform, $url);
                                 if ($formattedUrl !== '#') {
                                     $socialLinksArray[] = '"' . addslashes(htmlspecialchars($formattedUrl)) . '"';
@@ -393,6 +408,7 @@ if (!$theme) {
     <!-- Styles -->
     <link href="/kisisel_qr/assets/css/profile-themes.css" rel="stylesheet">
     <link href="/kisisel_qr/assets/css/image-enhancements.css" rel="stylesheet">
+    <link href="/kisisel_qr/assets/css/profile-page.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
@@ -403,280 +419,6 @@ if (!$theme) {
             --accent-color: <?php echo htmlspecialchars($profile['accent_color'] ?? '#007bff'); ?>;
             --card-background: <?php echo htmlspecialchars($profile['card_background'] ?? '#ffffff'); ?>;
             --font-family: <?php echo htmlspecialchars($profile['font_family'] ?? "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"); ?>;
-        }
-
-        /* Additional Info Styles - Modern Compact Design */
-        .additional-info {
-            margin-top: 2rem;
-            padding: 0;
-        }
-
-        /* X Platform Icon Styling */
-        .social-link.x {
-            background: #1da1f2 !important;
-            color: #ffffff !important;
-        }
-        
-        .social-link.x:hover {
-            background: #0d8bd9 !important;
-            color: #ffffff !important;
-            transform: translateY(-2px);
-        }
-        
-        .social-link.x i {
-            color: #ffffff !important;
-        }
-        
-        .social-link.x:hover i {
-            color: #ffffff !important;
-        }
-
-        .info-item {
-            background: var(--card-background);
-            border-radius: 16px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .info-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }
-
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            font-size: 1.2rem;
-            color: white;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-        }
-
-        .blood-icon {
-            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3) !important;
-        }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.4;
-        }
-
-        .blood-info .info-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 0;
-        }
-
-        .blood-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .info-action {
-            background: rgba(52, 152, 219, 0.1);
-            color: #3498db;
-            border-radius: 8px;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .info-item:hover .info-action {
-            background: #3498db;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .additional-info {
-                margin-top: 1.5rem;
-                padding: 0 0.5rem;
-            }
-
-            .info-item {
-                padding: 1rem;
-                margin-bottom: 0.75rem;
-            }
-
-            .info-icon {
-                width: 40px;
-                height: 40px;
-                margin-right: 0.75rem;
-                font-size: 1rem;
-            }
-
-            .info-value {
-                font-size: 0.9rem;
-                letter-spacing: 0.3px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .blood-info .info-label {
-                font-size: 1rem;
-            }
-
-            .blood-value {
-                font-size: 1.2rem;
-            }
-
-            .info-action {
-                width: 32px;
-                height: 32px;
-                font-size: 0.8rem;
-                flex-shrink: 0;
-            }
-        }
-
-        /* Extra small screens */
-        @media (max-width: 480px) {
-            .info-item {
-                padding: 0.75rem;
-            }
-
-            .info-icon {
-                width: 36px;
-                height: 36px;
-                margin-right: 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .info-value {
-                font-size: 0.85rem;
-                letter-spacing: 0.2px;
-            }
-
-            .info-action {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
-            }
-        }
-
-        /* İban ve Kan Grubu - Enhanced Mobile Responsive */
-        @media (max-width: 768px) {
-            .info-card {
-                padding: 16px !important;
-                margin-bottom: 12px !important;
-            }
-
-            .iban-card .iban-content,
-            .blood-card .blood-content {
-                width: 100%;
-            }
-
-            .iban-number {
-                padding: 10px 12px !important;
-                font-size: 13px !important;
-                word-spacing: 2px !important;
-                letter-spacing: 0.5px !important;
-                line-height: 1.3 !important;
-                overflow-wrap: break-word;
-                word-break: break-all;
-            }
-
-            .blood-type-display {
-                padding: 12px 16px !important;
-                font-size: 24px !important;
-            }
-
-            .iban-icon,
-            .blood-icon {
-                margin-right: 12px !important;
-                padding: 10px !important;
-            }
-
-            .iban-header h4,
-            .blood-header h4 {
-                font-size: 14px !important;
-            }
-
-            .iban-header span,
-            .blood-header span {
-                font-size: 10px !important;
-                padding: 1px 6px !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .additional-info {
-                margin-top: 16px !important;
-            }
-
-            .info-card {
-                padding: 14px !important;
-                border-radius: 12px !important;
-            }
-
-            .iban-number {
-                font-size: 12px !important;
-                padding: 8px 10px !important;
-                word-spacing: 1px !important;
-                letter-spacing: 0.3px !important;
-            }
-
-            .blood-type-display {
-                font-size: 20px !important;
-                padding: 10px 12px !important;
-            }
-
-            .iban-icon,
-            .blood-icon {
-                padding: 8px !important;
-                margin-right: 10px !important;
-            }
-
-            .iban-icon i,
-            .blood-icon i {
-                font-size: 18px !important;
-            }
         }
     </style>
 </head>
@@ -740,15 +482,19 @@ if (!$theme) {
                     <?php
                     $links = json_decode($profile['social_links'], true);
                     if (is_array($links) && !empty($links)) {
-                        foreach ($links as $platform => $url):
+                        foreach ($links as $key => $value) {
+                            $platform = '';
+                            $url = '';
+                            
                             // Yeni JSON format: {"platform": "url"}
-                            if (is_string($platform) && is_string($url)) {
-                                // Bu doğru format - kullan
+                            if (is_string($key) && is_string($value)) {
+                                $platform = $key;
+                                $url = $value;
                             }
                             // Eski array format: [{"platform":"facebook","url":"..."}]
-                            else if (isset($url['platform']) && isset($url['url'])) {
-                                $platform = $url['platform'];
-                                $url = $url['url'];
+                            else if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
+                                $platform = $value['platform'];
+                                $url = $value['url'];
                             }
                             // Geçersiz format
                             else {
@@ -794,7 +540,7 @@ if (!$theme) {
                                 <span><?php echo htmlspecialchars($displayName); ?></span>
                             </a>
                     <?php
-                        endforeach;
+                        }
                     } else {
                         echo "<!-- Sosyal medya linkleri bulunamadı veya geçersiz JSON -->";
                     }
@@ -804,98 +550,58 @@ if (!$theme) {
                 <!-- Sosyal medya linkleri yok -->
             <?php endif; ?>
 
-            <!-- IBAN ve Kan Grubu Bilgileri - Enhanced Modern Design -->
+            <!-- IBAN ve Kan Grubu Bilgileri - Sade Modern Tasarım -->
             <?php if ($profile['iban'] || $profile['blood_type']): ?>
                 <div class="additional-info" style="margin-top: 24px;">
 
                     <?php if ($profile['iban']): ?>
-                        <!-- İban Bilgisi - Geliştirilmiş Tasarım -->
-                        <div class="info-card iban-card"
-                            onclick="copyToClipboard('<?php echo htmlspecialchars($profile['iban']); ?>', '✅ İban kopyalandı!')"
-                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;"
-                            onmouseover="this.style.transform='translateY(-4px) scale(1.02)'; this.style.boxShadow='0 20px 40px rgba(102, 126, 234, 0.25)'"
-                            onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 32px rgba(102, 126, 234, 0.15)'">
-
-                            <!-- Background Pattern -->
-                            <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; pointer-events: none;"></div>
-
-                            <div style="display: flex; align-items: center; position: relative; z-index: 1;">
-                                <div class="iban-icon" style="margin-right: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-university" style="font-size: 24px; color: #fff;"></i>
-                                </div>
-
-                                <div class="iban-content" style="flex: 1;">
-                                    <div class="iban-header" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                        <h4 style="color: #fff; font-size: 16px; font-weight: 600; margin: 0; margin-right: 8px;">IBAN</h4>
-                                        <span style="background: rgba(255,255,255,0.3); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500;">Tıkla & Kopyala</span>
+                        <!-- İban Bilgisi - Sade Tasarım -->
+                        <div class="info-card iban-card" style="background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 12px; padding: 16px; margin-bottom: 16px; transition: all 0.2s ease; cursor: pointer;" 
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" 
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="flex: 1;">
+                                    <div style="color: #6c757d; font-size: 12px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <i class="fas fa-university" style="margin-right: 6px;"></i>IBAN
                                     </div>
-                                    
-                                    <div class="iban-number" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 8px;">
-                                        <div style="color: #fff; font-family: 'Courier New', 'SF Mono', Consolas, monospace; font-size: 15px; font-weight: 600; letter-spacing: 1px; word-spacing: 4px; line-height: 1.4; text-align: left; direction: ltr;">
-                                            <?php 
-                                            $iban = $profile['iban'];
-                                            // İban'ı 4'lü gruplar halinde düzenle
-                                            if (strlen($iban) > 4) {
-                                                $formattedIban = chunk_split($iban, 4, ' ');
-                                                echo trim($formattedIban);
-                                            } else {
-                                                echo $iban;
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8); font-size: 12px;">
-                                            <i class="fas fa-shield-alt" style="margin-right: 4px;"></i>
-                                            Güvenli Banka Transferi
-                                        </span>
-                                        <div style="color: #fff; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 12px;">
-                                            <i class="fas fa-copy" style="margin-right: 4px;"></i>
-                                            Kopyala
-                                        </div>
+                                    <div id="iban-number" style="color: #333; font-family: 'Courier New', monospace; font-size: 14px; font-weight: 600; letter-spacing: 0.5px; word-break: break-all; line-height: 1.4;">
+                                        <?php 
+                                        $iban = $profile['iban'];
+                                        // İban'ı 4'lü gruplar halinde düzenle
+                                        if (strlen($iban) > 4) {
+                                            $formattedIban = implode(' ', str_split($iban, 4));
+                                            echo htmlspecialchars($formattedIban);
+                                        } else {
+                                            echo htmlspecialchars($iban);
+                                        }
+                                        ?>
                                     </div>
                                 </div>
+                                <button onclick="copyIban()" style="background: #007bff; color: white; border: none; border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.2s ease; margin-left: 12px; box-shadow: 0 2px 4px rgba(0,123,255,0.3);" 
+                                        onmouseover="this.style.background='#0056b3'; this.style.transform='scale(1.05)'" 
+                                        onmouseout="this.style.background='#007bff'; this.style.transform='scale(1)'"
+                                        title="IBAN'ı Kopyala">
+                                    <i class="fas fa-copy" style="font-size: 14px;"></i>
+                                </button>
                             </div>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($profile['blood_type']): ?>
-                        <!-- Kan Grubu Bilgisi - Geliştirilmiş Tasarım -->
-                        <div class="info-card blood-card"
-                            style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.15); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden;"
-                            onmouseover="this.style.transform='translateY(-4px) scale(1.02)'; this.style.boxShadow='0 20px 40px rgba(255, 107, 107, 0.25)'"
-                            onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 32px rgba(255, 107, 107, 0.15)'">
-
-                            <!-- Background Pattern -->
-                            <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 15px 15px; pointer-events: none;"></div>
-
-                            <div style="display: flex; align-items: center; position: relative; z-index: 1;">
-                                <div class="blood-icon" style="margin-right: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fas fa-heartbeat" style="font-size: 24px; color: #fff;"></i>
+                        <!-- Kan Grubu Bilgisi - Sade Tasarım -->
+                        <div class="info-card blood-card" style="background: #fff5f5; border: 2px solid #fed7d7; border-radius: 12px; padding: 16px; transition: all 0.2s ease;"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(229,62,62,0.1)'" 
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="display: flex; align-items: center;">
+                                <div style="background: #e53e3e; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+                                    <i class="fas fa-heartbeat" style="font-size: 16px;"></i>
                                 </div>
-
-                                <div class="blood-content" style="flex: 1;">
-                                    <div class="blood-header" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                        <h4 style="color: #fff; font-size: 16px; font-weight: 600; margin: 0; margin-right: 8px;">Kan Grubu</h4>
-                                        <span style="background: rgba(255,255,255,0.3); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500;">Acil Durum</span>
+                                <div style="flex: 1;">
+                                    <div style="color: #a0a0a0; font-size: 12px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        Kan Grubu
                                     </div>
-                                    
-                                    <div class="blood-type-display" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 8px; text-align: center;">
-                                        <div style="color: #fff; font-size: 32px; font-weight: 700; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1;">
-                                            <?php echo htmlspecialchars($profile['blood_type']); ?>
-                                        </div>
-                                    </div>
-
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8); font-size: 12px;">
-                                            <i class="fas fa-plus-circle" style="margin-right: 4px;"></i>
-                                            Kan Grubu Bilgisi
-                                        </span>
-                                        <div style="color: #fff; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 8px; font-size: 12px;">
-                                            <i class="fas fa-heart" style="margin-right: 4px;"></i>
-                                            Sağlık
-                                        </div>
+                                    <div style="color: #e53e3e; font-size: 20px; font-weight: 700; font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;">
+                                        <?php echo htmlspecialchars($profile['blood_type']); ?>
                                     </div>
                                 </div>
                             </div>
@@ -908,199 +614,22 @@ if (!$theme) {
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/kisisel_qr/assets/js/image-cleanup.js"></script>
-    <script>
-        // Copy to clipboard function with feedback
-        function copyToClipboard(text, message = 'Kopyalandı!', feedbackId = null) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(function() {
-                    showCopyFeedback(message, feedbackId);
-                }).catch(function() {
-                    fallbackCopyText(text, message, feedbackId);
-                });
-            } else {
-                fallbackCopyText(text, message, feedbackId);
-            }
-        }
-
-        function fallbackCopyText(text, message, feedbackId) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showCopyFeedback(message, feedbackId);
-            } catch (err) {
-                showCopyFeedback('Kopyalama başarısız!', feedbackId);
-            }
-            textArea.remove();
-        }
-
-        function showCopyFeedback(message, feedbackId) {
-            if (feedbackId) {
-                // Use specific feedback element
-                const feedback = document.getElementById(feedbackId);
-                if (feedback) {
-                    feedback.querySelector('span').textContent = message;
-                    feedback.classList.add('show');
-                    setTimeout(() => {
-                        feedback.classList.remove('show');
-                    }, 2000);
-                    return;
-                }
-            }
-
-            // Fallback to general toast
-            showToast(message);
-        }
-
-        function showToast(message) {
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.textContent = message;
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--accent-color);
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-weight: 500;
-                z-index: 10000;
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            `;
-
-            document.body.appendChild(toast);
-
-            // Animate in
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-            }, 100);
-
-            // Remove after 3 seconds
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
-
-        // Profile page specific image enhancements
-        document.addEventListener('DOMContentLoaded', function() {
-            // WebP support detection
-            function supportsWebP() {
-                return new Promise((resolve) => {
-                    const webP = new Image();
-                    webP.onload = webP.onerror = () => resolve(webP.height === 2);
-                    webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-                });
-            }
-
-            // Add no-webp class if WebP is not supported
-            supportsWebP().then((supported) => {
-                if (!supported) {
-                    document.documentElement.classList.add('no-webp');
-                }
-            });
-
-            // Enhanced error handling for profile photo
-            const profilePhoto = document.querySelector('.profile-photo');
-            if (profilePhoto) {
-                profilePhoto.addEventListener('error', function() {
-                    this.classList.add('error');
-                    this.alt = 'Profil fotoğrafı yüklenemedi';
-                    if (!this.src.includes('default-profile.svg')) {
-                        this.src = '/kisisel_qr/assets/images/default-profile.svg';
-                    }
-                });
-
-                profilePhoto.addEventListener('load', function() {
-                    this.classList.add('loaded');
-                    this.classList.remove('error');
-                });
-            }
-
-            // Intersection Observer for additional lazy loading
-            if ('IntersectionObserver' in window) {
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.classList.add('loaded');
-                            observer.unobserve(img);
-                        }
-                    });
-                });
-
-                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                    imageObserver.observe(img);
-                });
-            }
-        });
-    </script>
+    <script src="/kisisel_qr/assets/js/profile-page.min.js"></script>
 
     <!-- Kişisel QR Reklam Footer -->
-    <footer class="qr-footer-ad" onclick="window.open('https://acdisoftware.com.tr/kisisel_qr', '_blank')" style="
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-align: center;
-        padding: 12px 20px;
-        font-size: 14px;
-        font-weight: 500;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        cursor: pointer;
-        z-index: 1000;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border-top: 2px solid rgba(255,255,255,0.2);
-    ">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <footer class="qr-footer-ad">
+        <div class="qr-footer-ad-content">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4z" />
                 <path d="M15 13h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm4 0h2v2h-2z" />
             </svg>
             <span>Siz de kendi Kişisel QR kodunuzu oluşturun!</span>
-            <span style="font-size: 12px; opacity: 0.8;">→</span>
+            <span class="qr-footer-ad-arrow">→</span>
         </div>
     </footer>
-
-    <style>
-        .qr-footer-ad:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Mobil responsive */
-        @media (max-width: 768px) {
-            .qr-footer-ad {
-                font-size: 13px;
-                padding: 10px 15px;
-            }
-
-            .qr-footer-ad span:last-child {
-                display: none;
-            }
-        }
-
-        /* Body'ye alt padding ekle ki footer content'i kapatmasın */
-        body {
-            padding-bottom: 60px;
-        }
-    </style>
 </body>
 
 </html>
