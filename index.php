@@ -1958,7 +1958,9 @@
                 const socialMediaData = getSocialMediaData();
                 socialMediaData.forEach(item => {
                     const platform = socialMediaPlatforms[item.platform];
-                    socialMedia.push(`${platform.name}: ${item.url}`);
+                    if (platform) {
+                        socialMedia.push(`${platform.name}: ${item.url}`);
+                    }
                 });
 
                 // Create shipping address separately
@@ -2112,7 +2114,9 @@
             const socialMediaData = getSocialMediaData();
             socialMediaData.forEach(item => {
                 const platform = socialMediaPlatforms[item.platform];
-                socialMedia.push(`${platform.name}: ${item.url}`);
+                if (platform) {
+                    socialMedia.push(`${platform.name}: ${item.url}`);
+                }
             });
 
             // WhatsApp mesajını oluştur

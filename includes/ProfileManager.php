@@ -137,7 +137,12 @@ class ProfileManager {
                             'facebook' => 'facebook',
                             'youtube' => 'youtube',
                             'tiktok' => 'tiktok',
+                            'whatsapp' => 'whatsapp',
                             'website' => 'website',
+                            'telegram' => 'telegram',
+                            'discord' => 'discord',
+                            'snapchat' => 'snapchat',
+                            'twitch' => 'twitch',
                             'behance' => 'behance'
                         ];
                         
@@ -154,6 +159,10 @@ class ProfileManager {
                                         break;
                                     case 'tiktok':
                                         $value = "https://tiktok.com/@{$username}";
+                                        break;
+                                    case 'whatsapp':
+                                        // WhatsApp için telefon numarası formatı
+                                        $value = "https://wa.me/{$username}";
                                         break;
                                 }
                             }

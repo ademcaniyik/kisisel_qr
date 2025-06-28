@@ -635,19 +635,31 @@ if (!$theme) {
                             </div>
                         </a>
 
-                        <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $profile['phone']); ?>"
-                            target="_blank" class="contact-btn whatsapp-btn">
-                            <div class="btn-icon">
-                                <i class="fab fa-whatsapp"></i>
-                            </div>
-                            <div class="btn-content">
-                                <span class="btn-title">WhatsApp Mesaj</span>
-                                <span class="btn-subtitle">Hemen mesaj gönder</span>
-                            </div>
-                            <div class="btn-arrow">
-                                <i class="fas fa-chevron-right"></i>
-                            </div>
-                        </a>
+                        <?php 
+                        // WhatsApp butonunu sadece sosyal medya linklerinde WhatsApp varsa göster
+                        $showWhatsAppBtn = false;
+                        if ($profile['social_links']) {
+                            $links = json_decode($profile['social_links'], true);
+                            if (is_array($links) && isset($links['whatsapp'])) {
+                                $showWhatsAppBtn = true;
+                            }
+                        }
+                        
+                        if ($showWhatsAppBtn): ?>
+                            <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $profile['phone']); ?>"
+                                target="_blank" class="contact-btn whatsapp-btn">
+                                <div class="btn-icon">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div class="btn-content">
+                                    <span class="btn-title">WhatsApp Mesaj</span>
+                                    <span class="btn-subtitle">Hemen mesaj gönder</span>
+                                </div>
+                                <div class="btn-arrow">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>
