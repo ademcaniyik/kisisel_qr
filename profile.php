@@ -714,7 +714,6 @@ if (!$theme) {
                             </div>
                         </div>
                     <?php endif; ?>
-
                     <?php if ($profile['blood_type']): ?>
                         <!-- Kan Grubu Bilgisi -->
                         <div class="info-item blood-group-info"
