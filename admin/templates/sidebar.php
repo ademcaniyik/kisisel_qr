@@ -33,17 +33,18 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <i class="fas fa-layer-group me-2"></i>QR Pool
                         <?php
                         // Stok uyarısı için badge
-                        if (file_exists(__DIR__ . '/../../includes/QRPoolManager.php')) {
-                            require_once __DIR__ . '/../../includes/QRPoolManager.php';
-                            try {
+                        try {
+                            if (file_exists(__DIR__ . '/../../includes/QRPoolManager.php')) {
+                                require_once __DIR__ . '/../../config/database.php';
+                                require_once __DIR__ . '/../../includes/QRPoolManager.php';
                                 $qrPoolManager = new QRPoolManager();
                                 $stockStatus = $qrPoolManager->getStockStatus();
                                 if ($stockStatus['stock_warning']) {
                                     echo '<span class="badge bg-warning ms-2">!</span>';
                                 }
-                            } catch (Exception $e) {
-                                // Hata durumunda badge gösterme
                             }
+                        } catch (Exception $e) {
+                            // Hata durumunda badge gösterme, sessizce devam et
                         }
                         ?>
                     </a>

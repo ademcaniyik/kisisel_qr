@@ -4,8 +4,8 @@
  * Güvenli URL formatını koruyarak (örn: /qr/7d268b70) QR havuzu işlemleri
  */
 
-require_once 'config/database.php';
-require_once 'includes/QRManager.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/QRManager.php';
 
 class QRPoolManager {
     private $db;

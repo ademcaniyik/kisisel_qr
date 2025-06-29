@@ -112,10 +112,10 @@ try {
     
     // QRPoolManager sınıfının varlığını kontrol et
     if (!class_exists('QRPoolManager')) {
-        if (!file_exists('includes/QRPoolManager.php')) {
-            throw new Exception("QRPoolManager.php dosyası bulunamadı!");
+        if (!file_exists(__DIR__ . '/includes/QRPoolManager.php')) {
+            throw new Exception("QRPoolManager.php dosyası bulunamadı: " . __DIR__ . '/includes/QRPoolManager.php');
         }
-        require_once 'includes/QRPoolManager.php';
+        require_once __DIR__ . '/includes/QRPoolManager.php';
     }
     
     $qrPoolManager = new QRPoolManager();
