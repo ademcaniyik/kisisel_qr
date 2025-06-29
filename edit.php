@@ -261,6 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div id="selectedSocialMedias" class="selected-social-medias"></div>
                         </div>
+                        <input type="hidden" name="social_links" id="socialLinksInput">
                         <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;">Kaydet</button>
                     </form>
                 </div>
@@ -309,6 +310,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           var el = document.querySelector('#selectedSocialMedias [data-platform="'+platform+'"]');
           if(el) el.remove();
         };
+        // Form submit olmadan önce sosyal medya dizisini inputa yaz
+        var editForm = document.getElementById('editProfileForm');
+        if(editForm){
+          editForm.addEventListener('submit', function(e){
+            var hiddenInput = document.getElementById('socialLinksInput');
+            if(hiddenInput){
+              hiddenInput.value = JSON.stringify(window.selectedSocialMedias || []);
+            }
+          });
+        }
         // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
         function bindSocialButtons() {
           document.querySelectorAll('.social-platform-btn').forEach(function(btn){
