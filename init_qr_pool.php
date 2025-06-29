@@ -15,6 +15,7 @@ if (!isset($_SESSION['admin_logged_in']) && PHP_SAPI !== 'cli') {
 }
 
 require_once 'config/database.php';
+require_once 'config/site.php'; // Base URL fonksiyonu
 require_once 'includes/QRPoolManager.php';
 
 echo "<h2>QR Pool Başlatma İşlemi</h2>\n";
@@ -92,9 +93,8 @@ try {
         echo "<tr><th>Pool ID</th><th>QR Code ID</th><th>Edit Token</th><th>Edit Code</th><th>Profil URL</th><th>Edit URL</th></tr>\n";
         
         foreach ($sampleQRs as $qr) {
-            $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-            $profileUrl = "https://$baseUrl/qr/" . $qr['qr_code_id'];
-            $editUrl = "https://$baseUrl/edit/" . $qr['edit_token'];
+            $profileUrl = getBaseUrl() . '/qr/' . $qr['qr_code_id'];
+            $editUrl = getBaseUrl() . '/edit/' . $qr['edit_token'];
             
             echo "<tr>";
             echo "<td>{$qr['pool_id']}</td>";
