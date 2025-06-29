@@ -454,7 +454,10 @@ class QRPoolManager {
     private function getBaseUrl() {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'];
-        $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
-        return $protocol . '://' . $host . $basePath;
+        // admin, api, vs. ne olursa olsun kök dizini bul
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $basePath = preg_replace('#/(admin|api)(/.*)?$#', '', dirname($scriptName));
+        $basePath = rtrim($basePath, '/');
+        return $protocol . '://' . $host . ($basePath ? $basePath : '');
     }
 }
