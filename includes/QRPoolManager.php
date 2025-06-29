@@ -301,7 +301,8 @@ class QRPoolManager {
             $zipPath = __DIR__ . "/../public/downloads/" . $zipFileName;
 
             // Eğer dosya zaten varsa yeniden oluşturma, doğrudan yolu döndür
-            $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+            // DÜZELTME: /admin ifadesini kaldırarak doğru kök yolu oluştur
+            $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
             $webPath = $basePath . '/public/downloads/' . $zipFileName;
             if (file_exists($zipPath)) {
                 return $webPath;
