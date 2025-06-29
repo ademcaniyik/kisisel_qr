@@ -68,3 +68,8 @@ AddDefaultCharset UTF-8
 # Hata sayfaları
 ErrorDocument 404 /kisisel_qr/errors/404.php
 ErrorDocument 500 /kisisel_qr/errors/500.php
+
+#Profile Edit
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^edit/([a-zA-Z0-9]+)$ edit.php?token=$1 [L,QSA]
