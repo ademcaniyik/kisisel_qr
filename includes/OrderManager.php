@@ -16,27 +16,37 @@ class OrderManager {
     }
     
     /**
-     * Yeni sipariş oluştur ve otomatik profil oluştur
+     * Yeni sipariş oluştur ve otomatik profil oluştur (QR Pool ile)
      */
     public function createOrder($data) {
-        // ProfileManager'ı yükle
+        // ProfileManager ve QRPoolManager'ı yükle
         require_once __DIR__ . '/ProfileManager.php';
+        require_once __DIR__ . '/QRPoolManager.php';
         $profileManager = new ProfileManager();
+        $qrPoolManager = new QRPoolManager();
         
         try {
             // Transaction başlat
             $this->connection->autocommit(false);
             
-            // Önce profil oluştur
+            // Önce profil oluştur (QR olmadan)
             $profileResult = $profileManager->createProfileFromOrder($data);
             
             if (!$profileResult['success']) {
                 throw new Exception("Profil oluşturulamadı: " . $profileResult['message']);
             }
             
-            // Sipariş verisine profil bilgilerini ekle
+            // QR Pool'dan müsait QR ata
+            $qrAssignment = $qrPoolManager->assignAvailableQR($profileResult['profile_id'], $data);
+            
+            if (!$qrAssignment['success']) {
+                throw new Exception("QR ataması başarısız: " . $qrAssignment['error']);
+            }
+            
+            // Sipariş verisine profil ve QR bilgilerini ekle
             $data['profile_id'] = $profileResult['profile_id'];
             $data['profile_slug'] = $profileResult['slug'];
+            $data['qr_pool_id'] = $qrAssignment['qr_pool_id'];
             
             // Siparişi oluştur
             $sql = "INSERT INTO orders (
@@ -45,6 +55,7 @@ class OrderManager {
                 customer_email,
                 profile_id,
                 profile_slug,
+                qr_pool_id,
                 product_type, 
                 product_name, 
                 quantity, 
@@ -53,7 +64,7 @@ class OrderManager {
                 shipping_address,
                 payment_method,
                 whatsapp_sent
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $this->connection->prepare($sql);
             if (!$stmt) {
@@ -71,6 +82,7 @@ class OrderManager {
                 $data['customer_email'],
                 $data['profile_id'],
                 $data['profile_slug'],
+                $data['qr_pool_id'],
                 $data['product_type'],
                 $data['product_name'],
                 $data['quantity'],
@@ -93,9 +105,13 @@ class OrderManager {
                     'order_id' => $orderId,
                     'profile_id' => $profileResult['profile_id'],
                     'profile_slug' => $profileResult['slug'],
-                    'profile_url' => "profile.php?slug=" . $profileResult['slug'],
-                    'qr_created' => $profileResult['qr_created'],
-                    'qr_id' => $profileResult['qr_id'] ?? null
+                    'profile_url' => $qrAssignment['profile_url'], // QR Pool'dan gelen güvenli URL
+                    'qr_created' => true,
+                    'qr_id' => $qrAssignment['qr_code_id'],
+                    'pool_id' => $qrAssignment['pool_id'],
+                    'edit_token' => $qrAssignment['edit_token'],
+                    'edit_code' => $qrAssignment['edit_code'],
+                    'edit_url' => $qrAssignment['edit_url']
                 ];
             } else {
                 $error = $stmt->error;

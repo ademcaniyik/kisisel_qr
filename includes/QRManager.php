@@ -159,5 +159,28 @@ class QRManager {
         
         return $statistics;
     }
+    
+    /**
+     * QR görsel dosyası oluştur (QRPoolManager için)
+     */
+    public function generateQRImage($url, $filename, $scale = 5) {
+        $qrImagePath = __DIR__ . "/../public/qr_codes/{$filename}.png";
+        
+        if (!file_exists(__DIR__ . "/../public/qr_codes/")) {
+            mkdir(__DIR__ . "/../public/qr_codes/", 0777, true);
+        }
+
+        $options = new QROptions([
+            'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+            'eccLevel' => QRCode::ECC_L,
+            'scale' => $scale,
+            'imageBase64' => false
+        ]);
+
+        $qrcode = new QRCode($options);
+        $qrcode->render($url, $qrImagePath);
+        
+        return file_exists($qrImagePath);
+    }
 }
 ?>

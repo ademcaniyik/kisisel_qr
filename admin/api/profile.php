@@ -94,32 +94,51 @@ try {
             if ($stmt->execute()) {
                 $profileId = $connection->insert_id;
                 
-                // Profil oluşturulduktan sonra otomatik QR kodu oluştur
+                // Profil oluşturulduktan sonra QR Pool'dan QR ata
                 try {
-                    $qrManager = new QRManager();
-                    $qrResult = $qrManager->createQR($profileId);
+                    require_once __DIR__ . '/../../includes/QRPoolManager.php';
+                    $qrPoolManager = new QRPoolManager();
                     
-                    if ($qrResult['success']) {
+                    $qrAssignment = $qrPoolManager->assignAvailableQR($profileId);
+                    
+                    if ($qrAssignment['success']) {
                         echo json_encode([
                             'success' => true, 
                             'message' => 'Profil ve QR kodu başarıyla oluşturuldu',
                             'profile_id' => $profileId,
-                            'qr_id' => $qrResult['qr_id']
+                            'qr_code_id' => $qrAssignment['qr_code_id'],
+                            'pool_id' => $qrAssignment['pool_id'],
+                            'profile_url' => $qrAssignment['profile_url'],
+                            'edit_url' => $qrAssignment['edit_url'],
+                            'edit_code' => $qrAssignment['edit_code']
                         ]);
                     } else {
-                        // QR oluşturulamadı ama profil oluştu
-                        echo json_encode([
-                            'success' => true, 
-                            'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $qrResult['message'],
-                            'profile_id' => $profileId,
-                            'qr_error' => $qrResult['message']
-                        ]);
+                        // QR ataması başarısız - eski sisteme fallback
+                        $qrManager = new QRManager();
+                        $qrResult = $qrManager->createQR($profileId);
+                        
+                        if ($qrResult['success']) {
+                            echo json_encode([
+                                'success' => true, 
+                                'message' => 'Profil oluşturuldu, QR Pool tükendi - yeni QR oluşturuldu',
+                                'profile_id' => $profileId,
+                                'qr_id' => $qrResult['qr_id'],
+                                'fallback_qr' => true
+                            ]);
+                        } else {
+                            echo json_encode([
+                                'success' => true, 
+                                'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $qrAssignment['error'],
+                                'profile_id' => $profileId,
+                                'qr_error' => $qrAssignment['error']
+                            ]);
+                        }
                     }
                 } catch (Exception $e) {
-                    // QR oluşturma hatası
+                    // QR Pool hatası - eski sisteme fallback
                     echo json_encode([
                         'success' => true, 
-                        'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $e->getMessage(),
+                        'message' => 'Profil oluşturuldu ancak QR Pool hatası: ' . $e->getMessage(),
                         'profile_id' => $profileId,
                         'qr_error' => $e->getMessage()
                     ]);

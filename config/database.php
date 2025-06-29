@@ -61,5 +61,12 @@ class Database {
     public function escapeString($string) {
         return $this->connection->real_escape_string($string);
     }
+
+    public function __get($property) {
+        if ($property === 'insert_id') {
+            return $this->connection->insert_id;
+        }
+        return null;
+    }
 }
 ?>

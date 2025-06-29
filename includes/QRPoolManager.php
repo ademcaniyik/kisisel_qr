@@ -1,0 +1,267 @@
+<?php
+/**
+ * QR Pool Manager - Önceden hazırlanmış QR havuzu yönetimi
+ * Güvenli URL formatını koruyarak (örn: /qr/7d268b70) QR havuzu işlemleri
+ */
+
+require_once 'config/database.php';
+require_once 'includes/QRManager.php';
+
+class QRPoolManager {
+    private $db;
+    private $qrManager;
+    
+    public function __construct() {
+        $this->db = new Database();
+        $this->qrManager = new QRManager();
+    }
+    
+    /**
+     * Yeni QR batch oluştur (100 adet varsayılan)
+     * Güvenli rastgele ID'ler kullanarak
+     */
+    public function createNewBatch($quantity = 100, $batchName = null) {
+        try {
+            // Batch adı oluştur
+            if (!$batchName) {
+                $batchCount = $this->db->query("SELECT COUNT(*) as count FROM print_batches")->fetch_assoc()['count'];
+                $batchName = 'BATCH' . str_pad($batchCount + 1, 3, '0', STR_PAD_LEFT);
+            }
+            
+            // Başlangıç pool ID'sini belirle
+            $lastPoolId = $this->db->query("SELECT pool_id FROM qr_pool ORDER BY id DESC LIMIT 1")->fetch_assoc();
+            $startNumber = 1;
+            if ($lastPoolId) {
+                $lastNumber = (int)str_replace('QR', '', $lastPoolId['pool_id']);
+                $startNumber = $lastNumber + 1;
+            }
+            
+            $poolStartId = 'QR' . str_pad($startNumber, 3, '0', STR_PAD_LEFT);
+            $poolEndId = 'QR' . str_pad($startNumber + $quantity - 1, 3, '0', STR_PAD_LEFT);
+            
+            // Batch kaydını oluştur
+            $batchStmt = $this->db->prepare("INSERT INTO print_batches (batch_name, pool_start_id, pool_end_id, quantity, status) VALUES (?, ?, ?, ?, 'planned')");
+            $batchStmt->bind_param("sssi", $batchName, $poolStartId, $poolEndId, $quantity);
+            $batchStmt->execute();
+            $batchId = $this->db->insert_id;
+            
+            // QR'ları oluştur
+            $qrData = [];
+            for ($i = 0; $i < $quantity; $i++) {
+                $poolId = 'QR' . str_pad($startNumber + $i, 3, '0', STR_PAD_LEFT);
+                $qrCodeId = $this->generateSecureId(8); // Güvenli rastgele ID
+                $editToken = $this->generateSecureId(8); // Düzenleme token
+                $editCode = $this->generateEditCode(); // 6 haneli şifre
+                
+                $qrData[] = [
+                    'pool_id' => $poolId,
+                    'qr_code_id' => $qrCodeId,
+                    'edit_token' => $editToken,
+                    'edit_code' => $editCode,
+                    'batch_id' => $batchId
+                ];
+            }
+            
+            // Toplu insert
+            $this->insertQRBatch($qrData);
+            
+            // Batch durumunu güncelle
+            $this->db->query("UPDATE print_batches SET status = 'ready_to_print' WHERE id = $batchId");
+            
+            return [
+                'success' => true,
+                'batch_id' => $batchId,
+                'batch_name' => $batchName,
+                'quantity' => $quantity,
+                'pool_range' => "$poolStartId - $poolEndId"
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    
+    /**
+     * Mevcut QR'dan bir profil atama
+     * Sipariş geldiğinde kullanılır
+     */
+    public function assignAvailableQR($profileId, $orderData = null) {
+        try {
+            // Müsait QR bul
+            $qrQuery = $this->db->query("SELECT * FROM qr_pool WHERE status = 'available' ORDER BY id ASC LIMIT 1");
+            
+            if ($qrQuery->num_rows === 0) {
+                throw new Exception("Hiç müsait QR yok! Yeni batch oluşturun.");
+            }
+            
+            $qrData = $qrQuery->fetch_assoc();
+            
+            // QR'ı profile ataма
+            $updateStmt = $this->db->prepare("UPDATE qr_pool SET status = 'assigned', profile_id = ?, assigned_at = NOW() WHERE id = ?");
+            $updateStmt->bind_param("ii", $profileId, $qrData['id']);
+            $updateStmt->execute();
+            
+            // Mevcut qr_codes tablosuna da kaydet (geriye uyumluluk için)
+            $qrCodeStmt = $this->db->prepare("INSERT INTO qr_codes (id, profile_id, qr_data, created_at) VALUES (?, ?, ?, NOW())");
+            $qrUrl = "qr/" . $qrData['qr_code_id'];
+            $qrCodeStmt->bind_param("sis", $qrData['qr_code_id'], $profileId, $qrUrl);
+            $qrCodeStmt->execute();
+            
+            // QR görseli oluştur (fiziksel basım için)
+            $this->generateQRImages($qrData);
+            
+            return [
+                'success' => true,
+                'qr_pool_id' => $qrData['id'],
+                'pool_id' => $qrData['pool_id'],
+                'qr_code_id' => $qrData['qr_code_id'],
+                'edit_token' => $qrData['edit_token'],
+                'edit_code' => $qrData['edit_code'],
+                'profile_url' => "qr/" . $qrData['qr_code_id'],
+                'edit_url' => "edit/" . $qrData['edit_token']
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    
+    /**
+     * Stok durumunu kontrol et
+     */
+    public function getStockStatus() {
+        $available = $this->db->query("SELECT COUNT(*) as count FROM qr_pool WHERE status = 'available'")->fetch_assoc()['count'];
+        $assigned = $this->db->query("SELECT COUNT(*) as count FROM qr_pool WHERE status = 'assigned'")->fetch_assoc()['count'];
+        $delivered = $this->db->query("SELECT COUNT(*) as count FROM qr_pool WHERE status = 'delivered'")->fetch_assoc()['count'];
+        $total = $available + $assigned + $delivered;
+        
+        return [
+            'total' => $total,
+            'available' => $available,
+            'assigned' => $assigned,
+            'delivered' => $delivered,
+            'stock_warning' => $available < 20 ? true : false
+        ];
+    }
+    
+    /**
+     * Batch listesini getir
+     */
+    public function getBatches() {
+        $result = $this->db->query("SELECT * FROM print_batches ORDER BY created_at DESC");
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    
+    /**
+     * Güvenli rastgele ID oluştur (mevcut sistemle uyumlu)
+     */
+    private function generateSecureId($length = 8) {
+        $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $id = '';
+        for ($i = 0; $i < $length; $i++) {
+            $id .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        
+        // Benzersizlik kontrolü (qr_code_id için)
+        $exists = $this->db->query("SELECT id FROM qr_pool WHERE qr_code_id = '$id' OR edit_token = '$id'")->num_rows > 0;
+        if ($exists) {
+            return $this->generateSecureId($length); // Recursive retry
+        }
+        
+        return $id;
+    }
+    
+    /**
+     * 6 haneli edit code oluştur
+     */
+    private function generateEditCode() {
+        do {
+            $code = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+            $exists = $this->db->query("SELECT id FROM qr_pool WHERE edit_code = '$code'")->num_rows > 0;
+        } while ($exists);
+        
+        return $code;
+    }
+    
+    /**
+     * QR verilerini toplu insert
+     */
+    private function insertQRBatch($qrData) {
+        $values = [];
+        $params = [];
+        
+        foreach ($qrData as $qr) {
+            $values[] = "(?, ?, ?, ?, ?, 'available')";
+            $params = array_merge($params, [
+                $qr['pool_id'],
+                $qr['qr_code_id'], 
+                $qr['edit_token'],
+                $qr['edit_code'],
+                $qr['batch_id']
+            ]);
+        }
+        
+        $sql = "INSERT INTO qr_pool (pool_id, qr_code_id, edit_token, edit_code, batch_id, status) VALUES " . implode(', ', $values);
+        $stmt = $this->db->prepare($sql);
+        
+        // Tüm parametreler string
+        $types = str_repeat('s', count($params));
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+    }
+    
+    /**
+     * QR görsellerini oluştur (fiziksel basım için)
+     */
+    private function generateQRImages($qrData) {
+        $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        
+        // Profil QR
+        $profileUrl = "https://$baseUrl/qr/" . $qrData['qr_code_id'];
+        $this->qrManager->generateQRImage($profileUrl, $qrData['qr_code_id']);
+        
+        // Edit QR (küçük boyutlu)
+        $editUrl = "https://$baseUrl/edit/" . $qrData['edit_token'];
+        $this->qrManager->generateQRImage($editUrl, $qrData['edit_token'] . '_edit', 150); // Küçük boyut
+    }
+    
+    /**
+     * Pool'dan QR sil (sadmin paneli için)
+     */
+    public function deleteFromPool($poolId) {
+        try {
+            $qrData = $this->db->query("SELECT * FROM qr_pool WHERE id = $poolId")->fetch_assoc();
+            
+            if ($qrData['status'] === 'assigned') {
+                throw new Exception("Atanmış QR silinemez!");
+            }
+            
+            // Pool'dan sil
+            $this->db->query("DELETE FROM qr_pool WHERE id = $poolId");
+            
+            // QR görsellerini sil
+            @unlink("public/qr_codes/" . $qrData['qr_code_id'] . ".png");
+            @unlink("public/qr_codes/" . $qrData['edit_token'] . "_edit.png");
+            
+            return ['success' => true];
+            
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+    
+    /**
+     * QR'ı delivered olarak işaretle
+     */
+    public function markAsDelivered($poolId) {
+        $stmt = $this->db->prepare("UPDATE qr_pool SET status = 'delivered', delivered_at = NOW() WHERE id = ?");
+        $stmt->bind_param("i", $poolId);
+        return $stmt->execute();
+    }
+}
