@@ -111,9 +111,8 @@ class QRPoolManager {
             $updateStmt->execute();
             
             // Mevcut qr_codes tablosuna da kaydet (geriye uyumluluk için)
-            $qrCodeStmt = $this->db->prepare("INSERT INTO qr_codes (id, profile_id, qr_data, created_at) VALUES (?, ?, ?, NOW())");
-            $qrUrl = "qr/" . $qrData['qr_code_id'];
-            $qrCodeStmt->bind_param("sis", $qrData['qr_code_id'], $profileId, $qrUrl);
+            $qrCodeStmt = $this->db->prepare("INSERT INTO qr_codes (id, profile_id, created_at) VALUES (?, ?, NOW())");
+            $qrCodeStmt->bind_param("si", $qrData['qr_code_id'], $profileId);
             $qrCodeStmt->execute();
             
             // QR görseli oluştur (fiziksel basım için)
