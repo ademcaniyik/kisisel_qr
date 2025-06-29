@@ -359,8 +359,8 @@ class QRPoolManager {
             
             $zip->addFromString("README.txt", $readmeContent);
             $zip->close();
-            
-            return "public/downloads/" . $zipFileName;
+            // Doğru web yolu ile döndür
+            return "/downloads/" . $zipFileName;
         } catch (Exception $e) {
             return false;
         }
