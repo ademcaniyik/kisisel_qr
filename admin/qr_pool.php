@@ -574,38 +574,31 @@ if (isset($_POST['action'])) {
 
         function displayQRList(qrs) {
             const container = document.getElementById('qrListContainer');
-            
             if (qrs.length === 0) {
                 container.innerHTML = '<div class="text-center py-4"><p>Bu filtrerede QR bulunamadı.</p></div>';
                 return;
             }
-            
             let html = '<div class="table-responsive"><table class="table table-sm table-hover">';
             html += '<thead><tr><th>Pool ID</th><th>QR Code ID</th><th>Durum</th><th>Batch</th><th>Profil</th><th>İşlemler</th></tr></thead><tbody>';
-            
             qrs.forEach(qr => {
                 const statusBadge = getStatusBadge(qr.status);
-                const profileInfo = qr.profile_id ? `ID: ${qr.profile_id}` : 'Atanmamış';
-                
+                const profileInfo = qr.profile_id ? `ID: ${qr.profile_id}` : '<span class="text-muted">Atanmamış</span>';
+                let actionBtns = '';
+                if (qr.profile_id) {
+                    actionBtns = `<button class="btn btn-outline-primary btn-sm" onclick="viewQRDetails('${qr.qr_code_id}')" title="Profili Görüntüle"><i class="fas fa-eye"></i></button>` +
+                        `<button class="btn btn-outline-secondary btn-sm" onclick="copyQRUrl('${qr.qr_code_id}')" title="URL Kopyala"><i class="fas fa-copy"></i></button>`;
+                } else {
+                    actionBtns = `<button class="btn btn-outline-secondary btn-sm" disabled title="Bu QR henüz bir profile atanmamış"><i class="fas fa-eye-slash"></i></button>`;
+                }
                 html += `<tr>
                     <td><code>${qr.pool_id}</code></td>
                     <td><code>${qr.qr_code_id}</code></td>
                     <td>${statusBadge}</td>
                     <td><small>${qr.batch_name || 'N/A'}</small></td>
                     <td><small>${profileInfo}</small></td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-primary btn-sm" onclick="viewQRDetails('${qr.qr_code_id}')" title="Detaylar">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="copyQRUrl('${qr.qr_code_id}')" title="URL Kopyala">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                    </td>
+                    <td><div class="btn-group btn-group-sm">${actionBtns}</div></td>
                 </tr>`;
             });
-            
             html += '</tbody></table></div>';
             container.innerHTML = html;
         }
