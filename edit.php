@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord"><i class="fab fa-discord text-primary"></i><span class="d-block small social-label">Discord</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small social_label">Telegram</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small social-label">Telegram</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
                                             <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch"><i class="fab fa-twitch text-purple"></i><span class="d-block small social-label">Twitch</span></button>
@@ -277,17 +277,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           // ...buraya yedek fonksiyon eklenebilir...
         };
 
-        // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
+        // Sosyal medya platform butonlarına tıklama eventini her zaman güncel ve doğru şekilde bağla
         function bindSocialButtons() {
           document.querySelectorAll('.social-platform-btn').forEach(function(btn){
-            btn.removeEventListener('click', btn._smClick, false);
-            btn._smClick = function(e){
+            btn.onclick = function(e){
               e.preventDefault();
-              if(typeof addSocialMediaPlatform === 'function') {
-                addSocialMediaPlatform(this.getAttribute('data-platform'));
+              if(typeof window.addSocialMediaPlatform === 'function') {
+                window.addSocialMediaPlatform(this.getAttribute('data-platform'));
               }
             };
-            btn.addEventListener('click', btn._smClick, false);
           });
         }
         document.addEventListener('DOMContentLoaded', function() {
@@ -333,6 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               }
             };
           });
+          bindSocialButtons(); // Her zaman güncel event bağla
         });
         </script>
         </body>
