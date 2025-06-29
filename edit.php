@@ -88,14 +88,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<input type="hidden" name="edit_code" value="' . htmlspecialchars($editCode) . '">';
         echo '<div class="row g-3">';
         echo '<div class="col-md-6"><label class="form-label">Ad Soyad *</label><input type="text" class="form-control" name="name" value="' . htmlspecialchars($profile['name']) . '" readonly style="background:#f5f5f5;cursor:not-allowed;"></div>';
-        echo '<div class="col-md-6"><label class="form-label">Telefon *</label><input type="text" class="form-control" name="phone" value="' . htmlspecialchars($profile['phone']) . '" required></div>';
+        echo '<div class="col-md-6"><label class="form-label">Telefon *</label>';
+        echo '<input type="text" class="form-control" name="phone" value="' . htmlspecialchars($profile['phone']) . '" required placeholder="555 555 55 55" maxlength="20">';
+        echo '<small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>';
+        echo '</div>';
         echo '</div>';
         echo '<div class="mb-3 mt-3"><label class="form-label">Kısa Yazı (Bio)</label><textarea class="form-control" name="bio" rows="2" placeholder="Kendinizi tanıtın...">' . htmlspecialchars($profile['bio'] ?? '') . '</textarea></div>';
         echo '<div class="row g-3">';
-        echo '<div class="col-md-6"><label class="form-label">IBAN</label><input type="text" class="form-control" name="iban" value="' . htmlspecialchars($profile['iban'] ?? '') . '"></div>';
-        echo '<div class="col-md-6"><label class="form-label">Kan Grubu</label><input type="text" class="form-control" name="blood_type" value="' . htmlspecialchars($profile['blood_type'] ?? '') . '"></div>';
+        echo '<div class="col-md-6"><label class="form-label">IBAN</label>';
+        echo '<input type="text" class="form-control" name="iban" value="' . htmlspecialchars($profile['iban'] ?? '') . '" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32">';
+        echo '<small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>';
         echo '</div>';
-        echo '<div class="mb-3 mt-3"><label class="form-label">Tema</label><input type="text" class="form-control" name="theme" value="' . htmlspecialchars($profile['theme'] ?? '') . '"></div>';
+        echo '<div class="col-md-6"><label class="form-label">Kan Grubu</label>';
+        echo '<select class="form-select" name="blood_type">';
+        $bloodTypes = ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "0+", "0-"];
+        foreach ($bloodTypes as $type) {
+            $selected = ($profile['blood_type'] ?? '') === $type ? 'selected' : '';
+            $label = $type ? ($type === '0+' ? '0 Rh+' : ($type === '0-' ? '0 Rh-' : $type . ' Rh' . ($type[1] === '+' ? '+' : '-'))) : 'Seçiniz';
+            echo '<option value="' . $type . '" ' . $selected . '>' . $label . '</option>';
+        }
+        echo '</select>';
+        echo '</div>';
+        echo '</div>';
+        echo '<div class="mb-3 mt-3"><label class="form-label">Tema</label>';
+        echo '<select class="form-select" name="theme">';
+        $themes = [
+            'default' => 'Sade Temiz (Varsayılan)',
+            'blue' => 'Deniz Mavisi',
+            'nature' => 'Günbatımı Sıcak',
+            'elegant' => 'Doğa Yeşil',
+            'gold' => 'Altın Lüks',
+            'purple' => 'Kraliyet Moru',
+            'dark' => 'Karanlık Siyah',
+            'ocean' => 'Sakura Pembe',
+            'minimal' => 'Şık Mor',
+            'pastel' => 'Pastel Rüya',
+            'retro' => 'Retro Synthwave',
+            'neon' => 'Neon Siber',
+        ];
+        foreach ($themes as $val => $label) {
+            $selected = ($profile['theme'] ?? '') === $val ? 'selected' : '';
+            echo '<option value="' . $val . '" ' . $selected . '>' . $label . '</option>';
+        }
+        echo '</select>';
+        echo '<small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>';
+        echo '</div>';
+        echo '</div>';
         // Sosyal Medya Alanı (index.php ile uyumlu)
         $socialLinksRaw = $profile['social_links'] ?? '[]';
         $socialLinks = json_decode($socialLinksRaw, true);
