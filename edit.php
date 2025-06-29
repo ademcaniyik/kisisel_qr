@@ -133,6 +133,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Profil Fotoğrafı</label>
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <?php
+                                $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg';
+                                ?>
+                                <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" style="width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #e3e3e3;">
+                                <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:220px;">
+                            </div>
+                            <small class="form-text text-muted">Yeni fotoğraf seçerek güncelleyebilirsiniz.</small>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Kısa Yazı (Bio)</label>
                             <textarea class="form-control" name="bio" rows="2" placeholder="Kendinizi tanıtın..."><?=htmlspecialchars($profile['bio'] ?? '')?></textarea>
                         </div>
@@ -159,55 +170,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Tema Seçimi</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <select class="form-select" name="theme" id="editTheme" onchange="updateThemePreview()">
-                                        <option value="default" <?=($profile['theme'] ?? '')==='default'?'selected':''?>>Sade Temiz (Varsayılan)</option>
-                                        <option value="blue" <?=($profile['theme'] ?? '')==='blue'?'selected':''?>>Deniz Mavisi</option>
-                                        <option value="nature" <?=($profile['theme'] ?? '')==='nature'?'selected':''?>>Günbatımı Sıcak</option>
-                                        <option value="elegant" <?=($profile['theme'] ?? '')==='elegant'?'selected':''?>>Doğa Yeşil</option>
-                                        <option value="gold" <?=($profile['theme'] ?? '')==='gold'?'selected':''?>>Altın Lüks</option>
-                                        <option value="purple" <?=($profile['theme'] ?? '')==='purple'?'selected':''?>>Kraliyet Moru</option>
-                                        <option value="dark" <?=($profile['theme'] ?? '')==='dark'?'selected':''?>>Karanlık Siyah</option>
-                                        <option value="ocean" <?=($profile['theme'] ?? '')==='ocean'?'selected':''?>>Sakura Pembe</option>
-                                        <option value="minimal" <?=($profile['theme'] ?? '')==='minimal'?'selected':''?>>Şık Mor</option>
-                                        <option value="pastel" <?=($profile['theme'] ?? '')==='pastel'?'selected':''?>>Pastel Rüya</option>
-                                        <option value="retro" <?=($profile['theme'] ?? '')==='retro'?'selected':''?>>Retro Synthwave</option>
-                                        <option value="neon" <?=($profile['theme'] ?? '')==='neon'?'selected':''?>>Neon Siber</option>
-                                    </select>
-                                    <small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="theme-preview-container">
-                                        <label class="form-label">Tema Önizlemesi</label>
-                                        <div id="themePreview" class="theme-preview theme-<?=htmlspecialchars($profile['theme'] ?? 'default')?>
-                                            <div class="preview-header">
-                                                <div class="preview-avatar">
-                                                    <i class="fas fa-user"></i>
-                                                </div>
-                                                <div class="preview-info">
-                                                    <h6><?=htmlspecialchars($profile['name'])?></h6>
-                                                    <small><?=htmlspecialchars($profile['bio'] ?? 'Yazılım Geliştirici')?></small>
-                                                </div>
-                                            </div>
-                                            <div class="preview-social">
-                                                <div class="preview-social-btn">
-                                                    <i class="fab fa-instagram"></i>
-                                                    <span>Instagram</span>
-                                                </div>
-                                                <div class="preview-social-btn">
-                                                    <i class="fab fa-twitter"></i>
-                                                    <span>X</span>
-                                                </div>
-                                                <div class="preview-social-btn">
-                                                    <i class="fab fa-linkedin"></i>
-                                                    <span>LinkedIn</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <select class="form-select" name="theme" id="editTheme">
+                                <option value="default" <?=($profile['theme'] ?? '')==='default'?'selected':''?>>Sade Temiz (Varsayılan)</option>
+                                <option value="blue" <?=($profile['theme'] ?? '')==='blue'?'selected':''?>>Deniz Mavisi</option>
+                                <option value="nature" <?=($profile['theme'] ?? '')==='nature'?'selected':''?>>Günbatımı Sıcak</option>
+                                <option value="elegant" <?=($profile['theme'] ?? '')==='elegant'?'selected':''?>>Doğa Yeşil</option>
+                                <option value="gold" <?=($profile['theme'] ?? '')==='gold'?'selected':''?>>Altın Lüks</option>
+                                <option value="purple" <?=($profile['theme'] ?? '')==='purple'?'selected':''?>>Kraliyet Moru</option>
+                                <option value="dark" <?=($profile['theme'] ?? '')==='dark'?'selected':''?>>Karanlık Siyah</option>
+                                <option value="ocean" <?=($profile['theme'] ?? '')==='ocean'?'selected':''?>>Sakura Pembe</option>
+                                <option value="minimal" <?=($profile['theme'] ?? '')==='minimal'?'selected':''?>>Şık Mor</option>
+                                <option value="pastel" <?=($profile['theme'] ?? '')==='pastel'?'selected':''?>>Pastel Rüya</option>
+                                <option value="retro" <?=($profile['theme'] ?? '')==='retro'?'selected':''?>>Retro Synthwave</option>
+                                <option value="neon" <?=($profile['theme'] ?? '')==='neon'?'selected':''?>>Neon Siber</option>
+                            </select>
+                            <small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sosyal Medya Hesapları</label>
@@ -285,6 +262,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                         }
                     }, 200);
+                });
+            }
+            // Profil fotoğrafı önizleme
+            const photoInput = document.getElementById('editPhotoInput');
+            const photoPreview = document.getElementById('profilePhotoPreview');
+            if(photoInput && photoPreview) {
+                photoInput.addEventListener('change', function(e) {
+                    if(this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            photoPreview.src = ev.target.result;
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
                 });
             }
         });
