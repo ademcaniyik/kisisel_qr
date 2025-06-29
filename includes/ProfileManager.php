@@ -400,5 +400,17 @@ class ProfileManager {
             throw new Exception("Fotoğraf işleme hatası: " . $e->getMessage());
         }
     }
+    
+    /**
+     * Profil güncelle (temel bilgiler)
+     */
+    public function updateProfile($profileId, $name, $email, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null) {
+        $sql = "UPDATE profiles SET name = ?, email = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ? WHERE id = ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bind_param("sssssssi", $name, $email, $phone, $bio, $iban, $blood_type, $theme, $profileId);
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    }
 }
 ?>
