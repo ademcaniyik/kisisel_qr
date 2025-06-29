@@ -10,30 +10,7 @@
     <link href="assets/css/landing.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.php">
-                <i class="fas fa-qrcode me-2"></i>Kişisel QR
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Ana Sayfa</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php#features">Özellikler</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php#contact">İletişim</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<?php include 'includes/header.php'; ?>
 
     <!-- Content -->
     <div class="container mt-5 pt-5">
@@ -144,15 +121,11 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="text-center">
-                <p>&copy; 2025 Kişisel QR. Tüm hakları saklıdır.</p>
-                <p class="mb-0">Made with ❤️ in Acdisoftware</p>
-            </div>
-        </div>
-    </footer>
+<?php include 'includes/footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
