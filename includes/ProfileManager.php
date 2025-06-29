@@ -53,18 +53,32 @@ class ProfileManager {
             $profileId = $this->createProfile($profileData);
             
             if ($profileId) {
-                // QR kod oluştur
-                require_once __DIR__ . '/QRManager.php';
-                $qrManager = new QRManager();
-                $qrResult = $qrManager->createQR($profileId);
-                
-                return [
-                    'success' => true,
-                    'profile_id' => $profileId,
-                    'slug' => $slug,
-                    'qr_created' => $qrResult['success'] ?? false,
-                    'qr_id' => $qrResult['qrId'] ?? null
-                ];
+                // QR kod ataması: Sadece QRPoolManager kullanılacak
+                require_once __DIR__ . '/QRPoolManager.php';
+                $qrPoolManager = new QRPoolManager();
+                $qrAssignment = $qrPoolManager->assignAvailableQR($profileId, $orderData);
+                if ($qrAssignment['success']) {
+                    return [
+                        'success' => true,
+                        'profile_id' => $profileId,
+                        'slug' => $slug,
+                        'qr_created' => true,
+                        'qr_id' => $qrAssignment['qr_code_id']
+                    ];
+                } else {
+                    // Fallback: QR havuzunda QR yoksa eski sistemle üret
+                    require_once __DIR__ . '/QRManager.php';
+                    $qrManager = new QRManager();
+                    $qrResult = $qrManager->createQR($profileId);
+                    return [
+                        'success' => true,
+                        'profile_id' => $profileId,
+                        'slug' => $slug,
+                        'qr_created' => $qrResult['success'] ?? false,
+                        'qr_id' => $qrResult['qrId'] ?? null,
+                        'fallback_qr' => true
+                    ];
+                }
             }
             
             return ['success' => false, 'message' => 'Profil oluşturulamadı'];
