@@ -126,8 +126,9 @@ class QRPoolManager {
                 'qr_code_id' => $qrData['qr_code_id'],
                 'edit_token' => $qrData['edit_token'],
                 'edit_code' => $qrData['edit_code'],
-                'profile_url' => "qr/" . $qrData['qr_code_id'],
-                'edit_url' => "edit/" . $qrData['edit_token']
+                // Tam kök URL ile döndür
+                'profile_url' => $this->getBaseUrl() . '/qr/' . $qrData['qr_code_id'],
+                'edit_url' => $this->getBaseUrl() . '/edit/' . $qrData['edit_token']
             ];
             
         } catch (Exception $e) {
@@ -158,10 +159,14 @@ class QRPoolManager {
     
     /**
      * Batch listesini getir
+     * @return array<int, array<string, mixed>>
      */
     public function getBatches() {
         $result = $this->db->query("SELECT * FROM print_batches ORDER BY created_at DESC");
-        return $result->fetch_all(MYSQLI_ASSOC);
+        if ($result) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+        return [];
     }
     
     /**
@@ -277,6 +282,8 @@ class QRPoolManager {
     
     /**
      * Batch için QR görsellerini ZIP dosyası olarak hazırla
+     * @param int $batchId
+     * @return string|false
      */
     public function createQRBatchZip($batchId) {
         try {
@@ -355,7 +362,6 @@ class QRPoolManager {
             $zip->close();
             
             return "public/downloads/" . $zipFileName;
-            
         } catch (Exception $e) {
             return false;
         }
@@ -436,5 +442,13 @@ class QRPoolManager {
         } else {
             return ['success' => false, 'error' => 'Güncelleme başarısız'];
         }
+    }
+    
+    // Yardımcı fonksiyon ekle:
+    private function getBaseUrl() {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
+        return $protocol . '://' . $host . $basePath;
     }
 }

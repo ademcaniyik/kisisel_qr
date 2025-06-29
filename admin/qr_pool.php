@@ -501,25 +501,49 @@ if (isset($_POST['action'])) {
 
         async function createBatch() {
             const quantity = document.getElementById('batchQuantity').value;
-            
+            const btn = document.querySelector('#createBatchModal .btn-primary');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Oluşturuluyor...';
             try {
                 const response = await fetch('qr_pool.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     body: `action=create_batch&quantity=${quantity}`
                 });
-                
                 const result = await response.json();
-                
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus me-2"></i>Batch Oluştur';
                 if (result.success) {
-                    alert('Batch başarıyla oluşturuldu: ' + result.batch_name);
-                    location.reload();
+                    // Modalı kapat
+                    bootstrap.Modal.getInstance(document.getElementById('createBatchModal')).hide();
+                    // Başarı bildirimi
+                    showToast('Batch başarıyla oluşturuldu: ' + result.batch_name, 'success');
+                    setTimeout(() => location.reload(), 1200);
                 } else {
-                    alert('Hata: ' + result.error);
+                    showToast('Hata: ' + result.error, 'danger');
                 }
             } catch (error) {
-                alert('Bir hata oluştu: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-plus me-2"></i>Batch Oluştur';
+                showToast('Bir hata oluştu: ' + error.message, 'danger');
             }
+        }
+
+        // Toast bildirimi fonksiyonu
+        function showToast(message, type = 'info') {
+            let toast = document.getElementById('mainToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'mainToast';
+                toast.className = 'toast align-items-center text-white bg-' + type + ' border-0 position-fixed bottom-0 end-0 m-4';
+                toast.style.zIndex = 9999;
+                toast.innerHTML = '<div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
+                document.body.appendChild(toast);
+            }
+            toast.querySelector('.toast-body').textContent = message;
+            toast.className = 'toast align-items-center text-white bg-' + type + ' border-0 position-fixed bottom-0 end-0 m-4';
+            const bsToast = new bootstrap.Toast(toast, { delay: 2500 });
+            bsToast.show();
         }
 
         async function loadQRList(status = 'all', page = 1) {
@@ -740,12 +764,13 @@ if (isset($_POST['action'])) {
         }
 
         function viewQRDetails(qrCodeId) {
-            const profileUrl = `${window.location.origin}/qr/${qrCodeId}`;
-            window.open(profileUrl, '_blank');
+            // Her zaman kök dizinli URL
+            const url = `${window.location.origin}/kisisel_qr/qr/${qrCodeId}`;
+            window.open(url, '_blank');
         }
 
         function copyQRUrl(qrCodeId) {
-            const url = `${window.location.origin}/qr/${qrCodeId}`;
+            const url = `${window.location.origin}/kisisel_qr/qr/${qrCodeId}`;
             navigator.clipboard.writeText(url).then(() => {
                 alert('QR URL kopyalandı: ' + url);
             });
