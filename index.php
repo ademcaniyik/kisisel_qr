@@ -89,7 +89,7 @@
                         Profesyonel profil sistemi ile markanızı güçlendirin!
                     </p>
                     <div class="cta-buttons">
-                        <a href="https://acdisoftware.com.tr/kisisel_qr/qr/2b536102" target="_blank" class="btn-hero btn-primary-hero">
+                        <a href="https://acdisoftware.com.tr/kisisel_qr/qr/7d268b70" target="_blank" class="btn-hero btn-primary-hero">
                             <i class="fas fa-eye"></i>
                             Canlı Demo
                         </a>
@@ -223,7 +223,7 @@
                 <h2 class="display-4 fw-bold mb-4">🚀 Nasıl Çalışır?</h2>
                 <p class="lead text-muted">3 basit adımda profesyonel QR profili oluşturun</p>
                 <div class="mt-4">
-                    <a href="https://acdisoftware.com.tr/kisisel_qr/qr/2b536102" target="_blank" class="btn btn-primary btn-lg me-3">
+                    <a href="https://acdisoftware.com.tr/kisisel_qr/qr/7d268b70" target="_blank" class="btn btn-primary btn-lg me-3">
                         <i class="fas fa-eye me-2"></i>Canlı Demo Görün
                     </a>
                     <a href="#pricing" class="btn btn-outline-primary btn-lg">
