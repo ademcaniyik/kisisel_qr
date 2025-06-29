@@ -101,7 +101,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Telefon *</label>
-                                <input type="text" class="form-control" name="phone" id="editPhone" value="<?=htmlspecialchars($profile['phone'])?>" required placeholder="555 555 55 55" maxlength="20">
+                                <div class="phone-input-container">
+                                    <?php
+                                    // Telefonu ülke kodu ve numara olarak ayır
+                                    $phoneRaw = $profile['phone'] ?? '';
+                                    $countryCode = '+90';
+                                    $phoneNumber = '';
+                                    if (preg_match('/^(\+\d{1,3})(.*)$/', $phoneRaw, $m)) {
+                                        $countryCode = $m[1];
+                                        $phoneNumber = trim($m[2]);
+                                    } elseif (preg_match('/^(\d{10,})$/', $phoneRaw)) {
+                                        $countryCode = '+90';
+                                        $phoneNumber = $phoneRaw;
+                                    }
+                                    ?>
+                                    <select class="form-control country-dropdown" name="country_code" id="editCountryCode" style="max-width:110px;display:inline-block;">
+                                        <option value="+90" data-flag="🇹🇷" <?=($countryCode==='+90')?'selected':''?>>🇹🇷 +90</option>
+                                        <option value="+1" data-flag="🇺🇸" <?=($countryCode==='+1')?'selected':''?>>🇺🇸 +1</option>
+                                        <option value="+44" data-flag="🇬🇧" <?=($countryCode==='+44')?'selected':''?>>🇬🇧 +44</option>
+                                        <option value="+49" data-flag="🇩🇪" <?=($countryCode==='+49')?'selected':''?>>🇩🇪 +49</option>
+                                        <option value="+33" data-flag="🇫🇷" <?=($countryCode==='+33')?'selected':''?>>🇫🇷 +33</option>
+                                        <option value="+971" data-flag="🇦🇪" <?=($countryCode==='+971')?'selected':''?>>🇦🇪 +971</option>
+                                        <option value="+966" data-flag="🇸🇦" <?=($countryCode==='+966')?'selected':''?>>🇸🇦 +966</option>
+                                        <option value="+7" data-flag="🇷🇺" <?=($countryCode==='+7')?'selected':''?>>🇷🇺 +7</option>
+                                        <option value="+86" data-flag="🇨🇳" <?=($countryCode==='+86')?'selected':''?>>🇨🇳 +86</option>
+                                        <option value="+91" data-flag="🇮🇳" <?=($countryCode==='+91')?'selected':''?>>🇮🇳 +91</option>
+                                    </select>
+                                    <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" style="display:inline-block;width:calc(100% - 120px);margin-left:5px;">
+                                </div>
                                 <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                             </div>
                         </div>
