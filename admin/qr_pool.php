@@ -80,7 +80,6 @@ if (isset($_POST['action'])) {
             
             // ZIP dosyası oluştur
             $zipPath = $qrPoolManager->createQRBatchZip($batchId);
-            
             if ($zipPath) {
                 echo json_encode([
                     'success' => true,
@@ -89,6 +88,8 @@ if (isset($_POST['action'])) {
             } else {
                 echo json_encode(['success' => false, 'error' => 'ZIP oluşturulamadı']);
             }
+            exit();
+            
                         case 'update_batch_status':
                             $batchId = (int)($_POST['batch_id'] ?? 0);
                             $status = $_POST['status'] ?? '';
