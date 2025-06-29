@@ -231,18 +231,10 @@ class QRPoolManager {
      * QR görsellerini oluştur (fiziksel basım için)
      */
     private function generateQRImages($qrData) {
-        // Kök dizini doğru almak için
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'];
-        $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
-        $baseUrl = $protocol . '://' . $host . $basePath;
-
-        // Profil QR
-        $profileUrl = "$baseUrl/qr/" . $qrData['qr_code_id'];
+        require_once __DIR__ . '/../config/site.php';
+        $profileUrl = getBaseUrl() . '/qr/' . $qrData['qr_code_id'];
         $this->qrManager->generateQRImage($profileUrl, $qrData['qr_code_id']);
-        
-        // Edit QR (küçük boyutlu)
-        $editUrl = "$baseUrl/edit/" . $qrData['edit_token'];
+        $editUrl = getBaseUrl() . '/edit/' . $qrData['edit_token'];
         $this->qrManager->generateQRImage($editUrl, $qrData['edit_token'] . '_edit', 150); // Küçük boyut
     }
     
