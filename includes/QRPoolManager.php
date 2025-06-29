@@ -297,8 +297,13 @@ class QRPoolManager {
             }
             
             // ZIP dosyası oluştur
-            $zipFileName = "QR_Batch_" . $batchData['batch_name'] . "_" . date('Y-m-d_H-i-s') . ".zip";
+            $zipFileName = "QR_Batch_" . $batchData['batch_name'] . ".zip";
             $zipPath = __DIR__ . "/../public/downloads/" . $zipFileName;
+
+            // Eğer dosya zaten varsa yeniden oluşturma, doğrudan yolu döndür
+            if (file_exists($zipPath)) {
+                return "/downloads/" . $zipFileName;
+            }
             
             // Downloads klasörünü oluştur
             if (!file_exists(__DIR__ . "/../public/downloads/")) {
@@ -359,7 +364,6 @@ class QRPoolManager {
             
             $zip->addFromString("README.txt", $readmeContent);
             $zip->close();
-            // Doğru web yolu ile döndür
             return "/downloads/" . $zipFileName;
         } catch (Exception $e) {
             return false;
