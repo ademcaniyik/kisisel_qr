@@ -301,8 +301,10 @@ class QRPoolManager {
             $zipPath = __DIR__ . "/../public/downloads/" . $zipFileName;
 
             // Eğer dosya zaten varsa yeniden oluşturma, doğrudan yolu döndür
+            $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+            $webPath = $basePath . '/public/downloads/' . $zipFileName;
             if (file_exists($zipPath)) {
-                return "/downloads/" . $zipFileName;
+                return $webPath;
             }
             
             // Downloads klasörünü oluştur
@@ -364,7 +366,7 @@ class QRPoolManager {
             
             $zip->addFromString("README.txt", $readmeContent);
             $zip->close();
-            return "/downloads/" . $zipFileName;
+            return $webPath;
         } catch (Exception $e) {
             return false;
         }
