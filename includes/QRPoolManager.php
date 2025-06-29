@@ -66,6 +66,11 @@ class QRPoolManager {
             // Toplu insert
             $this->insertQRBatch($qrData);
             
+            // Eklenen QR'ların tamamı için görselleri oluştur
+            foreach ($qrData as $qr) {
+                $this->generateQRImages($qr);
+            }
+            
             // Batch durumunu güncelle
             $this->db->query("UPDATE print_batches SET status = 'ready_to_print' WHERE id = $batchId");
             
@@ -221,14 +226,18 @@ class QRPoolManager {
      * QR görsellerini oluştur (fiziksel basım için)
      */
     private function generateQRImages($qrData) {
-        $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-        
+        // Kök dizini doğru almak için
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
+        $baseUrl = $protocol . '://' . $host . $basePath;
+
         // Profil QR
-        $profileUrl = "https://$baseUrl/qr/" . $qrData['qr_code_id'];
+        $profileUrl = "$baseUrl/qr/" . $qrData['qr_code_id'];
         $this->qrManager->generateQRImage($profileUrl, $qrData['qr_code_id']);
         
         // Edit QR (küçük boyutlu)
-        $editUrl = "https://$baseUrl/edit/" . $qrData['edit_token'];
+        $editUrl = "$baseUrl/edit/" . $qrData['edit_token'];
         $this->qrManager->generateQRImage($editUrl, $qrData['edit_token'] . '_edit', 150); // Küçük boyut
     }
     

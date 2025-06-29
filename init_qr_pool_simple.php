@@ -150,9 +150,14 @@ try {
                 echo "<tr><th>Pool ID</th><th>QR Code ID</th><th>Edit Token</th><th>Edit Code</th><th>Profil URL</th><th>Edit URL</th></tr>\n";
                 
                 foreach ($sampleQRs as $qr) {
-                    $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-                    $profileUrl = "https://$baseUrl/qr/" . $qr['qr_code_id'];
-                    $editUrl = "https://$baseUrl/edit/" . $qr['edit_token'];
+                    // Kök dizini doğru almak için
+                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+                    $host = $_SERVER['HTTP_HOST'];
+                    $basePath = rtrim(str_replace('/admin', '', dirname($_SERVER['SCRIPT_NAME'])), '/');
+                    $baseUrl = $protocol . '://' . $host . $basePath;
+                    // QR ve edit linkleri
+                    $profileUrl = "$baseUrl/qr/{$qr['qr_code_id']}";
+                    $editUrl = "$baseUrl/edit/{$qr['edit_token']}";
                     
                     echo "<tr>";
                     echo "<td>{$qr['pool_id']}</td>";
