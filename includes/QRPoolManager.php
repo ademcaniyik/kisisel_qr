@@ -135,6 +135,7 @@ class QRPoolManager {
                 'success' => false,
                 'error' => $e->getMessage()
             ];
+            
         }
     }
     
