@@ -67,8 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $theme = $_POST['theme'] ?? '';
             $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
             $profileManager->updateProfile($profileId, $profile['name'], '', $phone, $bio, $iban, $blood_type, $theme, $socialLinks);
-            echo '<p class="alert alert-success">Profil başarıyla güncellendi.</p>';
-            $profile = $profileManager->getProfile($profileId);
+            // Başarıyla güncellendikten sonra GET ile yönlendir
+            header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken).'&success=1');
+            exit;
         }
         // index.php'deki modalın step1 (profil oluşturma) kısmının birebir kopyası ve JS entegrasyonu
         ?>
