@@ -348,7 +348,8 @@ if (!$theme) {
             <?php if (!empty($profile['phone'])): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
             <?php endif; ?>
             <?php if (!empty($profile['email'])): ?> "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>",
-            <?php endif; ?> "sameAs": [
+            <?php endif; ?>
+            "sameAs": [
                 <?php
                 $socialLinksArray = [];
                 if (!empty($profile['social_links'])) {
@@ -357,7 +358,7 @@ if (!$theme) {
                         foreach ($socialLinks as $key => $value) {
                             $platform = '';
                             $url = '';
-
+                            
                             // Yeni JSON format: {"platform": "url"}
                             if (is_string($key) && is_string($value)) {
                                 $platform = $key;
@@ -484,7 +485,7 @@ if (!$theme) {
                         foreach ($links as $key => $value) {
                             $platform = '';
                             $url = '';
-
+                            
                             // Yeni JSON format: {"platform": "url"}
                             if (is_string($key) && is_string($value)) {
                                 $platform = $key;
@@ -554,12 +555,12 @@ if (!$theme) {
                 <div class="minimal-info" style="margin-top: 20px; border-top: 1px solid #f0f0f0; padding-top: 20px;">
 
                     <?php if ($profile['iban']): ?>
-                        <!-- IBAN - Tek Satır Ultra Sade -->
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 12px 0; border-bottom: 1px solid #f8f8f8;">
-                            <button onclick="copyIban()" style="background: none; border: 1px solid #ddd; color: #666; border-radius: 4px; padding: 6px 8px; cursor: pointer; transition: all 0.2s ease; font-size: 11px; margin-left: 12px;"
-                                onmouseover="this.style.color='#000'; this.style.borderColor='#999'"
-                                onmouseout="this.style.color='#666'; this.style.borderColor='#ddd'"
-                                title="IBAN Kopyala">
+                        <!-- IBAN - Kopyalama Butonu Sol Tarafta -->
+                        <div style="display: flex; align-items: center; margin-bottom: 16px; padding: 12px 0; border-bottom: 1px solid #f8f8f8;">
+                            <button onclick="copyIban()" style="background: none; border: 1px solid #ddd; color: #666; border-radius: 4px; padding: 6px 8px; cursor: pointer; transition: all 0.2s ease; font-size: 11px; margin-right: 12px;" 
+                                    onmouseover="this.style.color='#000'; this.style.borderColor='#999'" 
+                                    onmouseout="this.style.color='#666'; this.style.borderColor='#ddd'"
+                                    title="IBAN Kopyala">
                                 <i class="fas fa-copy" style="font-size: 10px;"></i>
                             </button>
                             <div style="flex: 1; min-width: 0;">
