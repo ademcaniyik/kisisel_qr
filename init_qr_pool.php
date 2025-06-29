@@ -26,20 +26,42 @@ try {
     
     // Tabloları oluştur
     echo "<h3>1. Tabloları oluşturuluyor...</h3>\n";
-    $sqlFile = file_get_contents('database/qr_pool_setup.sql');
+    
+    // SQL dosyasının varlığını kontrol et
+    $sqlFilePath = 'database/qr_pool_setup.sql';
+    if (!file_exists($sqlFilePath)) {
+        throw new Exception("SQL dosyası bulunamadı: $sqlFilePath");
+    }
+    
+    $sqlFile = file_get_contents($sqlFilePath);
+    if ($sqlFile === false) {
+        throw new Exception("SQL dosyası okunamadı: $sqlFilePath");
+    }
+    
+    echo "📄 SQL dosyası okundu (" . strlen($sqlFile) . " karakter)\n<br>";
     
     // SQL komutlarını parçala ve çalıştır
     $sqlCommands = array_filter(array_map('trim', explode(';', $sqlFile)));
+    echo "🔢 " . count($sqlCommands) . " SQL komutu bulundu\n<br>";
     
-    foreach ($sqlCommands as $sql) {
+    foreach ($sqlCommands as $index => $sql) {
         if (!empty($sql)) {
+            echo "➤ SQL " . ($index + 1) . " çalıştırılıyor...\n<br>";
+            
+            // SQL komutunu göster (ilk 100 karakteri)
+            $sqlPreview = strlen($sql) > 100 ? substr($sql, 0, 100) . '...' : $sql;
+            echo "📝 <code>" . htmlspecialchars($sqlPreview) . "</code>\n<br>";
+            
             $result = $db->query($sql);
             if (!$result) {
-                throw new Exception("SQL hatası: " . $db->getConnection()->error);
+                $error = $db->getConnection()->error;
+                $errno = $db->getConnection()->errno;
+                throw new Exception("SQL hatası (Komut " . ($index + 1) . ", Errno: $errno): $error\n\nSQL: " . htmlspecialchars($sql));
             }
+            echo "✅ Başarılı\n<br>";
         }
     }
-    echo "✅ Tablolar başarıyla oluşturuldu\n<br>";
+    echo "✅ Tüm tablolar başarıyla oluşturuldu\n<br>";
     
     // QR Pool Manager'ı başlat
     $qrPoolManager = new QRPoolManager();
@@ -102,8 +124,34 @@ try {
     }
     
 } catch (Exception $e) {
-    echo "<h3 style='color: red;'>❌ Hata: " . $e->getMessage() . "</h3>\n";
-    echo "<p>Lütfen hata detaylarını kontrol edin ve tekrar deneyin.</p>\n";
+    echo "<div style='background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin: 10px 0;'>\n";
+    echo "<h3 style='color: #d32f2f;'>❌ Hata Detayları</h3>\n";
+    echo "<p><strong>Hata Mesajı:</strong> " . htmlspecialchars($e->getMessage()) . "</p>\n";
+    echo "<p><strong>Dosya:</strong> " . htmlspecialchars($e->getFile()) . "</p>\n";
+    echo "<p><strong>Satır:</strong> " . $e->getLine() . "</p>\n";
+    
+    // Stack trace'i güvenli şekilde göster
+    echo "<details>\n";
+    echo "<summary><strong>Detaylı Hata İzleme (Stack Trace)</strong></summary>\n";
+    echo "<pre style='background: #f5f5f5; padding: 10px; border-radius: 3px; font-size: 12px;'>";
+    echo htmlspecialchars($e->getTraceAsString());
+    echo "</pre>\n";
+    echo "</details>\n";
+    echo "</div>\n";
+    
+    // PHP hata logunu kontrol et
+    $errorLog = ini_get('error_log');
+    if ($errorLog && file_exists($errorLog)) {
+        echo "<p><strong>İpucu:</strong> Daha fazla detay için PHP hata logunu kontrol edin: <code>" . htmlspecialchars($errorLog) . "</code></p>\n";
+    }
+    
+    echo "<p><strong>Çözüm Önerileri:</strong></p>\n";
+    echo "<ul>\n";
+    echo "<li>🔍 Veritabanı bağlantı bilgilerini kontrol edin</li>\n";
+    echo "<li>📁 database/qr_pool_setup.sql dosyasının varlığını kontrol edin</li>\n";
+    echo "<li>🔐 MySQL kullanıcısının CREATE, ALTER yetkilerini kontrol edin</li>\n";
+    echo "<li>📝 Tabloların zaten var olup olmadığını kontrol edin</li>\n";
+    echo "</ul>\n";
 }
 
 // CLI için farklı çıktı
