@@ -100,6 +100,10 @@ if (isset($_POST['action'])) {
                             echo json_encode(['success' => false, 'error' => 'Bilinmeyen işlem']);
                             exit();
     }
+    // AJAX istekleri dışında kalan durumlarda scripti sonlandır
+    if (isset($_POST['action'])) {
+        exit();
+    }
 }
 ?>
 <!DOCTYPE html>
