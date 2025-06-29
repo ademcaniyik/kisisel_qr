@@ -236,24 +236,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
+        <script src="/kisisel_qr/assets/js/profile-page.js"></script>
+        <script src="/kisisel_qr/assets/js/landing.js"></script>
         <script>
         // index.php'deki sosyal medya, tema ve input mask JS fonksiyonları
         document.addEventListener('DOMContentLoaded', function() {
-            initSocialMediaHandlers();
-            updateThemePreview();
+            initSocialMediaHandlers && initSocialMediaHandlers();
+            updateThemePreview && updateThemePreview();
             // Mevcut sosyal medya linklerini doldur
             var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
             if (Array.isArray(socialLinks)) {
                 socialLinks.forEach(function(item) {
-                    addSocialMediaPlatform(item.platform);
-                    // input'a url veya username doldur
+                    addSocialMediaPlatform && addSocialMediaPlatform(item.platform);
                     setTimeout(function() {
-                        var idx = selectedSocialMedias.findIndex(function(x){return x.platform===item.platform;});
+                        var idx = window.selectedSocialMedias ? selectedSocialMedias.findIndex(function(x){return x.platform===item.platform;}) : -1;
                         if(idx>-1){
                             var input = document.querySelector('input[data-index="'+idx+'"]');
                             if(input){
                                 input.value = item.username || '';
-                                updateSocialMediaUrl(idx);
+                                updateSocialMediaUrl && updateSocialMediaUrl(idx);
                             }
                         }
                     }, 200);
