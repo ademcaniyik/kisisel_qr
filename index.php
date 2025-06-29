@@ -840,7 +840,7 @@
                 <div class="col-lg-2">
                     <h6>Şirket</h6>
                     <ul class="list-unstyled">
-                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="hakkimizda.php">Hakkımızda</a></li>
                         <li><a href="#">Blog</a></li>
                         <li><a href="#">Kariyer</a></li>
                     </ul>
@@ -848,9 +848,9 @@
                 <div class="col-lg-2">
                     <h6>Yasal</h6>
                     <ul class="list-unstyled">
-                        <li><a href="#">Gizlilik Politikası</a></li>
-                        <li><a href="#">Kullanım Şartları</a></li>
-                        <li><a href="#">KVKK</a></li>
+                        <li><a href="gizlilik-politikasi.php">Gizlilik Politikası</a></li>
+                        <li><a href="kullanim-sartlari.php">Kullanım Şartları</a></li>
+                        <li><a href="kvkk.php">KVKK</a></li>
                     </ul>
                 </div>
             </div>
