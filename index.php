@@ -679,7 +679,7 @@
                                                 <option value="+91" data-flag="🇮🇳">🇮🇳 +91</option>
                                             </select>
                                             <input type="tel" class="form-control phone-number-input" id="deliveryPhone" required 
-                                                   placeholder="534 933 46 31" 
+                                                   placeholder="555 555 55 55" 
                                                    oninput="formatPhoneNumber('delivery')">
                                         </div>
                                         <small class="form-text text-muted">Kargo teslim için iletişim numarası</small>
