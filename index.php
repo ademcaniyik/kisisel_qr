@@ -78,6 +78,7 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            padding: 0.8rem 0;
         }
 
         .navbar-brand {
@@ -89,10 +90,20 @@
         .nav-link {
             font-weight: 500;
             transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
         }
 
         .nav-link:hover {
             color: var(--primary-color) !important;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
         }
 
         /* Hero Section */
@@ -103,6 +114,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding: 80px 0 40px;
         }
 
         .hero::before {
@@ -134,6 +146,7 @@
             font-weight: 400;
             margin-bottom: 2rem;
             opacity: 0.9;
+            line-height: 1.5;
         }
 
         .cta-buttons {
@@ -234,6 +247,7 @@
         .stat-item {
             text-align: center;
             padding: 30px 20px;
+            margin-bottom: 20px;
         }
 
         .stat-number {
@@ -241,12 +255,14 @@
             font-weight: 800;
             color: var(--primary-color);
             display: block;
+            line-height: 1;
         }
 
         .stat-label {
             font-size: 1.1rem;
             color: var(--secondary-color);
             font-weight: 500;
+            margin-top: 8px;
         }
 
         /* Demo Section */
@@ -383,23 +399,61 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            /* Navigation fixes */
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            
+            .navbar-toggler {
+                border: none;
+                padding: 4px 8px;
+            }
+            
+            .navbar-toggler:focus {
+                box-shadow: none;
+            }
+
+            /* Hero section fixes */
+            .hero {
+                min-height: 80vh;
+                padding: 80px 0 40px;
+                text-align: center;
+            }
+            
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+                line-height: 1.1;
+                margin-bottom: 1rem;
             }
 
             .hero .lead {
-                font-size: 1.1rem;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 0 10px;
             }
 
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.8rem;
             }
 
             .btn-hero {
                 width: 100%;
-                max-width: 300px;
+                max-width: 280px;
                 justify-content: center;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            /* Demo mockup mobile fix */
+            .demo-mockup {
+                max-width: 280px;
+                margin-top: 30px;
+            }
+            
+            .phone-mockup {
+                padding: 15px;
             }
 
             .features {
@@ -408,6 +462,62 @@
 
             .feature-card {
                 margin-bottom: 30px;
+                padding: 30px 20px;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+                margin-bottom: 12px;
+            }
+            
+            /* Stats section mobile */
+            .stats {
+                padding: 50px 0;
+            }
+            
+            .stat-item {
+                padding: 20px 15px;
+                margin-bottom: 15px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .stat-label {
+                font-size: 1rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 70px 0 30px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero .lead {
+                font-size: 0.95rem;
+            }
+            
+            .btn-hero {
+                font-size: 0.9rem;
+                padding: 10px 16px;
+            }
+            
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
             }
         }
 
