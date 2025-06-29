@@ -8,11 +8,12 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/QRManager.php';
 
 class QRPoolManager {
+    /** @var Database */
     private $db;
     private $qrManager;
     
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
         $this->qrManager = new QRManager();
     }
     
