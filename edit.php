@@ -92,8 +92,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-body p-4">
                     <h2 class="mb-4 text-center">Profil Bilgilerini Düzenle</h2>
-                    <form id="editProfileForm" method="post" autocomplete="off">
-                        <input type="hidden" name="edit_code" value="<?=htmlspecialchars($editCode)?>">
+                    <form id="editProfileForm" method="post" autocomplete="off" enctype="multipart/form-data">
+                        <div class="mb-3 text-center">
+                            <label class="form-label d-block">Profil Fotoğrafı</label>
+                            <?php
+                            $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg';
+                            ?>
+                            <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid #e3e3e3;">
+                            <div class="d-flex justify-content-center mt-2">
+                                <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:220px;">
+                            </div>
+                            <small class="form-text text-muted">Yeni fotoğraf seçerek güncelleyebilirsiniz.</small>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Ad Soyad *</label>
@@ -131,17 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Profil Fotoğrafı</label>
-                            <div class="d-flex align-items-center gap-3 mb-2">
-                                <?php
-                                $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg';
-                                ?>
-                                <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" style="width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #e3e3e3;">
-                                <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:220px;">
-                            </div>
-                            <small class="form-text text-muted">Yeni fotoğraf seçerek güncelleyebilirsiniz.</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Kısa Yazı (Bio)</label>
@@ -193,40 +192,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
                                     <div class="row g-2 social-platforms-grid">
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram"><i class="fab fa-instagram text-danger"></i><span class="d-block small">Instagram</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram"><i class="fab fa-instagram text-danger"></i><span class="d-block small social-label">Instagram</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x"><i class="fab fa-twitter" style="color: #1da1f2;"></i><span class="d-block small">X</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x"><i class="fab fa-twitter" style="color: #1da1f2;"></i><span class="d-block small social-label">X</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin"><i class="fab fa-linkedin text-primary"></i><span class="d-block small">LinkedIn</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin"><i class="fab fa-linkedin text-primary"></i><span class="d-block small social-label">LinkedIn</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook"><i class="fab fa-facebook text-primary"></i><span class="d-block small">Facebook</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook"><i class="fab fa-facebook text-primary"></i><span class="d-block small social-label">Facebook</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube"><i class="fab fa-youtube text-danger"></i><span class="d-block small">YouTube</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube"><i class="fab fa-youtube text-danger"></i><span class="d-block small social-label">YouTube</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok"><i class="fab fa-tiktok text-dark"></i><span class="d-block small">TikTok</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok"><i class="fab fa-tiktok text-dark"></i><span class="d-block small social-label">TikTok</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp"><i class="fab fa-whatsapp text-success"></i><span class="d-block small">WhatsApp</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp"><i class="fab fa-whatsapp text-success"></i><span class="d-block small social-label">WhatsApp</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website"><i class="fas fa-globe text-info"></i><span class="d-block small">Website</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website"><i class="fas fa-globe text-info"></i><span class="d-block small social-label">Website</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat"><i class="fab fa-snapchat text-warning"></i><span class="d-block small">Snapchat</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat"><i class="fab fa-snapchat text-warning"></i><span class="d-block small social-label">Snapchat</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord"><i class="fab fa-discord text-primary"></i><span class="d-block small">Discord</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord"><i class="fab fa-discord text-primary"></i><span class="d-block small social-label">Discord</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small">Telegram</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small social_label">Telegram</span></button>
                                         </div>
                                         <div class="col-6 col-md-4 col-lg-3">
-                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch"><i class="fab fa-twitch text-purple"></i><span class="d-block small">Twitch</span></button>
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch"><i class="fab fa-twitch text-purple"></i><span class="d-block small social-label">Twitch</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -278,6 +277,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 });
             }
+            // Sosyal medya platform butonları tıklama
+            document.querySelectorAll('.social-platform-btn').forEach(function(btn){
+                btn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    if(typeof addSocialMediaPlatform === 'function') {
+                        addSocialMediaPlatform(this.getAttribute('data-platform'));
+                    }
+                });
+            });
         });
         </script>
         </body>
