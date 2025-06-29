@@ -665,15 +665,9 @@ if (isset($_POST['action'])) {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // PHP tam URL döndürüyorsa, doğrudan kullan
-                    const link = document.createElement('a');
-                    link.href = result.download_url;
-                    const fileName = result.download_url.split('/').pop();
-                    link.download = fileName || 'QR_Batch.zip';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    showToast('QR batch ZIP dosyası hazırlandı ve indiriliyor...', 'success');
+                    // Yeni sekmede aç, tarayıcıya bırak
+                    window.open(result.download_url, '_blank');
+                    showToast('QR batch ZIP dosyası yeni sekmede açıldı, indirme başlatıldı.', 'success');
                 } else {
                     showToast('Hata: ' + result.error, 'danger');
                 }
