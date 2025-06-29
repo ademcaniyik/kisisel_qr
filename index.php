@@ -413,7 +413,7 @@
                                                 <option value="+91" data-flag="🇮🇳">🇮🇳 +91</option>
                                             </select>
                                             <input type="tel" class="form-control phone-number-input" id="customerPhone" required 
-                                                   placeholder="534 933 46 31" 
+                                                   placeholder="555 555 55 55" 
                                                    oninput="formatPhoneNumber('customer')">
                                         </div>
                                         <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
@@ -1741,7 +1741,7 @@
             const countryCode = countrySelect.value;
             
             const placeholders = {
-                '+90': '534 933 46 31',
+                '+90': '555 555 55 55',
                 '+1': '(555) 123-4567',
                 '+44': '7700 900123',
                 '+49': '30 12345678',
