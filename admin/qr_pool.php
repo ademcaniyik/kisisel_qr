@@ -657,29 +657,29 @@ if (isset($_POST['action'])) {
             if (!confirm('Bu batch\'teki tüm QR\'ları indirmek istediğinizden emin misiniz?')) {
                 return;
             }
-            
             try {
                 const response = await fetch('qr_pool.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     body: `action=download_qr_batch&batch_id=${batchId}`
                 });
-                
                 const result = await response.json();
-                
                 if (result.success) {
-                    // ZIP dosyasını indir
+                    // ZIP dosyasını tarayıcı uyumlu şekilde indir
                     const link = document.createElement('a');
                     link.href = result.download_url;
-                    link.download = '';
+                    // Dosya adını URL'den çek
+                    const fileName = result.download_url.split('/').pop();
+                    link.download = fileName || 'QR_Batch.zip';
+                    document.body.appendChild(link);
                     link.click();
-                    
-                    alert('QR batch ZIP dosyası hazırlandı ve indiriliyor...');
+                    document.body.removeChild(link);
+                    showToast('QR batch ZIP dosyası hazırlandı ve indiriliyor...', 'success');
                 } else {
-                    alert('Hata: ' + result.error);
+                    showToast('Hata: ' + result.error, 'danger');
                 }
             } catch (error) {
-                alert('Bir hata oluştu: ' + error.message);
+                showToast('Bir hata oluştu: ' + error.message, 'danger');
             }
         }
 
