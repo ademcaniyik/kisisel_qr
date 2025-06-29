@@ -113,26 +113,13 @@ try {
                             'edit_code' => $qrAssignment['edit_code']
                         ]);
                     } else {
-                        // QR ataması başarısız - eski sisteme fallback
-                        $qrManager = new QRManager();
-                        $qrResult = $qrManager->createQR($profileId);
-                        
-                        if ($qrResult['success']) {
-                            echo json_encode([
-                                'success' => true, 
-                                'message' => 'Profil oluşturuldu, QR Pool tükendi - yeni QR oluşturuldu',
-                                'profile_id' => $profileId,
-                                'qr_id' => $qrResult['qr_id'],
-                                'fallback_qr' => true
-                            ]);
-                        } else {
-                            echo json_encode([
-                                'success' => true, 
-                                'message' => 'Profil oluşturuldu ancak QR kodu oluşturulamadı: ' . $qrAssignment['error'],
-                                'profile_id' => $profileId,
-                                'qr_error' => $qrAssignment['error']
-                            ]);
-                        }
+                        // QR havuzunda QR yoksa hata döndür
+                        echo json_encode([
+                            'success' => false,
+                            'message' => 'Profil oluşturuldu ancak QR Pool tükendi: ' . $qrAssignment['error'],
+                            'profile_id' => $profileId,
+                            'qr_error' => $qrAssignment['error']
+                        ]);
                     }
                 } catch (Exception $e) {
                     // QR Pool hatası - eski sisteme fallback
