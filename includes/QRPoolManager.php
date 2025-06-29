@@ -264,4 +264,167 @@ class QRPoolManager {
         $stmt->bind_param("i", $poolId);
         return $stmt->execute();
     }
+    
+    /**
+     * Batch için QR görsellerini ZIP dosyası olarak hazırla
+     */
+    public function createQRBatchZip($batchId) {
+        try {
+            $batchData = $this->db->query("SELECT * FROM print_batches WHERE id = $batchId")->fetch_assoc();
+            if (!$batchData) {
+                throw new Exception("Batch bulunamadı");
+            }
+            
+            $qrs = $this->db->query("SELECT * FROM qr_pool WHERE batch_id = $batchId ORDER BY pool_id")->fetch_all(MYSQLI_ASSOC);
+            if (empty($qrs)) {
+                throw new Exception("Batch'te QR bulunamadı");
+            }
+            
+            // ZIP dosyası oluştur
+            $zipFileName = "QR_Batch_" . $batchData['batch_name'] . "_" . date('Y-m-d_H-i-s') . ".zip";
+            $zipPath = __DIR__ . "/../public/downloads/" . $zipFileName;
+            
+            // Downloads klasörünü oluştur
+            if (!file_exists(__DIR__ . "/../public/downloads/")) {
+                mkdir(__DIR__ . "/../public/downloads/", 0777, true);
+            }
+            
+            $zip = new ZipArchive();
+            if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+                throw new Exception("ZIP dosyası oluşturulamadı");
+            }
+            
+            // Her QR için dosyaları ekle
+            foreach ($qrs as $qr) {
+                // Ana QR görseli
+                $profileQRPath = __DIR__ . "/../public/qr_codes/" . $qr['qr_code_id'] . ".png";
+                if (file_exists($profileQRPath)) {
+                    $zip->addFile($profileQRPath, "Profile_QRs/" . $qr['pool_id'] . "_profile.png");
+                }
+                
+                // Edit QR görseli
+                $editQRPath = __DIR__ . "/../public/qr_codes/" . $qr['edit_token'] . "_edit.png";
+                if (file_exists($editQRPath)) {
+                    $zip->addFile($editQRPath, "Edit_QRs/" . $qr['pool_id'] . "_edit.png");
+                }
+            }
+            
+            // QR listesi CSV dosyası oluştur
+            $csvContent = "Pool ID,QR Code ID,Edit Token,Edit Code,Profile URL,Edit URL\n";
+            foreach ($qrs as $qr) {
+                $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+                $profileUrl = "https://$baseUrl/qr/" . $qr['qr_code_id'];
+                $editUrl = "https://$baseUrl/edit/" . $qr['edit_token'];
+                
+                $csvContent .= implode(',', [
+                    $qr['pool_id'],
+                    $qr['qr_code_id'],
+                    $qr['edit_token'],
+                    $qr['edit_code'],
+                    $profileUrl,
+                    $editUrl
+                ]) . "\n";
+            }
+            
+            $zip->addFromString("QR_List.csv", $csvContent);
+            
+            // Batch bilgileri README
+            $readmeContent = "QR BATCH BİLGİLERİ\n";
+            $readmeContent .= "==================\n\n";
+            $readmeContent .= "Batch Adı: " . $batchData['batch_name'] . "\n";
+            $readmeContent .= "QR Aralığı: " . $batchData['pool_start_id'] . " - " . $batchData['pool_end_id'] . "\n";
+            $readmeContent .= "Miktar: " . $batchData['quantity'] . " QR\n";
+            $readmeContent .= "Oluşturma Tarihi: " . $batchData['created_at'] . "\n";
+            $readmeContent .= "İndirme Tarihi: " . date('Y-m-d H:i:s') . "\n\n";
+            $readmeContent .= "KLASÖR YAPISI:\n";
+            $readmeContent .= "- Profile_QRs/: Ana profil QR'ları (büyük boyut)\n";
+            $readmeContent .= "- Edit_QRs/: Düzenleme QR'ları (küçük boyut)\n";
+            $readmeContent .= "- QR_List.csv: Tüm QR bilgileri ve URL'leri\n";
+            
+            $zip->addFromString("README.txt", $readmeContent);
+            $zip->close();
+            
+            return "public/downloads/" . $zipFileName;
+            
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Tüm QR'ları listele (sayfalama ile)
+     */
+    public function getQRList($page = 1, $limit = 20, $status = 'all') {
+        $offset = ($page - 1) * $limit;
+        $whereClause = '';
+        
+        if ($status !== 'all') {
+            $whereClause = "WHERE status = '" . $this->db->getConnection()->real_escape_string($status) . "'";
+        }
+        
+        $totalQuery = "SELECT COUNT(*) as total FROM qr_pool $whereClause";
+        $total = $this->db->query($totalQuery)->fetch_assoc()['total'];
+        
+        $qrQuery = "SELECT qp.*, pb.batch_name FROM qr_pool qp 
+                   LEFT JOIN print_batches pb ON qp.batch_id = pb.id 
+                   $whereClause 
+                   ORDER BY qp.id DESC 
+                   LIMIT $limit OFFSET $offset";
+        
+        $qrs = $this->db->query($qrQuery)->fetch_all(MYSQLI_ASSOC);
+        
+        return [
+            'qrs' => $qrs,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+                'pages' => ceil($total / $limit)
+            ]
+        ];
+    }
+    
+    /**
+     * QR durumunu güncelle
+     */
+    public function updateQRStatus($qrId, $status) {
+        $validStatuses = ['available', 'assigned', 'delivered'];
+        if (!in_array($status, $validStatuses)) {
+            return ['success' => false, 'error' => 'Geçersiz durum'];
+        }
+        
+        $stmt = $this->db->prepare("UPDATE qr_pool SET status = ? WHERE id = ?");
+        $stmt->bind_param("si", $status, $qrId);
+        
+        if ($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'Güncelleme başarısız'];
+        }
+    }
+    
+    /**
+     * Batch durumunu güncelle
+     */
+    public function updateBatchStatus($batchId, $status) {
+        $validStatuses = ['planned', 'ready_to_print', 'printed', 'stocked'];
+        if (!in_array($status, $validStatuses)) {
+            return ['success' => false, 'error' => 'Geçersiz durum'];
+        }
+        
+        $updateData = ['status' => $status];
+        if ($status === 'printed') {
+            $updateData['printed_at'] = date('Y-m-d H:i:s');
+        }
+        
+        $stmt = $this->db->prepare("UPDATE print_batches SET status = ?, printed_at = ? WHERE id = ?");
+        $printedAt = $updateData['printed_at'] ?? null;
+        $stmt->bind_param("ssi", $status, $printedAt, $batchId);
+        
+        if ($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'Güncelleme başarısız'];
+        }
+    }
 }
