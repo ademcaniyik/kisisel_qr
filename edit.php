@@ -272,9 +272,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($showForm) {
-    echo '<h2>Profil Düzenleme Şifresi</h2>';
-    echo '<form method="post">';
-    echo '<label>Edit Şifresi: <input type="text" name="edit_code"></label>';
-    echo '<button type="submit">Devam</button>';
-    echo '</form>';
+    // Modern ve şık şifre giriş ekranı
+    ?>
+    <!DOCTYPE html>
+    <html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Profil Düzenleme Şifresi | Kişisel QR</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="/kisisel_qr/assets/css/landing.css" rel="stylesheet">
+        <style>
+            body { background: #f8f9fa; }
+            .edit-pass-card { max-width: 400px; margin: 5vh auto; border-radius: 1.5rem; box-shadow: 0 4px 32px rgba(0,0,0,0.08); }
+            .edit-pass-card .card-body { padding: 2.5rem 2rem; }
+            .edit-pass-card .form-control:focus { box-shadow: 0 0 0 2px #3498db33; border-color: #3498db; }
+            .edit-pass-card .btn-primary { font-size: 1.1rem; border-radius: 2rem; }
+            .edit-pass-card .input-group-text { background: #f1f3f6; border: none; }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="card edit-pass-card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+                    <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
+                    <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
+                </div>
+                <form method="post" autocomplete="off">
+                    <div class="mb-3">
+                        <label class="form-label">Edit Şifresi</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input type="text" name="edit_code" class="form-control" placeholder="Şifrenizi girin" required autofocus>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required>
+                        </div>
+                        <small class="form-text text-muted">Güvenlik için telefon numaranız istenmektedir.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+    <?php
+    exit;
 }
