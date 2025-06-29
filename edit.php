@@ -85,7 +85,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <link href="/kisisel_qr/assets/css/profile-page.css" rel="stylesheet">
             <link href="/kisisel_qr/assets/css/profile-themes.css" rel="stylesheet">
             <link href="/kisisel_qr/assets/css/social-buttons.css" rel="stylesheet">
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <style>
+            /* Sosyal medya label'larını tüm temalarda okunaklı yapmak için */
+            .social-label {
+              color: #111 !important;
+              font-weight: 700 !important;
+              font-size: 1rem !important;
+              text-align: center;
+              letter-spacing: 0.01em;
+              line-height: 1.2;
+              text-shadow: 0 1px 2px #fff8, 0 0 1px #fff8;
+              user-select: text;
+            }
+            /* Koyu temalarda da okunaklı olması için arka planı hafif beyazlaştır */
+            .theme-dark .social-label,
+            .theme-dark .card.bg-light .social-label,
+            .card.bg-dark .social-label {
+              color: #fff !important;
+              text-shadow: 0 1px 2px #000a, 0 0 2px #000a;
+              background: rgba(0,0,0,0.08);
+              border-radius: 4px;
+              padding: 1px 4px;
+            }
+            .social-platform-btn {
+              min-height: 60px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+            </style>
         </head>
         <body style="background:#f8f9fa;">
         <div class="container" style="max-width:700px;margin:auto;margin-top:2rem;">
@@ -243,49 +272,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <script src="/kisisel_qr/assets/js/landing.js"></script>
         <script>
         // index.php'deki sosyal medya, tema ve input mask JS fonksiyonları
+        window.addSocialMediaPlatform = window.addSocialMediaPlatform || function(platform) {
+          if (typeof addSocialMediaPlatformOrig === 'function') return addSocialMediaPlatformOrig(platform);
+          // ...buraya yedek fonksiyon eklenebilir...
+        };
+
+        // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
+        function bindSocialButtons() {
+          document.querySelectorAll('.social-platform-btn').forEach(function(btn){
+            btn.removeEventListener('click', btn._smClick, false);
+            btn._smClick = function(e){
+              e.preventDefault();
+              if(typeof addSocialMediaPlatform === 'function') {
+                addSocialMediaPlatform(this.getAttribute('data-platform'));
+              }
+            };
+            btn.addEventListener('click', btn._smClick, false);
+          });
+        }
         document.addEventListener('DOMContentLoaded', function() {
-            initSocialMediaHandlers && initSocialMediaHandlers();
-            updateThemePreview && updateThemePreview();
-            // Mevcut sosyal medya linklerini doldur
-            var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
-            if (Array.isArray(socialLinks)) {
-                socialLinks.forEach(function(item) {
-                    addSocialMediaPlatform && addSocialMediaPlatform(item.platform);
-                    setTimeout(function() {
-                        var idx = window.selectedSocialMedias ? selectedSocialMedias.findIndex(function(x){return x.platform===item.platform;}) : -1;
-                        if(idx>-1){
-                            var input = document.querySelector('input[data-index="'+idx+'"]');
-                            if(input){
-                                input.value = item.username || '';
-                                updateSocialMediaUrl && updateSocialMediaUrl(idx);
-                            }
-                        }
-                    }, 200);
-                });
-            }
-            // Profil fotoğrafı önizleme
-            const photoInput = document.getElementById('editPhotoInput');
-            const photoPreview = document.getElementById('profilePhotoPreview');
-            if(photoInput && photoPreview) {
-                photoInput.addEventListener('change', function(e) {
-                    if(this.files && this.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            photoPreview.src = ev.target.result;
-                        };
-                        reader.readAsDataURL(this.files[0]);
-                    }
-                });
-            }
-            // Sosyal medya platform butonları tıklama
-            document.querySelectorAll('.social-platform-btn').forEach(function(btn){
-                btn.addEventListener('click', function(e){
-                    e.preventDefault();
-                    if(typeof addSocialMediaPlatform === 'function') {
-                        addSocialMediaPlatform(this.getAttribute('data-platform'));
-                    }
-                });
+          initSocialMediaHandlers && initSocialMediaHandlers();
+          updateThemePreview && updateThemePreview();
+          // Mevcut sosyal medya linklerini doldur
+          var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
+          if (Array.isArray(socialLinks)) {
+            socialLinks.forEach(function(item) {
+              addSocialMediaPlatform && addSocialMediaPlatform(item.platform);
+              setTimeout(function() {
+                var idx = window.selectedSocialMedias ? selectedSocialMedias.findIndex(function(x){return x.platform===item.platform;}) : -1;
+                if(idx>-1){
+                  var input = document.querySelector('input[data-index="'+idx+'"]');
+                  if(input){
+                    input.value = item.username || '';
+                    updateSocialMediaUrl && updateSocialMediaUrl(idx);
+                  }
+                }
+              }, 200);
             });
+          }
+          // Profil fotoğrafı önizleme
+          const photoInput = document.getElementById('editPhotoInput');
+          const photoPreview = document.getElementById('profilePhotoPreview');
+          if(photoInput && photoPreview) {
+            photoInput.addEventListener('change', function(e) {
+              if(this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                  photoPreview.src = ev.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+              }
+            });
+          }
+          // Sosyal medya platform butonları tıklama
+          document.querySelectorAll('.social-platform-btn').forEach(function(btn){
+            btn.onclick = function(e){
+              e.preventDefault();
+              if(typeof window.addSocialMediaPlatform === 'function') {
+                window.addSocialMediaPlatform(this.getAttribute('data-platform'));
+              }
+            };
+          });
         });
         </script>
         </body>
