@@ -61,12 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken));
         exit;
     } else if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
+        $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
         $phone = $_POST['phone'] ?? '';
         $bio = $_POST['bio'] ?? '';
         $iban = $_POST['iban'] ?? '';
         $blood_type = $_POST['blood_type'] ?? '';
         $theme = $_POST['theme'] ?? '';
         $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
+        if (is_string($socialLinks)) {
+            $decoded = json_decode($socialLinks, true);
+            if (is_array($decoded)) $socialLinks = $decoded;
+        }
         $profileManager->updateProfile($profileId, $profile['name'], '', $phone, $bio, $iban, $blood_type, $theme, $socialLinks);
         header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken).'&success=1');
         exit;
