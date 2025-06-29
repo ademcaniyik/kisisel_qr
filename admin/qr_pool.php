@@ -665,11 +665,20 @@ if (isset($_POST['action'])) {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // ZIP dosyasını tarayıcı uyumlu şekilde indir
+                    // ZIP dosyasını tam domain ile indir
+                    let baseUrl = 'https://acdisoftware.com.tr/kisisel_qr';
+                    let downloadUrl = result.download_url;
+                    // Eğer zaten tam URL ise tekrar ekleme
+                    if (!downloadUrl.startsWith('http')) {
+                        // Başta / varsa kaldır
+                        if (downloadUrl.startsWith('/')) {
+                            downloadUrl = downloadUrl.substring(1);
+                        }
+                        downloadUrl = baseUrl + '/' + downloadUrl.replace(/^kisisel_qr\//, '');
+                    }
                     const link = document.createElement('a');
-                    link.href = result.download_url;
-                    // Dosya adını URL'den çek
-                    const fileName = result.download_url.split('/').pop();
+                    link.href = downloadUrl;
+                    const fileName = downloadUrl.split('/').pop();
                     link.download = fileName || 'QR_Batch.zip';
                     document.body.appendChild(link);
                     link.click();
