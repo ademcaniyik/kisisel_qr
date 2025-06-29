@@ -108,14 +108,79 @@ try {
     echo "✅ Tüm tablolar başarıyla hazırlandı\n<br>";
     
     // QR Pool Manager'ı yükle
-    require_once 'includes/QRPoolManager.php';
+    echo "<h3>2. QR Pool Manager yükleniyor...</h3>\n";
+    
+    // QRPoolManager sınıfının varlığını kontrol et
+    if (!class_exists('QRPoolManager')) {
+        if (!file_exists('includes/QRPoolManager.php')) {
+            throw new Exception("QRPoolManager.php dosyası bulunamadı!");
+        }
+        require_once 'includes/QRPoolManager.php';
+    }
+    
     $qrPoolManager = new QRPoolManager();
-    echo "<h3>2. İlk QR Batch'i oluşturuluyor (100 adet)...</h3>\n";
+    echo "✅ QRPoolManager yüklendi\n<br>";
+    
+    echo "<h3>3. İlk QR Batch'i oluşturuluyor (100 adet)...</h3>\n";
     
     // Zaten batch var mı kontrol et
     $existingBatches = $db->query("SELECT COUNT(*) as count FROM print_batches")->fetch_assoc();
     if ($existingBatches['count'] > 0) {
         echo "ℹ️ Zaten " . $existingBatches['count'] . " batch var. Yeni batch oluşturuluyor...\n<br>";
+    }
+    
+    // QR Pool'da zaten QR var mı kontrol et
+    $existingQRs = $db->query("SELECT COUNT(*) as count FROM qr_pool")->fetch_assoc();
+    if ($existingQRs['count'] > 0) {
+        echo "ℹ️ QR Pool'da zaten " . $existingQRs['count'] . " QR var.\n<br>";
+        
+        // Stok durumunu göster
+        $stockStatus = $qrPoolManager->getStockStatus();
+        echo "📊 Mevcut Stok - Toplam: {$stockStatus['total']}, Müsait: {$stockStatus['available']}, Atanmış: {$stockStatus['assigned']}\n<br>";
+        
+        if ($stockStatus['available'] >= 50) {
+            echo "✅ Yeterli QR stoku var. Yeni batch oluşturma atlanıyor.\n<br>";
+            echo "<h3>4. Mevcut QR'lar:</h3>\n";
+            
+            // Mevcut QR'ları göster
+            $sampleQRs = $db->query("SELECT pool_id, qr_code_id, edit_token, edit_code FROM qr_pool ORDER BY id LIMIT 5")->fetch_all(MYSQLI_ASSOC);
+            
+            if (!empty($sampleQRs)) {
+                echo "<table border='1' style='border-collapse: collapse; margin: 10px 0;'>\n";
+                echo "<tr><th>Pool ID</th><th>QR Code ID</th><th>Edit Token</th><th>Edit Code</th><th>Profil URL</th><th>Edit URL</th></tr>\n";
+                
+                foreach ($sampleQRs as $qr) {
+                    $baseUrl = $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+                    $profileUrl = "https://$baseUrl/qr/" . $qr['qr_code_id'];
+                    $editUrl = "https://$baseUrl/edit/" . $qr['edit_token'];
+                    
+                    echo "<tr>";
+                    echo "<td>{$qr['pool_id']}</td>";
+                    echo "<td>{$qr['qr_code_id']}</td>";
+                    echo "<td>{$qr['edit_token']}</td>";
+                    echo "<td>{$qr['edit_code']}</td>";
+                    echo "<td><a href='$profileUrl' target='_blank'>Profil</a></td>";
+                    echo "<td><a href='$editUrl' target='_blank'>Düzenle</a></td>";
+                    echo "</tr>\n";
+                }
+                echo "</table>\n";
+            }
+            
+            echo "<h3>✅ QR Pool sistemi hazır!</h3>\n";
+            echo "<p><strong>Sistem Durumu:</strong></p>\n";
+            echo "<ul>\n";
+            echo "<li>✅ Tablolar oluşturuldu</li>\n";
+            echo "<li>✅ QR Pool hazır ({$stockStatus['available']} müsait QR)</li>\n";
+            echo "<li>✅ Sipariş sistemi QR Pool kullanabilir</li>\n";
+            echo "<li>✅ Admin panel QR Pool kullanabilir</li>\n";
+            echo "</ul>\n";
+            
+            // Admin panel linki
+            echo "<p><a href='admin/dashboard.php' style='display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;'>Admin Panel'e Git</a></p>\n";
+            echo "<p><a href='admin/qr_pool.php' style='display: inline-block; padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 5px;'>QR Pool Yönetimi</a></p>\n";
+            
+            return; // Script'i sonlandır
+        }
     }
     
     // İlk batch'i oluştur
