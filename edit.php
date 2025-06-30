@@ -592,6 +592,58 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                 }, 2000);
             });
         });
+        // --- Sosyal Medya Platform Ekleme Fonksiyonu (Bağımsız ve Garantili) ---
+        window.selectedSocialMedias = window.selectedSocialMedias || [];
+        window.addSocialMediaPlatform = function(platform) {
+          if (!window.selectedSocialMedias) window.selectedSocialMedias = [];
+          // Zaten ekli mi kontrol et
+          if (window.selectedSocialMedias.some(function(x){return x.platform===platform;})) return;
+          var idx = window.selectedSocialMedias.length;
+          window.selectedSocialMedias.push({platform: platform, username: ''});
+          var labelMap = {
+            instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', facebook: 'Facebook', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp', website: 'Website', snapchat: 'Snapchat', discord: 'Discord', telegram: 'Telegram', twitch: 'Twitch'
+          };
+          var iconMap = {
+            instagram: '<i class="fab fa-instagram text-danger"></i>',
+            x: '<i class="fab fa-twitter" style="color:#1da1f2"></i>',
+            linkedin: '<i class="fab fa-linkedin text-primary"></i>',
+            facebook: '<i class="fab fa-facebook text-primary"></i>',
+            youtube: '<i class="fab fa-youtube text-danger"></i>',
+            tiktok: '<i class="fab fa-tiktok text-dark"></i>',
+            whatsapp: '<i class="fab fa-whatsapp text-success"></i>',
+            website: '<i class="fas fa-globe text-info"></i>',
+            snapchat: '<i class="fab fa-snapchat text-warning"></i>',
+            discord: '<i class="fab fa-discord text-primary"></i>',
+            telegram: '<i class="fab fa-telegram text-info"></i>',
+            twitch: '<i class="fab fa-twitch text-purple"></i>'
+          };
+          var html = '<div class="input-group mb-2" data-platform="'+platform+'">'+
+            '<span class="input-group-text">'+iconMap[platform]+'</span>'+
+            '<input type="text" class="form-control" placeholder="'+labelMap[platform]+' kullanıcı adı/link" data-index="'+idx+'" oninput="window.selectedSocialMedias['+idx+'].username=this.value">'+
+            '<button type="button" class="btn btn-outline-danger" onclick="window.removeSocialMediaPlatform(\''+platform+'\')"><i class="fas fa-times"></i></button>'+
+            '</div>';
+          document.getElementById('selectedSocialMedias').insertAdjacentHTML('beforeend', html);
+        };
+        window.removeSocialMediaPlatform = function(platform) {
+          var idx = window.selectedSocialMedias.findIndex(function(x){return x.platform===platform;});
+          if(idx>-1) window.selectedSocialMedias.splice(idx,1);
+          var el = document.querySelector('#selectedSocialMedias [data-platform="'+platform+'"]');
+          if(el) el.remove();
+        };
+        // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
+        function bindSocialButtons() {
+          document.querySelectorAll('.social-platform-btn').forEach(function(btn){
+            btn.onclick = function(e){
+              e.preventDefault();
+              if(typeof window.addSocialMediaPlatform === 'function') {
+                window.addSocialMediaPlatform(this.getAttribute('data-platform'));
+              }
+            };
+          });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+          bindSocialButtons();
+        });
         </script>
     </body>
     </html>
