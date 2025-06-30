@@ -193,7 +193,6 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Profil Fotoğrafı</label>
-                                <?php $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg'; ?>
                                 <div class="d-flex align-items-center gap-3">
                                     <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
                                     <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:250px;">
