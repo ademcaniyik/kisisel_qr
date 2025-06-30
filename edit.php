@@ -3,6 +3,7 @@
 define('ROOT', __DIR__);
 require_once ROOT . '/includes/QRPoolManager.php';
 require_once ROOT . '/includes/ProfileManager.php';
+require_once ROOT . '/includes/template_helpers.php';
 
 $qrPoolManager = new QRPoolManager();
 $profileManager = new ProfileManager();
@@ -12,7 +13,6 @@ $editToken = null;
 if (isset($_GET['token'])) {
     $editToken = $_GET['token'];
 } else {
-    // Pretty URL desteği: /edit/xxxxxxx
     $requestUri = $_SERVER['REQUEST_URI'];
     if (preg_match('#/edit/([a-zA-Z0-9]+)#', $requestUri, $m)) {
         $editToken = $m[1];
@@ -46,6 +46,11 @@ if (!$qr['profile_id']) {
 }
 
 session_start();
+// CSRF token oluştur (her oturumda bir kez)
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrfToken = $_SESSION['csrf_token'];
 
 // Şifre kontrolü
 $showForm = true;
@@ -53,12 +58,36 @@ $editCode = $qr['edit_code'];
 $profileId = $qr['profile_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    ob_start();
+    // CSRF token kontrolü (hem profil güncelleme hem şifre giriş için)
+    if ((isset($_POST['save_profile']) || isset($_POST['edit_code'])) && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? ''))) {
+        ob_end_clean();
+        echo '<p style="color:red">Güvenlik hatası: Geçersiz CSRF token.</p>';
+        exit;
+    }
     $inputCode = $_POST['edit_code'] ?? '';
     $inputPhone = $_POST['phone_check'] ?? '';
+    $profilePhone = $profileManager->getProfile($profileId)['phone'] ?? '';
+    $loginError = false;
+    $loginErrorType = '';
     // Şifre ve telefon kontrolü
-    if ($inputCode === $editCode && ($inputPhone === ($profileManager->getProfile($profileId)['phone'] ?? ''))) {
+    // Telefon numaralarını normalize et (sadece rakamlar)
+    $inputPhoneNorm = preg_replace('/\D+/', '', $inputPhone);
+    $profilePhoneNorm = preg_replace('/\D+/', '', $profilePhone);
+    if ($inputCode === $editCode && $inputPhoneNorm === $profilePhoneNorm) {
+        session_regenerate_id(true); // Session fixation önlemi
         $_SESSION['edit_auth_'.$editToken] = true;
-        header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken));
+        ob_end_clean(); // Tüm tamponu temizle, hiçbir çıktı olmasın
+        // Pretty URL varsa tekrar ?token= ekleme
+        $redirectUrl = $_SERVER['REQUEST_URI'];
+        if (strpos($redirectUrl, '/edit/') !== false) {
+            // /edit/xxxxxx formatı, parametre eklemeye gerek yok
+            $redirectUrl = preg_replace('/\?.*/', '', $redirectUrl); // varsa query string'i temizle
+        } else {
+            // Sadece ?token= ile gelmişse, parametreli şekilde yönlendir
+            $redirectUrl = '/kisisel_qr/edit/' . urlencode($editToken);
+        }
+        header('Location: ' . $redirectUrl);
         exit;
     } else if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
         $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
@@ -91,15 +120,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
-        // Yönlendirme: Sadece path ile
-        $_SESSION['profile_update_success'] = true;
+        ob_end_clean();
         header('Location: /kisisel_qr/edit/' . urlencode($editToken));
         exit;
     } else if (isset($_POST['save_profile'])) {
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
-        session_destroy();
+        unset($_SESSION['edit_auth_'.$editToken]);
     } else if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
-        $loginError = true;
+        if ($inputCode !== $editCode && $inputPhone !== $profilePhone) {
+            $loginError = true;
+            $loginErrorType = 'both';
+        } else if ($inputCode !== $editCode) {
+            $loginError = true;
+            $loginErrorType = 'code';
+        } else if ($inputPhone !== $profilePhone) {
+            $loginError = true;
+            $loginErrorType = 'phone';
+        }
     }
 }
 
@@ -128,18 +165,8 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
             $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoUrl);
         }
     }
+    renderPageHeader('Profil Düzenle - Kişisel QR', ['/kisisel_qr/assets/css/profile-edit.css']);
     ?>
-    <!DOCTYPE html>
-    <html lang="tr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Profil Düzenle - Kişisel QR</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-        <link href="/kisisel_qr/assets/css/profile-edit.css" rel="stylesheet">
-    </head>
-    <body>
     <div class="container py-5">
         <?php if ($showSuccess): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert" id="profileSuccessAlert">
@@ -161,6 +188,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                     </div>
                     <div class="card-body">
                         <form id="editProfileForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                            <input type="hidden" name="csrf_token" value="<?=$csrfToken?>">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Soyad *</label>
@@ -196,7 +224,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                             <option value="+86" data-flag="🇨🇳" <?=($countryCode==='+86')?'selected':''?>>🇨🇳 +86</option>
                                             <option value="+91" data-flag="🇮🇳" <?=($countryCode==='+91')?'selected':''?>>🇮🇳 +91</option>
                                         </select>
-                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" pattern="[0-9 ]{10,20}">
+                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" pattern="[0-9]{10,15}" title="Sadece rakam, 10-15 hane arası.">
                                     </div>
                                     <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                                 </div>
@@ -215,7 +243,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">IBAN</label>
-                                    <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32">
+                                    <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32" pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$" title="TR ile başlayan 26 haneli IBAN.">
                                     <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -266,130 +294,42 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                 <div id="socialLinksContainer"></div>
                             </div>
                             <input type="hidden" name="social_links" id="socialLinksInput">
-                            <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;">Kaydet</button>
+                            <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;" id="saveProfileBtn">Kaydet</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
     <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
     <script>
-    // Sosyal medya platform butonlarını dinamik oluştur
     document.addEventListener('DOMContentLoaded', function() {
-      const socialPlatforms = window.socialPlatforms || {};
-      const platformsOrder = [
-        'instagram','x','linkedin','facebook','youtube','tiktok','whatsapp','website','snapchat','discord','telegram','twitch'
-      ];
-      const icons = {
-        instagram: '<i class="fab fa-instagram text-danger"></i>',
-        x: '<i class="fab fa-twitter" style="color:#1da1f2"></i>',
-        linkedin: '<i class="fab fa-linkedin text-primary"></i>',
-        facebook: '<i class="fab fa-facebook text-primary"></i>',
-        youtube: '<i class="fab fa-youtube text-danger"></i>',
-        tiktok: '<i class="fab fa-tiktok text-dark"></i>',
-        whatsapp: '<i class="fab fa-whatsapp text-success"></i>',
-        website: '<i class="fas fa-globe text-info"></i>',
-        snapchat: '<i class="fab fa-snapchat text-warning"></i>',
-        discord: '<i class="fab fa-discord text-primary"></i>',
-        telegram: '<i class="fab fa-telegram text-info"></i>',
-        twitch: '<i class="fab fa-twitch text-purple"></i>'
-      };
-      const btnContainer = document.getElementById('socialPlatformsButtons');
-      if(btnContainer) {
-        platformsOrder.forEach(function(key) {
-          if(socialPlatforms[key]) {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'btn btn-outline-secondary social-platform-btn';
-            btn.setAttribute('data-platform', key);
-            btn.innerHTML = icons[key] + '<span class="d-block small">' + socialPlatforms[key].name + '</span>';
-            btn.onclick = function() { addSocialLink('socialLinksContainer', key, ''); };
-            btnContainer.appendChild(btn);
-          }
-        });
+      // Telefon input mask
+      var editPhone = document.getElementById('editPhone');
+      if(editPhone && window.IMask){
+        IMask(editPhone, { mask: '000 000 00 00' });
       }
-      // Mevcut sosyal medya linklerini doldur
-      var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
-      if (Array.isArray(socialLinks)) {
-        socialLinks.forEach(function(item) {
-          if(item.platform && item.username) {
-            addSocialLink('socialLinksContainer', item.platform, item.username);
-          }
-        });
-      }
-      // Form submit sırasında sosyal medya linklerini JSON olarak gizli inputa aktar
+      // Kaydet butonuna loading animasyonu
       var editForm = document.getElementById('editProfileForm');
-      if(editForm){
-        editForm.addEventListener('submit', function(e){
-          const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
-          const socialLinksArr = [];
-          socialInputs.forEach(function(group) {
-            const select = group.querySelector('select');
-            const input = group.querySelector('input');
-            if(select && input && input.value.trim() !== '') {
-              socialLinksArr.push({ platform: select.value, username: input.value.trim() });
-            }
-          });
-          document.getElementById('socialLinksInput').value = JSON.stringify(socialLinksArr);
+      var saveBtn = document.getElementById('saveProfileBtn');
+      if(editForm && saveBtn){
+        editForm.addEventListener('submit', function(){
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Kaydediliyor...';
         });
       }
     });
-    // Telefon inputunda +90 seçiliyse sadece 10 hane ve rakam girilsin
-    const countryCodeInput = document.getElementById('editCountryCode');
-    const phoneInput = document.getElementById('editPhone');
-    function enforceTRPhoneFormat() {
-      if (countryCodeInput && phoneInput) {
-        if (countryCodeInput.value === '+90') {
-          phoneInput.setAttribute('maxlength', '10');
-          phoneInput.setAttribute('pattern', '\\d{10}');
-          phoneInput.placeholder = '5555555555';
-          phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
-          phoneInput.oninput = function() {
-            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
-          };
-        } else {
-          phoneInput.setAttribute('maxlength', '20');
-          phoneInput.setAttribute('pattern', '[0-9 ]{10,20}');
-          phoneInput.placeholder = '555 555 55 55';
-          phoneInput.oninput = null;
-        }
-      }
-    }
-    if (countryCodeInput && phoneInput) {
-      countryCodeInput.addEventListener('change', enforceTRPhoneFormat);
-      enforceTRPhoneFormat();
-    }
     </script>
-    </body>
-    </html>
     <?php
+    renderPageFooter();
     exit;
 }
 
 // Modern ve şık şifre giriş ekranı (This part is shown if session auth is false)
 if ($showForm) {
+    renderPageHeader('Profil Düzenleme Şifresi | Kişisel QR', ['/kisisel_qr/assets/css/landing.css']);
     ?>
-    <!DOCTYPE html>
-    <html lang="tr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Profil Düzenleme Şifresi | Kişisel QR</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-        <link href="/kisisel_qr/assets/css/landing.css" rel="stylesheet">
-        <style>
-            body { background: #f8f9fa; }
-            .edit-pass-card { max-width: 400px; margin: 5vh auto; border-radius: 1.5rem; box-shadow: 0 4px 32px rgba(0,0,0,0.08); }
-            .edit-pass-card .card-body { padding: 2.5rem 2rem; }
-            .edit-pass-card .form-control:focus { box-shadow: 0 0 0 2px #3498db33; border-color: #3498db; }
-            .edit-pass-card .btn-primary { font-size: 1.1rem; border-radius: 2rem; }
-            .edit-pass-card .input-group-text { background: #f1f3f6; border: none; }
-        </style>
-    </head>
-    <body>
     <div class="container">
         <div class="card edit-pass-card">
             <div class="card-body">
@@ -398,20 +338,30 @@ if ($showForm) {
                     <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
                     <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
                 </div>
-                <?php if (!empty($loginError)) { echo '<div class="alert alert-danger">Şifre veya telefon numarası hatalı!</div>'; } ?>
+                <?php if (!empty($loginError)) {
+    if ($loginErrorType === 'both') {
+        echo '<div class="alert alert-danger">Şifre ve telefon numarası hatalı!</div>';
+    } else if ($loginErrorType === 'code') {
+        echo '<div class="alert alert-danger">Şifre hatalı!</div>';
+    } else if ($loginErrorType === 'phone') {
+        echo '<div class="alert alert-danger">Telefon numarası hatalı!</div>';
+    }
+} ?>
                 <form method="post" autocomplete="off">
+                    <input type="hidden" name="csrf_token" value="<?=$csrfToken?>">
                     <div class="mb-3">
                         <label class="form-label">Edit Şifresi</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            <input type="text" name="edit_code" class="form-control" placeholder="Şifrenizi girin" required autofocus>
+                            <input type="password" name="edit_code" id="editCodeInput" class="form-control" placeholder="Şifrenizi girin" required autofocus pattern="[A-Za-z0-9]{4,}" title="En az 4 karakter, harf ve rakam içerebilir.">
+                            <button type="button" class="btn btn-outline-secondary" tabindex="-1" id="toggleEditCode"><i class="fas fa-eye"></i></button>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required>
+                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required pattern="[0-9]{10,15}" title="Sadece rakam, 10-15 hane arası." id="loginPhoneInput">
                         </div>
                         <small class="form-text text-muted">Güvenlik için telefon numaranız istenmektedir.</small>
                     </div>
@@ -420,9 +370,30 @@ if ($showForm) {
             </div>
         </div>
     </div>
-    </body>
-    </html>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggleBtn = document.getElementById('toggleEditCode');
+      var input = document.getElementById('editCodeInput');
+      if(toggleBtn && input) {
+        toggleBtn.addEventListener('click', function() {
+          if(input.type === 'password') {
+            input.type = 'text';
+            toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+          } else {
+            input.type = 'password';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+          }
+        });
+      }
+      // Telefon input mask
+      var phoneInput = document.getElementById('loginPhoneInput');
+      if(phoneInput && window.IMask){
+        IMask(phoneInput, { mask: '000 000 00 00' });
+      }
+    });
+    </script>
     <?php
+    renderPageFooter();
     exit; // Exit after showing the password form
-} // Close the second PHP if block here
-?>
+}
