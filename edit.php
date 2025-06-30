@@ -339,6 +339,31 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         });
       }
     });
+    // Telefon inputunda +90 seçiliyse sadece 10 hane ve rakam girilsin
+    const countryCodeInput = document.getElementById('editCountryCode');
+    const phoneInput = document.getElementById('editPhone');
+    function enforceTRPhoneFormat() {
+      if (countryCodeInput && phoneInput) {
+        if (countryCodeInput.value === '+90') {
+          phoneInput.setAttribute('maxlength', '10');
+          phoneInput.setAttribute('pattern', '\\d{10}');
+          phoneInput.placeholder = '5555555555';
+          phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
+          phoneInput.oninput = function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+          };
+        } else {
+          phoneInput.setAttribute('maxlength', '20');
+          phoneInput.setAttribute('pattern', '[0-9 ]{10,20}');
+          phoneInput.placeholder = '555 555 55 55';
+          phoneInput.oninput = null;
+        }
+      }
+    }
+    if (countryCodeInput && phoneInput) {
+      countryCodeInput.addEventListener('change', enforceTRPhoneFormat);
+      enforceTRPhoneFormat();
+    }
     </script>
     </body>
     </html>
