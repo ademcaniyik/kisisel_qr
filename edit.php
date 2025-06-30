@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else if (isset($_POST['save_profile'])) {
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
         session_destroy();
-        
+    } else if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
+        $loginError = true;
     }
 }
 
@@ -397,6 +398,7 @@ if ($showForm) {
                     <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
                     <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
                 </div>
+                <?php if (!empty($loginError)) { echo '<div class="alert alert-danger">Şifre veya telefon numarası hatalı!</div>'; } ?>
                 <form method="post" autocomplete="off">
                     <div class="mb-3">
                         <label class="form-label">Edit Şifresi</label>
