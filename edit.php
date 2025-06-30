@@ -85,18 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl);
-        // Yönlendirme URL'sini düzelt
-        $redirectUrl = $_SERVER['REQUEST_URI'];
-        // Eğer URL'de ? varsa ve token parametresi zaten varsa, sadece &success=1 ekle
-        if (strpos($redirectUrl, '?token=') !== false) {
-            if (strpos($redirectUrl, 'success=1') === false) {
-                $redirectUrl .= (strpos($redirectUrl, 'success=') === false ? (strpos($redirectUrl, '?') !== false ? '&' : '?') : '') . 'success=1';
-            }
-        } else {
-            // Token parametresi yoksa ekle
-            $redirectUrl .= (strpos($redirectUrl, '?') === false ? '?' : '&') . 'token=' . urlencode($editToken) . '&success=1';
-        }
-        header('Location: ' . $redirectUrl);
+        // Yönlendirme: Sadece path ve success parametresi ile
+        header('Location: /kisisel_qr/edit/' . urlencode($editToken) . '?success=1');
         exit;
     } else if (isset($_POST['save_profile'])) {
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
@@ -112,6 +102,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         echo '<h2>Profil bulunamadı.</h2>';
         exit;
     }
+    $showSuccess = isset($_GET['success']) && $_GET['success'] == 1;
     ?>
     <!DOCTYPE html>
     <html lang="tr">
@@ -125,6 +116,18 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
     </head>
     <body>
     <div class="container py-5">
+        <?php if ($showSuccess): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert" id="profileSuccessAlert">
+            <strong>Başarılı!</strong> Profiliniz başarıyla güncellendi.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <script>
+        setTimeout(function(){
+            var alert = document.getElementById('profileSuccessAlert');
+            if(alert) alert.classList.remove('show');
+        }, 3500);
+        </script>
+        <?php endif; ?>
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="card shadow-lg">
