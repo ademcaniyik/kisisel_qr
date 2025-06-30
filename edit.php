@@ -74,17 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Fotoğraf yükleme işlemi
         $photoUrl = $profile['photo_url'] ?? null;
+        $photoData = $profile['photo_data'] ?? null;
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-            $uploadsDir = ROOT . '/uploads/profiles/';
-            if (!is_dir($uploadsDir)) mkdir($uploadsDir, 0777, true);
-            $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('profile_', true) . '.' . $ext;
-            $targetPath = $uploadsDir . $filename;
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetPath)) {
-                $photoUrl = $filename;
+            require_once ROOT . '/includes/ImageOptimizer.php';
+            // processUploadedPhoto fonksiyonunu kullan
+            try {
+                $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
+                if ($photoDataArr && isset($photoDataArr['filename'])) {
+                    $photoUrl = $photoDataArr['filename'];
+                    $photoData = json_encode($photoDataArr, JSON_UNESCAPED_UNICODE);
+                }
+            } catch (Exception $e) {
+                // Hata olursa eski fotoğrafı koru
             }
         }
-        $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl);
+        $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
         // Yönlendirme: Sadece path ve success parametresi ile
         header('Location: /kisisel_qr/edit/' . urlencode($editToken) . '?success=1');
         exit;
