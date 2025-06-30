@@ -256,36 +256,13 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                     <div class="card-body">
                                         <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
                                         <div class="row g-2 social-platforms-grid">
-                                            <?php
-                                            $platforms = [
-                                                'instagram' => 'Instagram', 'x' => 'X', 'linkedin' => 'LinkedIn', 'facebook' => 'Facebook',
-                                                'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'whatsapp' => 'WhatsApp', 'website' => 'Website',
-                                                'snapchat' => 'Snapchat', 'discord' => 'Discord', 'telegram' => 'Telegram', 'twitch' => 'Twitch'
-                                            ];
-                                            $icons = [
-                                                'instagram' => '<i class="fab fa-instagram text-danger"></i>',
-                                                'x' => '<i class="fab fa-twitter" style="color:#1da1f2"></i>',
-                                                'linkedin' => '<i class="fab fa-linkedin text-primary"></i>',
-                                                'facebook' => '<i class="fab fa-facebook text-primary"></i>',
-                                                'youtube' => '<i class="fab fa-youtube text-danger"></i>',
-                                                'tiktok' => '<i class="fab fa-tiktok text-dark"></i>',
-                                                'whatsapp' => '<i class="fab fa-whatsapp text-success"></i>',
-                                                'website' => '<i class="fas fa-globe text-info"></i>',
-                                                'snapchat' => '<i class="fab fa-snapchat text-warning"></i>',
-                                                'discord' => '<i class="fab fa-discord text-primary"></i>',
-                                                'telegram' => '<i class="fab fa-telegram text-info"></i>',
-                                                'twitch' => '<i class="fab fa-twitch text-purple"></i>'
-                                            ];
-                                            foreach ($platforms as $key => $label) {
-                                                echo '<div class="col-6 col-md-4 col-lg-3 mb-2">';
-                                                echo '<button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="'.$key.'">'.$icons[$key].'<span class="d-block small">'.$label.'</span></button>';
-                                                echo '</div>';
-                                            }
-                                            ?>
+                                            <div class="col-12">
+                                                <div id="socialPlatformsButtons" class="d-flex flex-wrap gap-2"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="selectedSocialMedias" class="selected-social-medias"></div>
+                                <div id="socialLinksContainer"></div>
                             </div>
                             <input type="hidden" name="social_links" id="socialLinksInput">
                             <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;">Kaydet</button>
@@ -296,55 +273,65 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
     <script>
-    // Sosyal medya platform ekleme ve mevcut linkleri doldurma
-    window.selectedSocialMedias = window.selectedSocialMedias || [];
-    window.addSocialMediaPlatform = function(platform, initialUsername = '') {
-      if (!window.selectedSocialMedias) window.selectedSocialMedias = [];
-      if (window.selectedSocialMedias.some(function(x){return x.platform===platform;})) return;
-      var idx = window.selectedSocialMedias.length;
-      window.selectedSocialMedias.push({platform: platform, username: initialUsername});
-      var labelMap = { instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', facebook: 'Facebook', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp', website: 'Website', snapchat: 'Snapchat', discord: 'Discord', telegram: 'Telegram', twitch: 'Twitch' };
-      var iconMap = { instagram: '<i class="fab fa-instagram text-danger"></i>', x: '<i class="fab fa-twitter" style="color:#1da1f2"></i>', linkedin: '<i class="fab fa-linkedin text-primary"></i>', facebook: '<i class="fab fa-facebook text-primary"></i>', youtube: '<i class="fab fa-youtube text-danger"></i>', tiktok: '<i class="fab fa-tiktok text-dark"></i>', whatsapp: '<i class="fab fa-whatsapp text-success"></i>', website: '<i class="fas fa-globe text-info"></i>', snapchat: '<i class="fab fa-snapchat text-warning"></i>', discord: '<i class="fab fa-discord text-primary"></i>', telegram: '<i class="fab fa-telegram text-info"></i>', twitch: '<i class="fab fa-twitch text-purple"></i>' };
-      var html = '<div class="input-group mb-2" data-platform="'+platform+'">'+
-        '<span class="input-group-text">'+iconMap[platform]+'</span>'+
-        '<input type="text" class="form-control" placeholder="'+labelMap[platform]+' kullanıcı adı/link" data-index="'+idx+'" value="'+(initialUsername||'')+'" oninput="window.selectedSocialMedias['+idx+'].username=this.value">'+
-        '<button type="button" class="btn btn-outline-danger" onclick="window.removeSocialMediaPlatform(\''+platform+'\')"><i class="fas fa-times"></i></button>'+ '</div>';
-      var selectedMediasContainer = document.getElementById('selectedSocialMedias');
-      if(selectedMediasContainer) selectedMediasContainer.insertAdjacentHTML('beforeend', html);
-    };
-    window.removeSocialMediaPlatform = function(platform) {
-      var idx = window.selectedSocialMedias.findIndex(function(x){return x.platform===platform;});
-      if(idx>-1) window.selectedSocialMedias.splice(idx,1);
-      var el = document.querySelector('#selectedSocialMedias [data-platform="'+platform+'"]');
-      if(el) el.remove();
-    };
+    // Sosyal medya platform butonlarını dinamik oluştur
     document.addEventListener('DOMContentLoaded', function() {
+      const socialPlatforms = window.socialPlatforms || {};
+      const platformsOrder = [
+        'instagram','x','linkedin','facebook','youtube','tiktok','whatsapp','website','snapchat','discord','telegram','twitch'
+      ];
+      const icons = {
+        instagram: '<i class="fab fa-instagram text-danger"></i>',
+        x: '<i class="fab fa-twitter" style="color:#1da1f2"></i>',
+        linkedin: '<i class="fab fa-linkedin text-primary"></i>',
+        facebook: '<i class="fab fa-facebook text-primary"></i>',
+        youtube: '<i class="fab fa-youtube text-danger"></i>',
+        tiktok: '<i class="fab fa-tiktok text-dark"></i>',
+        whatsapp: '<i class="fab fa-whatsapp text-success"></i>',
+        website: '<i class="fas fa-globe text-info"></i>',
+        snapchat: '<i class="fab fa-snapchat text-warning"></i>',
+        discord: '<i class="fab fa-discord text-primary"></i>',
+        telegram: '<i class="fab fa-telegram text-info"></i>',
+        twitch: '<i class="fab fa-twitch text-purple"></i>'
+      };
+      const btnContainer = document.getElementById('socialPlatformsButtons');
+      if(btnContainer) {
+        platformsOrder.forEach(function(key) {
+          if(socialPlatforms[key]) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-outline-secondary social-platform-btn';
+            btn.setAttribute('data-platform', key);
+            btn.innerHTML = icons[key] + '<span class="d-block small">' + socialPlatforms[key].name + '</span>';
+            btn.onclick = function() { addSocialLink('socialLinksContainer', key, ''); };
+            btnContainer.appendChild(btn);
+          }
+        });
+      }
       // Mevcut sosyal medya linklerini doldur
       var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
       if (Array.isArray(socialLinks)) {
         socialLinks.forEach(function(item) {
-          window.addSocialMediaPlatform && window.addSocialMediaPlatform(item.platform, item.username || '');
+          if(item.platform && item.username) {
+            addSocialLink('socialLinksContainer', item.platform, item.username);
+          }
         });
       }
-      document.querySelectorAll('.social-platform-btn').forEach(function(btn){
-        if (btn._socialClickListener) btn.removeEventListener('click', btn._socialClickListener);
-        btn._socialClickListener = function(e){
-          e.preventDefault();
-          const platform = this.getAttribute('data-platform');
-          this.classList.add('btn-success');
-          setTimeout(() => { this.classList.remove('btn-success'); }, 300);
-          if(typeof window.addSocialMediaPlatform === 'function') window.addSocialMediaPlatform(platform);
-        };
-        btn.addEventListener('click', btn._socialClickListener);
-      });
+      // Form submit sırasında sosyal medya linklerini JSON olarak gizli inputa aktar
       var editForm = document.getElementById('editProfileForm');
       if(editForm){
         editForm.addEventListener('submit', function(e){
-          var hiddenInput = document.getElementById('socialLinksInput');
-          if(hiddenInput){
-            hiddenInput.value = JSON.stringify(window.selectedSocialMedias || []);
-          }
+          const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
+          const socialLinksArr = [];
+          socialInputs.forEach(function(group) {
+            const select = group.querySelector('select');
+            const input = group.querySelector('input');
+            if(select && input && input.value.trim() !== '') {
+              socialLinksArr.push({ platform: select.value, username: input.value.trim() });
+            }
+          });
+          document.getElementById('socialLinksInput').value = JSON.stringify(socialLinksArr);
         });
       }
     });
