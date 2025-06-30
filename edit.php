@@ -62,7 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } else if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
         $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
-        $phone = $_POST['phone'] ?? '';
+        // Telefon numarasını ülke kodu ile birleştir
+        $countryCode = $_POST['country_code'] ?? '+90';
+        $phoneNumber = $_POST['phone'] ?? '';
+        $phone = $countryCode . preg_replace('/\D+/', '', $phoneNumber);
         $bio = $_POST['bio'] ?? '';
         $iban = $_POST['iban'] ?? '';
         $blood_type = $_POST['blood_type'] ?? '';
@@ -77,11 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $photoData = $profile['photo_data'] ?? null;
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             require_once ROOT . '/includes/ImageOptimizer.php';
-            // processUploadedPhoto fonksiyonunu kullan
             try {
                 $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
                 if ($photoDataArr && isset($photoDataArr['filename'])) {
-                    $photoUrl = $photoDataArr['filename'];
+                    $photoUrl = '/kisisel_qr/public/uploads/profiles/' . $photoDataArr['filename'];
                     $photoData = json_encode($photoDataArr, JSON_UNESCAPED_UNICODE);
                 }
             } catch (Exception $e) {
@@ -89,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
-        // Yönlendirme: Sadece path ve success parametresi ile
         header('Location: /kisisel_qr/edit/' . urlencode($editToken) . '?success=1');
         exit;
     } else if (isset($_POST['save_profile'])) {
@@ -107,6 +108,19 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         exit;
     }
     $showSuccess = isset($_GET['success']) && $_GET['success'] == 1;
+    // Profil fotoğrafı önizlemesi için photo_data veya photo_url kullan
+    $photoUrl = '/kisisel_qr/assets/images/default-profile.svg';
+    if (!empty($profile['photo_data'])) {
+        $photoDataArr = json_decode($profile['photo_data'], true);
+        if ($photoDataArr && isset($photoDataArr['filename'])) {
+            $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoDataArr['filename']);
+        }
+    } elseif (!empty($profile['photo_url'])) {
+        $photoUrl = $profile['photo_url'];
+        if (strpos($photoUrl, '/kisisel_qr/') === false) {
+            $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoUrl);
+        }
+    }
     ?>
     <!DOCTYPE html>
     <html lang="tr">
