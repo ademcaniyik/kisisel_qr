@@ -186,7 +186,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                             <option value="+86" data-flag="🇨🇳" <?=($countryCode==='+86')?'selected':''?>>🇨🇳 +86</option>
                                             <option value="+91" data-flag="🇮🇳" <?=($countryCode==='+91')?'selected':''?>>🇮🇳 +91</option>
                                         </select>
-                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20">
+                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" pattern="[0-9 ]{10,20}">
                                     </div>
                                     <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                                 </div>
