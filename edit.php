@@ -104,59 +104,297 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         <link href="/kisisel_qr/assets/css/profile-themes.css" rel="stylesheet">
         <link href="/kisisel_qr/assets/css/social-buttons.css" rel="stylesheet">
         <style>
-        /* Sosyal medya label'larını tüm temalarda okunaklı yapmak için */
-        .social-label {
-          color: #111 !important;
-          font-weight: 700 !important;
-          font-size: 1rem !important;
-          text-align: center;
-          letter-spacing: 0.01em;
-          line-height: 1.2;
-          text-shadow: 0 1px 2px #fff8, 0 0 1px #fff8;
-          user-select: text;
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
         }
-        /* Koyu temalarda da okunaklı olması için arka planı hafif beyazlaştır */
-        .theme-dark .social-label,
-        .theme-dark .card.bg-light .social-label,
-        .card.bg-dark .social-label {
-          color: #fff !important;
-          text-shadow: 0 1px 2px #000a, 0 0 2px #000a;
-          background: rgba(0,0,0,0.08);
-          border-radius: 4px;
-          padding: 1px 4px;
+        
+        body {
+            background: linear-gradient(135deg, #f6f8fa 0%, #f0f2f5 100%);
+            min-height: 100vh;
         }
+
+        .edit-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .edit-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .edit-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .edit-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .edit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .edit-sections {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding: 0;
+            list-style: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .edit-sections li {
+            flex: none;
+            padding: 1rem 1.5rem;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .edit-sections li.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .edit-sections li.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .edit-content {
+            padding: 2rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .profile-photo-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .photo-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .photo-upload-btn:hover {
+            transform: scale(1.1);
+            background: var(--dark-color);
+        }
+
         .social-platform-btn {
-          min-height: 60px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid #eee;
+            background: #fff;
         }
+
+        .social-platform-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-platform-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .social-label {
+            font-weight: 600 !important;
+            color: var(--dark-color) !important;
+        }
+
+        .save-button {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .save-button:hover {
+            background: var(--dark-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .selected-social-medias .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .selected-social-medias .input-group-text {
+            border-radius: 12px 0 0 12px;
+            border: 2px solid #eee;
+            border-right: none;
+        }
+
+        .selected-social-medias .form-control {
+            border-radius: 0 12px 12px 0;
+            border-left: none;
+        }
+
+        .selected-social-medias .btn-outline-danger {
+            border-radius: 12px;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .edit-content {
+                padding: 1.5rem;
+            }
+
+            .edit-sections {
+                padding: 0 1rem;
+            }
+
+            .edit-sections li {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        .floating-preview {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            padding: 1rem;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .theme-preview {
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .preview-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .preview-toggle:hover {
+            transform: scale(1.1);
+        }
+
         </style>
     </head>
-    <body style="background:#f8f9fa;">
-    <div class="container" style="max-width:700px;margin:auto;margin-top:2rem;">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body p-4">
-                <h2 class="mb-4 text-center">Profil Bilgilerini Düzenle</h2>
-                <form id="editProfileForm" method="post" autocomplete="off" enctype="multipart/form-data">
-                    <div class="mb-3 text-center">
-                        <label class="form-label d-block">Profil Fotoğrafı</label>
-                        <?php
-                        $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg';
-                        ?>
-                        <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid #e3e3e3;">
-                        <div class="d-flex justify-content-center mt-2">
-                            <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:220px;">
+    <body>
+        <div class="edit-container">
+            <div class="edit-header">
+                <h1>Profilinizi Özelleştirin</h1>
+                <p>Kişisel QR profilinizi dilediğiniz gibi düzenleyin</p>
+            </div>
+            
+            <div class="edit-card">
+                <ul class="edit-sections">
+                    <li class="active"><i class="fas fa-user-circle me-2"></i>Temel Bilgiler</li>
+                    <li><i class="fas fa-paint-brush me-2"></i>Görünüm</li>
+                    <li><i class="fas fa-share-alt me-2"></i>Sosyal Medya</li>
+                    <li><i class="fas fa-cog me-2"></i>Diğer Ayarlar</li>
+                </ul>
+                
+                <div class="edit-content">
+                    <form id="editProfileForm" method="post" autocomplete="off" enctype="multipart/form-data">
+                        <div class="profile-photo-container">
+                            <?php
+                            $photoUrl = !empty($profile['photo']) ? '/kisisel_qr/uploads/profiles/' . htmlspecialchars($profile['photo']) : '/kisisel_qr/assets/images/default-profile.svg';
+                            ?>
+                            <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" class="profile-photo">
+                            <label for="editPhotoInput" class="photo-upload-btn">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="d-none">
                         </div>
-                        <small class="form-text text-muted">Yeni fotoğraf seçerek güncelleyebilirsiniz.</small>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+
+                        <div class="mb-3">
                             <label class="form-label">Ad Soyad *</label>
                             <input type="text" class="form-control" name="name" value="<?=htmlspecialchars($profile['name'])?>" readonly style="background:#f5f5f5;cursor:not-allowed;">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Telefon *</label>
                             <div class="phone-input-container">
                                 <?php
@@ -188,171 +426,173 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                             </div>
                             <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kısa Yazı (Bio)</label>
-                        <textarea class="form-control" name="bio" rows="2" placeholder="Kendinizi tanıtın..."><?=htmlspecialchars($profile['bio'] ?? '')?></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">IBAN</label>
-                            <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32">
-                            <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
+                        <div class="mb-3">
+                            <label class="form-label">Kısa Yazı (Bio)</label>
+                            <textarea class="form-control" name="bio" rows="2" placeholder="Kendinizi tanıtın..."><?=htmlspecialchars($profile['bio'] ?? '')?></textarea>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Kan Grubu</label>
-                            <select class="form-select" name="blood_type">
-                                <option value="">Seçiniz</option>
-                                <option value="A+" <?=($profile['blood_type'] ?? '')==='A+'?'selected':''?>>A Rh+</option>
-                                <option value="A-" <?=($profile['blood_type'] ?? '')==='A-'?'selected':''?>>A Rh-</option>
-                                <option value="B+" <?=($profile['blood_type'] ?? '')==='B+'?'selected':''?>>B Rh+</option>
-                                <option value="B-" <?=($profile['blood_type'] ?? '')==='B-'?'selected':''?>>B Rh-</option>
-                                <option value="AB+" <?=($profile['blood_type'] ?? '')==='AB+'?'selected':''?>>AB Rh+</option>
-                                <option value="AB-" <?=($profile['blood_type'] ?? '')==='AB-'?'selected':''?>>AB Rh-</option>
-                                <option value="0+" <?=($profile['blood_type'] ?? '')==='0+'?'selected':''?>>0 Rh+</option>
-                                <option value="0-" <?=($profile['blood_type'] ?? '')==='0-'?'selected':''?>>0 Rh-</option>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">IBAN</label>
+                                <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32">
+                                <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kan Grubu</label>
+                                <select class="form-select" name="blood_type">
+                                    <option value="">Seçiniz</option>
+                                    <option value="A+" <?=($profile['blood_type'] ?? '')==='A+'?'selected':''?>>A Rh+</option>
+                                    <option value="A-" <?=($profile['blood_type'] ?? '')==='A-'?'selected':''?>>A Rh-</option>
+                                    <option value="B+" <?=($profile['blood_type'] ?? '')==='B+'?'selected':''?>>B Rh+</option>
+                                    <option value="B-" <?=($profile['blood_type'] ?? '')==='B-'?'selected':''?>>B Rh-</option>
+                                    <option value="AB+" <?=($profile['blood_type'] ?? '')==='AB+'?'selected':''?>>AB Rh+</option>
+                                    <option value="AB-" <?=($profile['blood_type'] ?? '')==='AB-'?'selected':''?>>AB Rh-</option>
+                                    <option value="0+" <?=($profile['blood_type'] ?? '')==='0+'?'selected':''?>>0 Rh+</option>
+                                    <option value="0-" <?=($profile['blood_type'] ?? '')==='0-'?'selected':''?>>0 Rh-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tema Seçimi</label>
+                            <select class="form-select" name="theme" id="editTheme">
+                                <option value="default" <?=($profile['theme'] ?? '')==='default'?'selected':''?>>Sade Temiz (Varsayılan)</option>
+                                <option value="blue" <?=($profile['theme'] ?? '')==='blue'?'selected':''?>>Deniz Mavisi</option>
+                                <option value="nature" <?=($profile['theme'] ?? '')==='nature'?'selected':''?>>Günbatımı Sıcak</option>
+                                <option value="elegant" <?=($profile['theme'] ?? '')==='elegant'?'selected':''?>>Doğa Yeşil</option>
+                                <option value="gold" <?=($profile['theme'] ?? '')==='gold'?'selected':''?>>Altın Lüks</option>
+                                <option value="purple" <?=($profile['theme'] ?? '')==='purple'?'selected':''?>>Kraliyet Moru</option>
+                                <option value="dark" <?=($profile['theme'] ?? '')==='dark'?'selected':''?>>Karanlık Siyah</option>
+                                <option value="ocean" <?=($profile['theme'] ?? '')==='ocean'?'selected':''?>>Sakura Pembe</option>
+                                <option value="minimal" <?=($profile['theme'] ?? '')==='minimal'?'selected':''?>>Şık Mor</option>
+                                <option value="pastel" <?=($profile['theme'] ?? '')==='pastel'?'selected':''?>>Pastel Rüya</option>
+                                <option value="retro" <?=($profile['theme'] ?? '')==='retro'?'selected':''?>>Retro Synthwave</option>
+                                <option value="neon" <?=($profile['theme'] ?? '')==='neon'?'selected':''?>>Neon Siber</option>
                             </select>
+                            <small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tema Seçimi</label>
-                        <select class="form-select" name="theme" id="editTheme">
-                            <option value="default" <?=($profile['theme'] ?? '')==='default'?'selected':''?>>Sade Temiz (Varsayılan)</option>
-                            <option value="blue" <?=($profile['theme'] ?? '')==='blue'?'selected':''?>>Deniz Mavisi</option>
-                            <option value="nature" <?=($profile['theme'] ?? '')==='nature'?'selected':''?>>Günbatımı Sıcak</option>
-                            <option value="elegant" <?=($profile['theme'] ?? '')==='elegant'?'selected':''?>>Doğa Yeşil</option>
-                            <option value="gold" <?=($profile['theme'] ?? '')==='gold'?'selected':''?>>Altın Lüks</option>
-                            <option value="purple" <?=($profile['theme'] ?? '')==='purple'?'selected':''?>>Kraliyet Moru</option>
-                            <option value="dark" <?=($profile['theme'] ?? '')==='dark'?'selected':''?>>Karanlık Siyah</option>
-                            <option value="ocean" <?=($profile['theme'] ?? '')==='ocean'?'selected':''?>>Sakura Pembe</option>
-                            <option value="minimal" <?=($profile['theme'] ?? '')==='minimal'?'selected':''?>>Şık Mor</option>
-                            <option value="pastel" <?=($profile['theme'] ?? '')==='pastel'?'selected':''?>>Pastel Rüya</option>
-                            <option value="retro" <?=($profile['theme'] ?? '')==='retro'?'selected':''?>>Retro Synthwave</option>
-                            <option value="neon" <?=($profile['theme'] ?? '')==='neon'?'selected':''?>>Neon Siber</option>
-                        </select>
-                        <small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Sosyal Medya Hesapları</label>
-                        <div class="card border-0 bg-light mb-3">
-                            <div class="card-body">
-                                <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
-                                <div class="row g-2 social-platforms-grid">
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram"><i class="fab fa-instagram text-danger"></i><span class="d-block small social-label">Instagram</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x"><i class="fab fa-twitter" style="color: #1da1f2;"></i><span class="d-block small social-label">X</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin"><i class="fab fa-linkedin text-primary"></i><span class="d-block small social-label">LinkedIn</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook"><i class="fab fa-facebook text-primary"></i><span class="d-block small social-label">Facebook</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube"><i class="fab fa-youtube text-danger"></i><span class="d-block small social-label">YouTube</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok"><i class="fab fa-tiktok text-dark"></i><span class="d-block small social-label">TikTok</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp"><i class="fab fa-whatsapp text-success"></i><span class="d-block small social-label">WhatsApp</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website"><i class="fas fa-globe text-info"></i><span class="d-block small social-label">Website</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat"><i class="fab fa-snapchat text-warning"></i><span class="d-block small social-label">Snapchat</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord"><i class="fab fa-discord text-primary"></i><span class="d-block small social-label">Discord</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small social-label">Telegram</span></button>
-                                    </div>
-                                    <div class="col-6 col-md-4 col-lg-3">
-                                        <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch"><i class="fab fa-twitch text-purple"></i><span class="d-block small social-label">Twitch</span></button>
+                        <div class="mb-3">
+                            <label class="form-label">Sosyal Medya Hesapları</label>
+                            <div class="card border-0 bg-light mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
+                                    <div class="row g-2 social-platforms-grid">
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="instagram"><i class="fab fa-instagram text-danger"></i><span class="d-block small social-label">Instagram</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="x"><i class="fab fa-twitter" style="color: #1da1f2;"></i><span class="d-block small social-label">X</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="linkedin"><i class="fab fa-linkedin text-primary"></i><span class="d-block small social-label">LinkedIn</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="facebook"><i class="fab fa-facebook text-primary"></i><span class="d-block small social-label">Facebook</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="youtube"><i class="fab fa-youtube text-danger"></i><span class="d-block small social-label">YouTube</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="tiktok"><i class="fab fa-tiktok text-dark"></i><span class="d-block small social-label">TikTok</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="whatsapp"><i class="fab fa-whatsapp text-success"></i><span class="d-block small social-label">WhatsApp</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="website"><i class="fas fa-globe text-info"></i><span class="d-block small social-label">Website</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="snapchat"><i class="fab fa-snapchat text-warning"></i><span class="d-block small social-label">Snapchat</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="discord"><i class="fab fa-discord text-primary"></i><span class="d-block small social-label">Discord</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="telegram"><i class="fab fa-telegram text-info"></i><span class="d-block small social-label">Telegram</span></button>
+                                        </div>
+                                        <div class="col-6 col-md-4 col-lg-3">
+                                            <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" data-platform="twitch"><i class="fab fa-twitch text-purple"></i><span class="d-block small social-label">Twitch</span></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div id="selectedSocialMedias" class="selected-social-medias"></div>
                         </div>
-                        <div id="selectedSocialMedias" class="selected-social-medias"></div>
-                    </div>
-                    <input type="hidden" name="social_links" id="socialLinksInput">
-                    <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;">Kaydet</button>
-                </form>
+                        <input type="hidden" name="social_links" id="socialLinksInput">
+                        <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;">Kaydet</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
-    <script src="/kisisel_qr/assets/js/profile-page.js"></script>
-    <script src="/kisisel_qr/assets/js/landing.js"></script>
-    <script>
-    // --- Sosyal Medya Platform Ekleme Fonksiyonu (Bağımsız ve Garantili) ---
-    window.selectedSocialMedias = window.selectedSocialMedias || [];
-    window.addSocialMediaPlatform = function(platform) {
-      if (!window.selectedSocialMedias) window.selectedSocialMedias = [];
-      // Zaten ekli mi kontrol et
-      if (window.selectedSocialMedias.some(function(x){return x.platform===platform;})) return;
-      var idx = window.selectedSocialMedias.length;
-      window.selectedSocialMedias.push({platform: platform, username: ''});
-      var labelMap = {
-        instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', facebook: 'Facebook', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp', website: 'Website', snapchat: 'Snapchat', discord: 'Discord', telegram: 'Telegram', twitch: 'Twitch'
-      };
-      var iconMap = {
-        instagram: '<i class="fab fa-instagram text-danger"></i>',
-        x: '<i class="fab fa-twitter" style="color:#1da1f2"></i>',
-        linkedin: '<i class="fab fa-linkedin text-primary"></i>',
-        facebook: '<i class="fab fa-facebook text-primary"></i>',
-        youtube: '<i class="fab fa-youtube text-danger"></i>',
-        tiktok: '<i class="fab fa-tiktok text-dark"></i>',
-        whatsapp: '<i class="fab fa-whatsapp text-success"></i>',
-        website: '<i class="fas fa-globe text-info"></i>',
-        snapchat: '<i class="fab fa-snapchat text-warning"></i>',
-        discord: '<i class="fab fa-discord text-primary"></i>',
-        telegram: '<i class="fab fa-telegram text-info"></i>',
-        twitch: '<i class="fab fa-twitch text-purple"></i>'
-      };
-      var html = '<div class="input-group mb-2" data-platform="'+platform+'">'+
-        '<span class="input-group-text">'+iconMap[platform]+'</span>'+
-        '<input type="text" class="form-control" placeholder="'+labelMap[platform]+' kullanıcı adı/link" data-index="'+idx+'" oninput="window.selectedSocialMedias['+idx+'].username=this.value">'+
-        '<button type="button" class="btn btn-outline-danger" onclick="window.removeSocialMediaPlatform(\''+platform+'\')"><i class="fas fa-times"></i></button>'+
-        '</div>';
-      document.getElementById('selectedSocialMedias').insertAdjacentHTML('beforeend', html);
-    };
-    window.removeSocialMediaPlatform = function(platform) {
-      var idx = window.selectedSocialMedias.findIndex(function(x){return x.platform===platform;});
-      if(idx>-1) window.selectedSocialMedias.splice(idx,1);
-      var el = document.querySelector('#selectedSocialMedias [data-platform="'+platform+'"]');
-      if(el) el.remove();
-    };
-    // Form submit olmadan önce sosyal medya dizisini inputa yaz
-    var editForm = document.getElementById('editProfileForm');
-    if(editForm){
-      editForm.addEventListener('submit', function(e){
-        var hiddenInput = document.getElementById('socialLinksInput');
-        if(hiddenInput){
-          hiddenInput.value = JSON.stringify(window.selectedSocialMedias || []);
-        }
-      });
-    }
-    // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
-    function bindSocialButtons() {
-      document.querySelectorAll('.social-platform-btn').forEach(function(btn){
-        btn.onclick = function(e){
-          e.preventDefault();
-          if(typeof window.addSocialMediaPlatform === 'function') {
-            window.addSocialMediaPlatform(this.getAttribute('data-platform'));
-          }
-        };
-      });
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-      bindSocialButtons();
-    });
-    </script>
+
+        <button class="preview-toggle" id="previewToggle">
+            <i class="fas fa-eye"></i>
+        </button>
+
+        <div class="floating-preview" id="floatingPreview">
+            <div class="theme-preview">
+                <!-- Profil önizlemesi burada gösterilecek -->
+            </div>
+            <button class="btn btn-sm btn-outline-secondary w-100" onclick="document.getElementById('floatingPreview').style.display='none'">
+                <i class="fas fa-times me-2"></i>Önizlemeyi Kapat
+            </button>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
+        <script src="/kisisel_qr/assets/js/profile-page.js"></script>
+        <script src="/kisisel_qr/assets/js/landing.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mevcut JS kodları
+            // ...existing code...
+
+            // Yeni interaktif özellikler
+            const sections = document.querySelectorAll('.edit-sections li');
+            sections.forEach(section => {
+                section.addEventListener('click', function() {
+                    sections.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                    // Seksiyon değişikliğinde smooth scroll
+                    document.querySelector('.edit-content').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Profil fotoğrafı yükleme
+            const photoInput = document.getElementById('editPhotoInput');
+            const photoPreview = document.getElementById('profilePhotoPreview');
+            if(photoInput && photoPreview) {
+                photoInput.addEventListener('change', function(e) {
+                    if(this.files && this.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            photoPreview.src = ev.target.result;
+                            photoPreview.style.animation = 'pulse 0.5s';
+                        };
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
+
+            // Önizleme toggle
+            const previewToggle = document.getElementById('previewToggle');
+            const floatingPreview = document.getElementById('floatingPreview');
+            previewToggle.addEventListener('click', function() {
+                floatingPreview.style.display = floatingPreview.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Form değişikliklerinde otomatik kaydetme göstergesi
+            const form = document.getElementById('editProfileForm');
+            const saveBtn = form.querySelector('button[type="submit"]');
+            let timeout;
+            
+            form.addEventListener('input', function() {
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>Kaydet*';
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>Kaydet';
+                }, 2000);
+            });
+        });
+        </script>
     </body>
     </html>
     <?php
