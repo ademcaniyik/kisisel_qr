@@ -91,7 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
-        header('Location: /kisisel_qr/edit/' . urlencode($editToken) . '?success=1');
+        // Yönlendirme: Sadece path ile
+        $_SESSION['profile_update_success'] = true;
+        header('Location: /kisisel_qr/edit/' . urlencode($editToken));
         exit;
     } else if (isset($_POST['save_profile'])) {
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
@@ -107,7 +109,11 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         echo '<h2>Profil bulunamadı.</h2>';
         exit;
     }
-    $showSuccess = isset($_GET['success']) && $_GET['success'] == 1;
+    $showSuccess = false;
+    if (isset($_SESSION['profile_update_success']) && $_SESSION['profile_update_success']) {
+        $showSuccess = true;
+        unset($_SESSION['profile_update_success']);
+    }
     // Profil fotoğrafı önizlemesi için photo_data veya photo_url kullan
     $photoUrl = '/kisisel_qr/assets/images/default-profile.svg';
     if (!empty($profile['photo_data'])) {
