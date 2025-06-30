@@ -402,13 +402,13 @@ class ProfileManager {
     }
     
     /**
-     * Profil güncelle (temel bilgiler + sosyal medya)
+     * Profil güncelle (temel bilgiler + sosyal medya + fotoğraf)
      */
-    public function updateProfile($profileId, $name, $email, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null, $socialLinks = null) {
-        $sql = "UPDATE profiles SET name = ?, email = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ? WHERE id = ?";
+    public function updateProfile($profileId, $name, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null, $socialLinks = null, $photoUrl = null) {
+        $sql = "UPDATE profiles SET name = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ?, photo_url = ? WHERE id = ?";
         $stmt = $this->connection->prepare($sql);
         $socialLinksJson = is_array($socialLinks) ? json_encode($socialLinks, JSON_UNESCAPED_UNICODE) : $socialLinks;
-        $stmt->bind_param("ssssssssi", $name, $email, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $profileId);
+        $stmt->bind_param("ssssssssi", $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $photoUrl, $profileId);
         $stmt->execute();
         $stmt->close();
         return true;

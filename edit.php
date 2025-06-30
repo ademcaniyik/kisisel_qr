@@ -72,7 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $decoded = json_decode($socialLinks, true);
             if (is_array($decoded)) $socialLinks = $decoded;
         }
-        $profileManager->updateProfile($profileId, $profile['name'], '', $phone, $bio, $iban, $blood_type, $theme, $socialLinks);
+        // Fotoğraf yükleme işlemi
+        $photoUrl = $profile['photo_url'] ?? null;
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $uploadsDir = ROOT . '/uploads/profiles/';
+            if (!is_dir($uploadsDir)) mkdir($uploadsDir, 0777, true);
+            $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('profile_', true) . '.' . $ext;
+            $targetPath = $uploadsDir . $filename;
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $targetPath)) {
+                $photoUrl = $filename;
+            }
+        }
+        $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl);
         header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken).'&success=1');
         exit;
     } else if (isset($_POST['save_profile'])) {
