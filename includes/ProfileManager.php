@@ -396,6 +396,7 @@ class ProfileManager {
                 throw new Exception("Fotoğraf işleme hatası: " . $result['message']);
             }
             
+            
         } catch (Exception $e) {
             throw new Exception("Fotoğraf işleme hatası: " . $e->getMessage());
         }
