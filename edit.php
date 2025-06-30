@@ -85,7 +85,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl);
-        header('Location: '.$_SERVER['REQUEST_URI'].'?token='.urlencode($editToken).'&success=1');
+        // Yönlendirme URL'sini düzelt
+        $redirectUrl = $_SERVER['REQUEST_URI'];
+        // Eğer URL'de ? varsa ve token parametresi zaten varsa, sadece &success=1 ekle
+        if (strpos($redirectUrl, '?token=') !== false) {
+            if (strpos($redirectUrl, 'success=1') === false) {
+                $redirectUrl .= (strpos($redirectUrl, 'success=') === false ? (strpos($redirectUrl, '?') !== false ? '&' : '?') : '') . 'success=1';
+            }
+        } else {
+            // Token parametresi yoksa ekle
+            $redirectUrl .= (strpos($redirectUrl, '?') === false ? '?' : '&') . 'token=' . urlencode($editToken) . '&success=1';
+        }
+        header('Location: ' . $redirectUrl);
         exit;
     } else if (isset($_POST['save_profile'])) {
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
