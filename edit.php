@@ -541,65 +541,31 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
         <script src="/kisisel_qr/assets/js/profile-page.js"></script>
         <script src="/kisisel_qr/assets/js/landing.js"></script>
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mevcut JS kodları
-            // ...existing code...
-
-            // Yeni interaktif özellikler
-            const sections = document.querySelectorAll('.edit-sections li');
-            sections.forEach(section => {
-                section.addEventListener('click', function() {
-                    sections.forEach(s => s.classList.remove('active'));
-                    this.classList.add('active');
-                    // Seksiyon değişikliğinde smooth scroll
-                    document.querySelector('.edit-content').scrollIntoView({ behavior: 'smooth' });
-                });
-            });
-
-            // Profil fotoğrafı yükleme
-            const photoInput = document.getElementById('editPhotoInput');
-            const photoPreview = document.getElementById('profilePhotoPreview');
-            if(photoInput && photoPreview) {
-                photoInput.addEventListener('change', function(e) {
-                    if(this.files && this.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = function(ev) {
-                            photoPreview.src = ev.target.result;
-                            photoPreview.style.animation = 'pulse 0.5s';
-                        };
-                        reader.readAsDataURL(this.files[0]);
-                    }
-                });
+        // HTML özel karakterlerini temizle (Fonksiyonu global scope'a taşıdık)
+        function htmlspecialchars(str) {
+            if (typeof str !== 'string') {
+                return str;
             }
+            return str.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '>').replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+        }
 
-            // Önizleme toggle
-            const previewToggle = document.getElementById('previewToggle');
-            const floatingPreview = document.getElementById('floatingPreview');
-            previewToggle.addEventListener('click', function() {
-                floatingPreview.style.display = floatingPreview.style.display === 'none' ? 'block' : 'none';
-            });
-
-            // Form değişikliklerinde otomatik kaydetme göstergesi
-            const form = document.getElementById('editProfileForm');
-            const saveBtn = form.querySelector('button[type="submit"]');
-            let timeout;
-            
-            form.addEventListener('input', function() {
-                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>Kaydet*';
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>Kaydet';
-                }, 2000);
-            });
-        });
         // --- Sosyal Medya Platform Ekleme Fonksiyonu (Bağımsız ve Garantili) ---
         window.selectedSocialMedias = window.selectedSocialMedias || [];
-        window.addSocialMediaPlatform = function(platform) {
+        window.addSocialMediaPlatform = function(platform, initialUsername = '') { // initialUsername parametresi eklendi
+          console.log('addSocialMediaPlatform called for:', platform, 'with username:', initialUsername); // Debug log
           if (!window.selectedSocialMedias) window.selectedSocialMedias = [];
           // Zaten ekli mi kontrol et
-          if (window.selectedSocialMedias.some(function(x){return x.platform===platform;})) return;
+          if (window.selectedSocialMedias.some(function(x){return x.platform===platform;})) {
+              console.log(platform, 'already added.'); // Debug log
+              return;
+          }
           var idx = window.selectedSocialMedias.length;
-          window.selectedSocialMedias.push({platform: platform, username: ''});
+          window.selectedSocialMedias.push({platform: platform, username: initialUsername}); // initialUsername kullanılıyor
+          console.log('selectedSocialMedias after push:', window.selectedSocialMedias); // Debug log
+
           var labelMap = {
             instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', facebook: 'Facebook', youtube: 'YouTube', tiktok: 'TikTok', whatsapp: 'WhatsApp', website: 'Website', snapchat: 'Snapchat', discord: 'Discord', telegram: 'Telegram', twitch: 'Twitch'
           };
@@ -617,92 +583,156 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
             telegram: '<i class="fab fa-telegram text-info"></i>',
             twitch: '<i class="fab fa-twitch text-purple"></i>'
           };
+
           var html = '<div class="input-group mb-2" data-platform="'+platform+'">'+
             '<span class="input-group-text">'+iconMap[platform]+'</span>'+
-            '<input type="text" class="form-control" placeholder="'+labelMap[platform]+' kullanıcı adı/link" data-index="'+idx+'" oninput="window.selectedSocialMedias['+idx+'].username=this.value">'+
+            '<input type="text" class="form-control" placeholder="'+labelMap[platform]+' kullanıcı adı/link" data-index="'+idx+'" value="'+htmlspecialchars(initialUsername)+'" oninput="window.selectedSocialMedias['+idx+'].username=this.value">'+
             '<button type="button" class="btn btn-outline-danger" onclick="window.removeSocialMediaPlatform(\''+platform+'\')"><i class="fas fa-times"></i></button>'+
             '</div>';
-          document.getElementById('selectedSocialMedias').insertAdjacentHTML('beforeend', html);
+
+          var selectedMediasContainer = document.getElementById('selectedSocialMedias');
+          if(selectedMediasContainer) {
+              selectedMediasContainer.insertAdjacentHTML('beforeend', html);
+              console.log('HTML inserted for', platform); // Debug log
+          } else {
+              console.error('#selectedSocialMedias element not found!'); // Debug log
+          }
         };
+
         window.removeSocialMediaPlatform = function(platform) {
+          console.log('removeSocialMediaPlatform called for:', platform); // Debug log
           var idx = window.selectedSocialMedias.findIndex(function(x){return x.platform===platform;});
-          if(idx>-1) window.selectedSocialMedias.splice(idx,1);
+          if(idx>-1) {
+              window.selectedSocialMedias.splice(idx,1);
+              console.log('selectedSocialMedias after splice:', window.selectedSocialMedias); // Debug log
+          }
           var el = document.querySelector('#selectedSocialMedias [data-platform="'+platform+'"]');
-          if(el) el.remove();
+          if(el) {
+              el.remove();
+              console.log('Element removed for', platform); // Debug log
+          } else {
+              console.error('Element not found for removal:', platform); // Debug log
+          }
         };
-        // Tüm sosyal medya butonlarına tıklama eventini tekrar bağla
-        function bindSocialButtons() {
-          document.querySelectorAll('.social-platform-btn').forEach(function(btn){
-            btn.onclick = function(e){
-              e.preventDefault();
-              if(typeof window.addSocialMediaPlatform === 'function') {
-                window.addSocialMediaPlatform(this.getAttribute('data-platform'));
-              }
-            };
-          });
-        }
+
         document.addEventListener('DOMContentLoaded', function() {
-          bindSocialButtons();
-        });
+          console.log('DOMContentLoaded fired'); // Debug log
+
+          // Mevcut sosyal medya linklerini doldur
+          var socialLinks = <?php echo json_encode(json_decode($profile['social_links'] ?? '[]', true)); ?>;
+          console.log('Existing social links from PHP:', socialLinks); // Debug log
+          if (Array.isArray(socialLinks)) {
+            socialLinks.forEach(function(item) {
+              console.log('Attempting to add existing social link:', item.platform, item.username); // Debug log
+              window.addSocialMediaPlatform && window.addSocialMediaPlatform(item.platform, item.username || ''); // Mevcut kullanıcı adıyla ekle
+            });
+          }
+
+          // Direct event listeners for social media buttons
+          document.querySelectorAll('.social-platform-btn').forEach(function(btn){
+              // Önceki event listener'ları kaldır (emin olmak için)
+              if (btn._socialClickListener) {
+                  btn.removeEventListener('click', btn._socialClickListener);
+              }
+              // Yeni event listener ekle
+              btn._socialClickListener = function(e){
+                e.preventDefault();
+                const platform = this.getAttribute('data-platform');
+                console.log('Button clicked directly for platform:', platform); // Debug log
+
+                // Add temporary visual feedback
+                this.classList.add('btn-success');
+                setTimeout(() => {
+                    this.classList.remove('btn-success');
+                }, 300);
+
+                if(typeof window.addSocialMediaPlatform === 'function') {
+                  window.addSocialMediaPlatform(platform);
+                } else {
+                    console.error('addSocialMediaPlatform function is not defined when button clicked directly'); // Debug log
+                }
+              };
+              btn.addEventListener('click', btn._socialClickListener);
+              console.log('Direct event listener attached to button for platform:', btn.getAttribute('data-platform')); // Debug log
+          }); // Close the forEach loop
+
+          // Form submit olmadan önce sosyal medya dizisini inputa yaz
+          var editForm = document.getElementById('editProfileForm');
+          if(editForm){
+            editForm.addEventListener('submit', function(e){
+              var hiddenInput = document.getElementById('socialLinksInput');
+              if(hiddenInput){
+                hiddenInput.value = JSON.stringify(window.selectedSocialMedias || []);
+                console.log('Social links prepared for submit:', hiddenInput.value); // Debug log
+              } else {
+                  console.error('socialLinksInput hidden input not found'); // Debug log
+              }
+            });
+          }
+          // Diğer DOMContentLoaded içindeki kodlar
+        }); // Close DOMContentLoaded listener
         </script>
     </body>
     </html>
     <?php
-    exit;
+    exit; // Exit after showing the profile edit form
 }
 
-// Modern ve şık şifre giriş ekranı
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Düzenleme Şifresi | Kişisel QR</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="/kisisel_qr/assets/css/landing.css" rel="stylesheet">
-    <style>
-        body { background: #f8f9fa; }
-        .edit-pass-card { max-width: 400px; margin: 5vh auto; border-radius: 1.5rem; box-shadow: 0 4px 32px rgba(0,0,0,0.08); }
-        .edit-pass-card .card-body { padding: 2.5rem 2rem; }
-        .edit-pass-card .form-control:focus { box-shadow: 0 0 0 2px #3498db33; border-color: #3498db; }
-        .edit-pass-card .btn-primary { font-size: 1.1rem; border-radius: 2rem; }
-        .edit-pass-card .input-group-text { background: #f1f3f6; border: none; }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="card edit-pass-card">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <i class="fas fa-lock fa-2x text-primary mb-2"></i>
-                <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
-                <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
+// Modern ve şık şifre giriş ekranı (This part is shown if session auth is false)
+if ($showForm) {
+    ?>
+    <!DOCTYPE html>
+    <html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Profil Düzenleme Şifresi | Kişisel QR</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="/kisisel_qr/assets/css/landing.css" rel="stylesheet">
+        <style>
+            body { background: #f8f9fa; }
+            .edit-pass-card { max-width: 400px; margin: 5vh auto; border-radius: 1.5rem; box-shadow: 0 4px 32px rgba(0,0,0,0.08); }
+            .edit-pass-card .card-body { padding: 2.5rem 2rem; }
+            .edit-pass-card .form-control:focus { box-shadow: 0 0 0 2px #3498db33; border-color: #3498db; }
+            .edit-pass-card .btn-primary { font-size: 1.1rem; border-radius: 2rem; }
+            .edit-pass-card .input-group-text { background: #f1f3f6; border: none; }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="card edit-pass-card">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+                    <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
+                    <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
+                </div>
+                <form method="post" autocomplete="off">
+                    <div class="mb-3">
+                        <label class="form-label">Edit Şifresi</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input type="text" name="edit_code" class="form-control" placeholder="Şifrenizi girin" required autofocus>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required>
+                        </div>
+                        <small class="form-text text-muted">Güvenlik için telefon numaranız istenmektedir.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
+                </form>
             </div>
-            <form method="post" autocomplete="off">
-                <div class="mb-3">
-                    <label class="form-label">Edit Şifresi</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-key"></i></span>
-                        <input type="text" name="edit_code" class="form-control" placeholder="Şifrenizi girin" required autofocus>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                        <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required>
-                    </div>
-                    <small class="form-text text-muted">Güvenlik için telefon numaranız istenmektedir.</small>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
-            </form>
         </div>
     </div>
-</div>
-</body>
-</html>
-<?php
-exit;
+    </body>
+    </html>
+    <?php
+    exit; // Exit after showing the password form
+} // Close the second PHP if block here
+?>
