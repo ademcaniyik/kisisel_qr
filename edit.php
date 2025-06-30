@@ -166,7 +166,10 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                         $phoneRaw = $profile['phone'] ?? '';
                                         $countryCode = '+90';
                                         $phoneNumber = '';
-                                        if (preg_match('/^(\+\d{1,3})(.*)$/', $phoneRaw, $m)) {
+                                        if (preg_match('/^(\+\d{1,3})(\d{10,})$/', $phoneRaw, $m)) {
+                                            $countryCode = $m[1];
+                                            $phoneNumber = $m[2];
+                                        } elseif (preg_match('/^(\+\d{1,3})(.*)$/', $phoneRaw, $m)) {
                                             $countryCode = $m[1];
                                             $phoneNumber = trim($m[2]);
                                         } elseif (preg_match('/^(\d{10,})$/', $phoneRaw)) {
