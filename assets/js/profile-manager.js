@@ -1,26 +1,17 @@
 // Sosyal medya platform tanımları
 const socialPlatforms = {
-    facebook: { name: 'Facebook', placeholder: 'facebook.com/kullaniciadi' },
-    x: { name: 'X', placeholder: 'x.com/kullaniciadi' },
-    instagram: { name: 'Instagram', placeholder: 'instagram.com/kullaniciadi' },
-    linkedin: { name: 'LinkedIn', placeholder: 'linkedin.com/in/kullaniciadi' },
-    github: { name: 'GitHub', placeholder: 'github.com/kullaniciadi' },
-    youtube: { name: 'YouTube', placeholder: 'youtube.com/@kanal' },
-    tiktok: { name: 'TikTok', placeholder: 'tiktok.com/@kullaniciadi' },
-    pinterest: { name: 'Pinterest', placeholder: 'pinterest.com/kullaniciadi' },
-    spotify: { name: 'Spotify', placeholder: 'open.spotify.com/user/kullaniciadi' },
-    medium: { name: 'Medium', placeholder: 'medium.com/@kullaniciadi' },
-    twitch: { name: 'Twitch', placeholder: 'twitch.tv/kullaniciadi' },
-    discord: { name: 'Discord', placeholder: 'discord.com/users/kullaniciadi' },
-    reddit: { name: 'Reddit', placeholder: 'reddit.com/user/kullaniciadi' },
-    whatsapp: { name: 'WhatsApp', placeholder: '905XXXXXXXXX' },
-    telegram: { name: 'Telegram', placeholder: 't.me/kullaniciadi' },
-    snapchat: { name: 'Snapchat', placeholder: 'snapchat.com/add/kullaniciadi' },
-    steam: { name: 'Steam', placeholder: 'steamcommunity.com/id/kullaniciadi' },
-    behance: { name: 'Behance', placeholder: 'behance.net/kullaniciadi' },
-    dribbble: { name: 'Dribbble', placeholder: 'dribbble.com/kullaniciadi' },
-    email: { name: 'E-posta', placeholder: 'ornek@email.com' },
-    website: { name: 'Website', placeholder: 'www.website.com' }
+    instagram: { name: 'Instagram', placeholder: 'instagram.com/kullaniciadi', icon: 'fab fa-instagram' },
+    x: { name: 'X', placeholder: 'x.com/kullaniciadi', icon: 'fab fa-x-twitter' },
+    linkedin: { name: 'LinkedIn', placeholder: 'linkedin.com/in/kullaniciadi', icon: 'fab fa-linkedin' },
+    facebook: { name: 'Facebook', placeholder: 'facebook.com/kullaniciadi', icon: 'fab fa-facebook' },
+    youtube: { name: 'YouTube', placeholder: 'youtube.com/@kanal', icon: 'fab fa-youtube' },
+    tiktok: { name: 'TikTok', placeholder: 'tiktok.com/@kullaniciadi', icon: 'fab fa-tiktok' },
+    whatsapp: { name: 'WhatsApp', placeholder: '905XXXXXXXXX', icon: 'fab fa-whatsapp' },
+    website: { name: 'Website', placeholder: 'www.website.com', icon: 'fas fa-globe' },
+    snapchat: { name: 'Snapchat', placeholder: 'snapchat.com/add/kullaniciadi', icon: 'fab fa-snapchat' },
+    discord: { name: 'Discord', placeholder: 'discord.com/users/kullaniciadi', icon: 'fab fa-discord' },
+    telegram: { name: 'Telegram', placeholder: 't.me/kullaniciadi', icon: 'fab fa-telegram' },
+    twitch: { name: 'Twitch', placeholder: 'twitch.tv/kullaniciadi', icon: 'fab fa-twitch' }
 };
 
 $(document).ready(function() {
@@ -48,7 +39,7 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
     Object.entries(socialPlatforms).forEach(([key, value]) => {
         const option = document.createElement('option');
         option.value = key;
-        option.textContent = value.name;
+        option.textContent = `${value.name}`;
         if (platform === key) option.selected = true;
         select.appendChild(option);
     });
@@ -56,13 +47,13 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
     input.className = 'form-control';
     input.required = true;
     
-    // WhatsApp için özel input tipi
+    // Platform tipine göre input tipini ayarla
     if (platform === 'whatsapp') {
         input.type = 'tel';
         input.placeholder = '905XXXXXXXXX';
-    } else if (platform === 'email') {
-        input.type = 'email';
-        input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
+    } else if (platform === 'website') {
+        input.type = 'url';
+        input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : 'www.website.com';
     } else {
         input.type = 'url';
         input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
@@ -78,8 +69,8 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
             if (plat === 'whatsapp') {
                 input.type = 'tel';
                 input.placeholder = '905XXXXXXXXX';
-            } else if (plat === 'email') {
-                input.type = 'email';
+            } else if (plat === 'website') {
+                input.type = 'url';
             } else {
                 input.type = 'url';
             }

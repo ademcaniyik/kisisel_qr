@@ -462,7 +462,7 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                                         <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
                                         <div class="row g-2 social-platforms-grid">
                                             <div class="col-12">
-                                                <div id="socialPlatformsButtons" class="d-flex flex-wrap gap-2"></div>
+                                                <div id="socialPlatformsButtons" class="d-flex flex-wrap justify-content-center" style="gap: 5px;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -498,11 +498,37 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
         // Sosyal medya platform butonlarını oluştur
         const platformsContainer = document.getElementById('socialPlatformsButtons');
         if (platformsContainer && typeof socialPlatforms !== 'undefined') {
+            // 3x4 grid düzeninde platform butonları oluştur
             Object.entries(socialPlatforms).forEach(([key, value]) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'btn btn-outline-secondary btn-sm me-2 mb-2';
-                btn.innerHTML = `<i class="fas fa-plus me-1"></i>${value.name}`;
+                btn.className = 'btn btn-outline-primary btn-sm platform-btn';
+                btn.style.cssText = 'width: 100px; height: 80px; margin: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; transition: all 0.3s ease;';
+                
+                // Icon ve text ekle
+                const icon = document.createElement('i');
+                icon.className = value.icon || 'fas fa-link';
+                icon.style.cssText = 'font-size: 24px; margin-bottom: 5px; transition: transform 0.2s ease;';
+                
+                const text = document.createElement('span');
+                text.textContent = value.name;
+                text.style.cssText = 'font-size: 11px; font-weight: 500;';
+                
+                // Hover efektleri
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 12px rgba(0,123,255,0.3)';
+                    icon.style.transform = 'scale(1.1)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                    icon.style.transform = 'scale(1)';
+                });
+                
+                btn.appendChild(icon);
+                btn.appendChild(text);
                 btn.onclick = () => addSocialLink('socialLinksContainer', key);
                 platformsContainer.appendChild(btn);
             });
