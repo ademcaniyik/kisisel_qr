@@ -195,6 +195,72 @@ class QRPoolManager {
     }
     
     /**
+     * QR atamayı kaldır - QR'ı tekrar müsait duruma getir
+     * @param int $qrPoolId QR Pool ID
+     * @param string $reason Kaldırma nedeni
+     * @return array<string, mixed>
+     */
+    public function unassignQR($qrPoolId, $reason = 'manual_unassign') {
+        try {
+            // QR'ın mevcut durumunu kontrol et
+            $qrQuery = $this->db->prepare("SELECT * FROM qr_pool WHERE id = ?");
+            $qrQuery->bind_param("i", $qrPoolId);
+            $qrQuery->execute();
+            $qr = $qrQuery->get_result()->fetch_assoc();
+            
+            if (!$qr) {
+                throw new Exception("QR bulunamadı");
+            }
+            
+            if ($qr['status'] !== 'assigned') {
+                throw new Exception("Bu QR zaten müsait durumda veya teslim edilmiş");
+            }
+            
+            // QR'ı müsait duruma getir
+            $updateStmt = $this->db->prepare("
+                UPDATE qr_pool 
+                SET status = 'available', 
+                    profile_id = NULL, 
+                    assigned_at = NULL 
+                WHERE id = ?
+            ");
+            $updateStmt->bind_param("i", $qrPoolId);
+            $result = $updateStmt->execute();
+            
+            if ($result) {
+                // Log kaydı tut
+                error_log("QR Unassigned: Pool ID {$qrPoolId}, Profile ID: {$qr['profile_id']}, Reason: {$reason}");
+                
+                // qr_codes tablosundan da sil (geriye uyumluluk)
+                if ($qr['profile_id']) {
+                    $deleteStmt = $this->db->prepare("DELETE FROM qr_codes WHERE profile_id = ?");
+                    $deleteStmt->bind_param("i", $qr['profile_id']);
+                    $deleteStmt->execute();
+                }
+                
+                return [
+                    'success' => true,
+                    'message' => 'QR başarıyla müsait duruma getirildi',
+                    'qr_data' => [
+                        'pool_id' => $qr['pool_id'],
+                        'qr_code_id' => $qr['qr_code_id'],
+                        'old_profile_id' => $qr['profile_id']
+                    ]
+                ];
+            }
+            
+            throw new Exception("QR güncelleme başarısız");
+            
+        } catch (Exception $e) {
+            error_log("QR Unassign Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    
+    /**
      * Batch listesini getir
      * @return array<int, array<string, mixed>>
      */
