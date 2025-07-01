@@ -47,6 +47,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="assets/css/landing.css" rel="stylesheet">
+    
+    <!-- WhatsApp Widget (Modüler) -->
+    <link href="assets/css/whatsapp-widget.css" rel="stylesheet">
 </head>
 
 <body>
@@ -807,17 +810,6 @@
         </div>
     </div>
 
-    <!-- WhatsApp Widget -->
-    <div class="whatsapp-widget" id="whatsappWidget">
-        <div class="whatsapp-button" onclick="openWhatsApp()">
-            <i class="fab fa-whatsapp"></i>
-            <span class="whatsapp-text">Yardım</span>
-        </div>
-        <div class="whatsapp-tooltip">
-            Merhaba! Size nasıl yardımcı olabilirim? 💬
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -879,26 +871,11 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- WhatsApp Widget (Modüler) -->
+    <script src="assets/js/whatsapp-widget.js"></script>
 
     <script>
-        // WhatsApp Widget Function
-        function openWhatsApp() {
-            const phoneNumber = '905349334631';
-            const message = 'Merhaba! Kişisel QR sistemi hakkında bilgi almak istiyorum. Yardımcı olabilir misiniz?';
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
-            // Analytics tracking (isteğe bağlı)
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'whatsapp_widget_click', {
-                    'event_category': 'engagement',
-                    'event_label': 'help_request'
-                });
-            }
-            
-            // WhatsApp'ı yeni sekmede aç
-            window.open(whatsappUrl, '_blank');
-        }
-
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -978,26 +955,6 @@
 
         // WhatsApp button click tracking and fallback
         document.addEventListener('DOMContentLoaded', function() {
-            // WhatsApp Widget Modal Control
-            const whatsappWidget = document.getElementById('whatsappWidget');
-            const orderModal = document.getElementById('orderModal');
-            
-            // Modal açıldığında widget'ı gizle
-            if (orderModal) {
-                orderModal.addEventListener('show.bs.modal', function() {
-                    if (whatsappWidget) {
-                        whatsappWidget.style.display = 'none';
-                    }
-                });
-                
-                // Modal kapandığında widget'ı göster
-                orderModal.addEventListener('hidden.bs.modal', function() {
-                    if (whatsappWidget) {
-                        whatsappWidget.style.display = 'block';
-                    }
-                });
-            }
-
             // WhatsApp buttons event listeners
             document.querySelectorAll('[href*="wa.me"]').forEach(button => {
                 button.addEventListener('click', function(e) {
