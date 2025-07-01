@@ -181,7 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'iban' => $postData['iban'],
                 'blood_type' => $postData['blood_type'],
                 'theme' => $postData['theme'],
-                'social_links' => $postData['social_links']
+                'social_links' => $postData['social_links'],
+                'photo_action' => $postData['photo_action']
             ];
             
             // Fotoğraf varsa ekle

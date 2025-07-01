@@ -176,6 +176,11 @@ class UserProfileManager {
                     $params[] = json_encode($photoData, JSON_UNESCAPED_UNICODE);
                     $types .= "s";
                     
+                    // Yeni fotoğraf yüklendiğinde photo_hidden'i sıfırla
+                    $updateFields[] = "photo_hidden = ?";
+                    $params[] = 0;
+                    $types .= "i";
+                    
                     $this->log("Yeni fotoğraf eklendi: " . $photoResult['filename']);
                 }
             }
@@ -185,10 +190,10 @@ class UserProfileManager {
                 $this->log("Fotoğraf aksiyonu: " . $data['photo_action']);
                 
                 if ($data['photo_action'] === 'hide') {
-                    // Fotoğrafı gizle (URL'yi null yap ama dosyayı silme)
-                    $updateFields[] = "photo_url = ?";
-                    $params[] = null;
-                    $types .= "s";
+                    // Fotoğrafı gizle (photo_hidden = 1 yap)
+                    $updateFields[] = "photo_hidden = ?";
+                    $params[] = 1;
+                    $types .= "i";
                     $this->log("Fotoğraf gizlendi");
                     
                 } elseif ($data['photo_action'] === 'delete') {
@@ -211,6 +216,10 @@ class UserProfileManager {
                     $updateFields[] = "photo_data = ?";
                     $params[] = null;
                     $types .= "s";
+                    
+                    $updateFields[] = "photo_hidden = ?";
+                    $params[] = 0;
+                    $types .= "i";
                     
                     $this->log("Fotoğraf kalıcı olarak silindi");
                 }

@@ -417,11 +417,6 @@ if (!$theme) {
         <div class="profile-header">
             <?php if (isset($profile['photo_url']) && $profile['photo_url'] && !$profile['photo_hidden']): ?>
                 <?php
-                // DEBUG: Fotoğraf verilerini kontrol et
-                echo "<!-- DEBUG: photo_url: " . htmlspecialchars($profile['photo_url']) . " -->";
-                echo "<!-- DEBUG: photo_data: " . htmlspecialchars($profile['photo_data'] ?? 'NULL') . " -->";
-                echo "<!-- DEBUG: photo_hidden: " . htmlspecialchars($profile['photo_hidden']) . " -->";
-                
                 // Modern responsive image display with WebP support
                 if (!empty($profile['photo_data'])) {
                     // Use optimized images if available
