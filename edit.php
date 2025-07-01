@@ -9,35 +9,12 @@ require_once ROOT . '/includes/template_helpers.php';
 require_once ROOT . '/includes/utilities.php';
 require_once ROOT . '/includes/UserProfileManager.php';
 
-// Error reporting (production'da kapatılmalı)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 
 // Sınıf örneği
 $userProfileManager = new UserProfileManager();
 
-/**
- * Loglama fonksiyonları
- */
-function log_edit_error($msg) {
-    $logFile = __DIR__ . '/logs/edit_error_log.txt';
-    if (!is_dir(dirname($logFile))) {
-        mkdir(dirname($logFile), 0755, true);
-    }
-    $date = date('Y-m-d H:i:s');
-    $logMessage = "[$date] $msg\n";
-    error_log($logMessage);
-    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
-}
 
-function log_edit_debug($msg, $data = null) {
-    $logMessage = $msg;
-    if ($data !== null) {
-        $logMessage .= "\nData: " . (is_scalar($data) ? $data : json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    }
-    log_edit_error("[DEBUG] " . $logMessage);
-}
 
 /**
  * POST verilerini güvenli şekilde al ve sanitize et
@@ -64,7 +41,7 @@ function getSanitizedPostData() {
         $data['social_links'] = is_array($socialLinks) ? $socialLinks : [];
     }
     
-    log_edit_debug('Sanitized POST data', $data);
+
     return $data;
 }
 
@@ -116,7 +93,6 @@ try {
     $editCode = $profile['edit_code'];
     $profileId = $profile['id'];
 } catch (Exception $e) {
-    log_edit_error('Profil arama hatası: ' . $e->getMessage());
     http_response_code(500);
     echo '<h2>Sistem hatası: Profil bilgileri alınamadı.</h2>';
     exit;
@@ -129,21 +105,9 @@ $loginErrorType = '';
 
 // POST işlemleri
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $submittedIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    $submittedUrl = $_SERVER['REQUEST_URI'] ?? 'unknown';
-    log_edit_error('Form post edildi. IP: ' . $submittedIp . ', URL: ' . $submittedUrl);
-    log_edit_debug('POST verileri', [
-        'post' => $_POST,
-        'files' => isset($_FILES['photo']) ? [
-            'name' => $_FILES['photo']['name'],
-            'size' => $_FILES['photo']['size'],
-            'error' => $_FILES['photo']['error']
-        ] : 'no_file'
-    ]);
     
     // CSRF token kontrolü
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $csrfToken) {
-        log_edit_error('CSRF token hatası');
         http_response_code(403);
         echo '<p style="color:red">Güvenlik hatası: Geçersiz CSRF token.</p>';
         exit;
@@ -165,19 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputPhoneNorm = normalizePhone($inputPhone, true);
         $profilePhoneNorm = normalizePhone($profile['phone']);
         
-        log_edit_debug('Giriş denemesi', [
-            'input_code' => $inputCode,
-            'expected_code' => $editCode,
-            'input_phone_norm' => $inputPhoneNorm,
-            'profile_phone_norm' => $profilePhoneNorm
-        ]);
-        
         // Doğrulama
         $codeValid = ($inputCode === $editCode);
         $phoneValid = ($inputPhoneNorm === $profilePhoneNorm);
         
         if ($codeValid && $phoneValid) {
-            log_edit_error('Şifre ve telefon doğru, oturum açılıyor');
             session_regenerate_id(true);
             $_SESSION['edit_auth_' . $editToken] = true;
             
@@ -186,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ' . $redirectUrl);
             exit;
         } else {
-            log_edit_error('Giriş başarısız');
             $loginError = true;
             if (!$codeValid && !$phoneValid) {
                 $loginErrorType = 'both';
@@ -200,16 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Profil güncelleme işlemi
     if (isset($_POST['save_profile'])) {
-        log_edit_error('save_profile parametresi bulundu, güncelleme işlemi başlıyor');
         
         if (!($_SESSION['edit_auth_' . $editToken] ?? false)) {
-            log_edit_error('Oturum doğrulaması başarısız');
             echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
             unset($_SESSION['edit_auth_' . $editToken]);
             exit;
         }
-        
-        log_edit_error('Profil güncelleme başlıyor. EditToken: ' . $editToken);
         
         try {
             // Mevcut profil bilgilerini al
@@ -237,19 +188,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $updateData['photo'] = $_FILES['photo'];
             }
             
-            // Debug için güncelleme verilerini logla
-            log_edit_debug('Güncelleme verileri:', $updateData);
-            
             // Profili güncelle
             $updateResult = $userProfileManager->updateProfile($editToken, $updateData);
             
             if ($updateResult) {
-                log_edit_error('Profil başarıyla güncellendi. EditToken: ' . $editToken);
                 $_SESSION['profile_update_success'] = true;
                 $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi! Değişiklikler anında yayına alındı.';
                 $_SESSION['profile_update_type'] = 'success';
             } else {
-                log_edit_error('Değişiklik yapılmadı. EditToken: ' . $editToken);
                 $_SESSION['profile_update_message'] = 'Herhangi bir değişiklik yapılmadı veya aynı bilgiler girildi.';
                 $_SESSION['profile_update_type'] = 'info';
             }
@@ -259,17 +205,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
             
         } catch (Exception $e) {
-            log_edit_error('Güncelleme hatası: ' . $e->getMessage());
             $_SESSION['profile_update_message'] = 'Profil güncellenirken bir hata oluştu: ' . $e->getMessage();
             $_SESSION['profile_update_type'] = 'danger';
             header('Location: /kisisel_qr/edit/' . urlencode($editToken));
             exit;
-        }
-    } else {
-        // save_profile parametresi yok, hangi parametreler var kontrol et
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            log_edit_error('POST yapıldı ama save_profile parametresi yok!');
-            log_edit_debug('Mevcut POST parametreleri:', array_keys($_POST));
         }
     }
 }
