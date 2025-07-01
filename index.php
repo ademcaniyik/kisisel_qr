@@ -1054,7 +1054,30 @@
         }
 
         async function completeOrder() {
+            // Buton kilitleme ve loading durumu
+            const completeOrderBtn = document.getElementById('completeOrderBtn');
+            
+            // Zaten işlem yapılıyorsa, fonksiyondan çık
+            if (completeOrderBtn.disabled) {
+                return;
+            }
+            
+            // Butonu hemen kilitle
+            completeOrderBtn.disabled = true;
+            
+            // Orijinal buton içeriğini kaydet
+            const originalContent = completeOrderBtn.innerHTML;
+            
+            // Loading durumu göster
+            completeOrderBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                İşleniyor...
+            `;
+            
             try {
+                // Başarı durumu flag'i
+                let orderSuccess = false;
+                
                 // Prepare form data for file upload
                 const formData = new FormData();
                 
@@ -1190,6 +1213,9 @@
                     // Show step 3
                     document.getElementById('step2').style.display = 'none';
                     document.getElementById('step3').style.display = 'block';
+                    
+                    // Sipariş başarılı oldu
+                    orderSuccess = true;
 
                     console.log('Order completed, WhatsApp link updated:', whatsappURL);
                 } else {
@@ -1200,6 +1226,22 @@
             } catch (error) {
                 console.error('Sipariş işlemi sırasında hata:', error);
                 alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            } finally {
+                // Her durumda butonu tekrar aktif hale getir (hata durumunda)
+                const completeOrderBtn = document.getElementById('completeOrderBtn');
+                if (completeOrderBtn) {
+                    completeOrderBtn.disabled = false;
+                    
+                    // Ödeme yöntemine göre buton metnini geri yükle
+                    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+                    if (paymentMethod === 'cash_on_delivery') {
+                        completeOrderBtn.innerHTML = 'Sipariş Ver';
+                        completeOrderBtn.className = 'btn btn-warning';
+                    } else {
+                        completeOrderBtn.innerHTML = 'Ödeme Yaptım, Sipariş Ver';
+                        completeOrderBtn.className = 'btn btn-success';
+                    }
+                }
             }
         }
 
