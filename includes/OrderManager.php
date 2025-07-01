@@ -71,12 +71,29 @@ class OrderManager {
                 throw new Exception("Prepare hatası: " . $this->connection->error);
             }
             
-            $whatsapp_sent = isset($data['whatsapp_sent']) ? $data['whatsapp_sent'] : true;
+            $whatsapp_sent = isset($data['whatsapp_sent']) ? (int)$data['whatsapp_sent'] : 1;
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : 'bank_transfer';
             $shipping_address = isset($data['shipping_address']) ? $data['shipping_address'] : '';
             
+            // Debug: Parametreleri logla
+            error_log("OrderManager bind_param debug:");
+            error_log("- customer_name: " . $data['customer_name']);
+            error_log("- customer_phone: " . $data['customer_phone']);
+            error_log("- customer_email: " . ($data['customer_email'] ?? 'null'));
+            error_log("- profile_id: " . $data['profile_id']);
+            error_log("- profile_slug: " . $data['profile_slug']);
+            error_log("- qr_pool_id: " . $data['qr_pool_id']);
+            error_log("- product_type: " . $data['product_type']);
+            error_log("- product_name: " . $data['product_name']);
+            error_log("- quantity: " . $data['quantity']);
+            error_log("- price: " . $data['price']);
+            error_log("- special_requests: " . ($data['special_requests'] ?? 'null'));
+            error_log("- shipping_address: " . $shipping_address);
+            error_log("- payment_method: " . $payment_method);
+            error_log("- whatsapp_sent: " . $whatsapp_sent);
+            
             $stmt->bind_param(
-                "sssisssidsssi",
+                "ssississidssi",
                 $data['customer_name'],
                 $data['customer_phone'],
                 $data['customer_email'],
@@ -101,6 +118,9 @@ class OrderManager {
                 $this->connection->commit();
                 $this->connection->autocommit(true);
                 
+                // Debug log
+                error_log("Sipariş başarıyla oluşturuldu: ID=" . $orderId);
+                
                 return [
                     'order_id' => $orderId,
                     'profile_id' => $profileResult['profile_id'],
@@ -116,6 +136,7 @@ class OrderManager {
             } else {
                 $error = $stmt->error;
                 $stmt->close();
+                error_log("Sipariş execute hatası: " . $error);
                 throw new Exception("Sipariş oluşturulurken hata: " . $error);
             }
             
@@ -123,6 +144,11 @@ class OrderManager {
             // Transaction'ı rollback et
             $this->connection->rollback();
             $this->connection->autocommit(true);
+            
+            // Detaylı error logging
+            error_log("OrderManager createOrder hatası: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            
             throw $e;
         }
     }
