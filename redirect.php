@@ -8,7 +8,8 @@ $qrId = isset($_GET['qr_id']) ? preg_replace('/[^a-zA-Z0-9]/', '', $_GET['qr_id'
 if (!$qrId) {
     error_log('Geçersiz QR yönlendirme denemesi: qr_id=' . ($_GET['qr_id'] ?? '') . ' IP=' . $_SERVER['REMOTE_ADDR']);
     header('HTTP/1.1 400 Bad Request');
-    die('Geçersiz QR kod.');
+    include __DIR__ . '/errors/profile-not-found.php';
+    exit();
 }
 
 try {
@@ -29,7 +30,8 @@ try {
     if ($result->num_rows === 0) {
         error_log('QR kod bulunamadı: qr_id=' . $qrId . ' IP=' . $_SERVER['REMOTE_ADDR']);
         header('HTTP/1.1 404 Not Found');
-        die('QR kod bulunamadı.');
+        include __DIR__ . '/errors/profile-not-found.php';
+        exit();
     }
 
     $qrInfo = $result->fetch_assoc();
@@ -38,7 +40,8 @@ try {
     if (!$qrInfo['is_active']) {
         error_log('Pasif QR kod erişimi: qr_id=' . $qrId . ' IP=' . $_SERVER['REMOTE_ADDR']);
         header('HTTP/1.1 403 Forbidden');
-        die('Bu QR kod artık aktif değil.');
+        include __DIR__ . '/errors/profile-not-found.php';
+        exit();
     }
 
     // Tarama istatistiğini kaydet
@@ -49,6 +52,7 @@ try {
 } catch (Exception $e) {
     error_log("QR Yönlendirme Hatası: " . $e->getMessage());
     header('HTTP/1.1 500 Internal Server Error');
-    die('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+    include __DIR__ . '/errors/profile-not-found.php';
+    exit();
 }
 ?>
