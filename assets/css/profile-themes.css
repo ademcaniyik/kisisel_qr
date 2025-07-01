@@ -111,6 +111,11 @@ body.theme-default .social-link.x {
     transition: all 0.2s ease;
 }
 
+/* Varsayılan temada icon renkleri - görünürlük için */
+body.theme-default .social-link i {
+    color: #495057 !important;
+}
+
 body.theme-default .social-link.facebook:hover,
 body.theme-default .social-link.twitter:hover,
 body.theme-default .social-link.instagram:hover,
@@ -134,6 +139,11 @@ body.theme-default .social-link.x:hover {
     color: #2c3e50 !important;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+/* Hover durumunda icon renkleri */
+body.theme-default .social-link:hover i {
+    color: #2c3e50 !important;
 }
 
 body.theme-default .contact-btn {
