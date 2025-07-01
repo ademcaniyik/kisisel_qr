@@ -200,6 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Profil güncelleme işlemi
     if (isset($_POST['save_profile'])) {
+        log_edit_error('save_profile parametresi bulundu, güncelleme işlemi başlıyor');
+        
         if (!($_SESSION['edit_auth_' . $editToken] ?? false)) {
             log_edit_error('Oturum doğrulaması başarısız');
             echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
@@ -207,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         
-        log_edit_error('Profil güncelleme başlıyor. ProfileId: ' . $profileId);
+        log_edit_error('Profil güncelleme başlıyor. EditToken: ' . $editToken);
         
         try {
             // Mevcut profil bilgilerini al
@@ -262,6 +264,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['profile_update_type'] = 'danger';
             header('Location: /kisisel_qr/edit/' . urlencode($editToken));
             exit;
+        }
+    } else {
+        // save_profile parametresi yok, hangi parametreler var kontrol et
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            log_edit_error('POST yapıldı ama save_profile parametresi yok!');
+            log_edit_debug('Mevcut POST parametreleri:', array_keys($_POST));
         }
     }
 }
@@ -339,9 +347,10 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Soyad *</label>
-                                    <input type="text" class="form-control" name="name" 
+                                    <input type="text" class="form-control" 
                                            value="<?= htmlspecialchars($profile['name']) ?>" 
-                                           readonly style="background:#f5f5f5;cursor:not-allowed;">
+                                           disabled style="background:#f5f5f5;cursor:not-allowed;">
+                                    <small class="form-text text-muted">Ad soyad değiştirilemez</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Telefon *</label>
@@ -521,6 +530,15 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                     }
                 });
                 document.getElementById('socialLinksInput').value = JSON.stringify(socialLinks);
+                
+                // save_profile parametresini ekle (eğer yoksa)
+                if (!editForm.querySelector('input[name="save_profile"]')) {
+                    const saveProfileInput = document.createElement('input');
+                    saveProfileInput.type = 'hidden';
+                    saveProfileInput.name = 'save_profile';
+                    saveProfileInput.value = '1';
+                    editForm.appendChild(saveProfileInput);
+                }
                 
                 saveBtn.disabled = true;
                 saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Kaydediliyor...';
