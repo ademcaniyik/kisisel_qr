@@ -319,6 +319,11 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     // Sosyal medya verilerini JavaScript'e gönder
     window.existingSocialLinks = <?= json_encode($socialLinks, JSON_UNESCAPED_UNICODE) ?>;
     </script>
+    <style>
+    .text-purple {
+        color: #9146ff !important;
+    }
+    </style>
     <div class="container py-5">
         <?php if ($alertMessage): ?>
         <div class="alert alert-<?= $alertType ?> alert-dismissible fade show" role="alert" id="profileAlert">
@@ -461,8 +466,77 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                                     <div class="card-body">
                                         <h6 class="card-title mb-3"><i class="fas fa-plus-circle text-primary me-2"></i>Platform Ekle</h6>
                                         <div class="row g-2 social-platforms-grid">
-                                            <div class="col-12">
-                                                <div id="socialPlatformsButtons" class="d-flex flex-wrap justify-content-center" style="gap: 5px;"></div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'instagram')">
+                                                    <i class="fab fa-instagram text-danger"></i>
+                                                    <span class="d-block small">Instagram</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'x')">
+                                                    <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                                                    <span class="d-block small">X</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'linkedin')">
+                                                    <i class="fab fa-linkedin text-primary"></i>
+                                                    <span class="d-block small">LinkedIn</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'facebook')">
+                                                    <i class="fab fa-facebook text-primary"></i>
+                                                    <span class="d-block small">Facebook</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'youtube')">
+                                                    <i class="fab fa-youtube text-danger"></i>
+                                                    <span class="d-block small">YouTube</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'tiktok')">
+                                                    <i class="fab fa-tiktok text-dark"></i>
+                                                    <span class="d-block small">TikTok</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'whatsapp')">
+                                                    <i class="fab fa-whatsapp text-success"></i>
+                                                    <span class="d-block small">WhatsApp</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'website')">
+                                                    <i class="fas fa-globe text-info"></i>
+                                                    <span class="d-block small">Website</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'snapchat')">
+                                                    <i class="fab fa-snapchat text-warning"></i>
+                                                    <span class="d-block small">Snapchat</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'discord')">
+                                                    <i class="fab fa-discord text-primary"></i>
+                                                    <span class="d-block small">Discord</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'telegram')">
+                                                    <i class="fab fa-telegram text-info"></i>
+                                                    <span class="d-block small">Telegram</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-4 col-lg-3">
+                                                <button type="button" class="btn btn-outline-secondary w-100 social-platform-btn" onclick="addSocialLink('socialLinksContainer', 'twitch')">
+                                                    <i class="fab fa-twitch text-purple"></i>
+                                                    <span class="d-block small">Twitch</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -492,45 +566,6 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                 if (url && url.trim()) {
                     addSocialLink('socialLinksContainer', platform, url);
                 }
-            });
-        }
-        
-        // Sosyal medya platform butonlarını oluştur
-        const platformsContainer = document.getElementById('socialPlatformsButtons');
-        if (platformsContainer && typeof socialPlatforms !== 'undefined') {
-            // 3x4 grid düzeninde platform butonları oluştur
-            Object.entries(socialPlatforms).forEach(([key, value]) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'btn btn-outline-primary btn-sm platform-btn';
-                btn.style.cssText = 'width: 100px; height: 80px; margin: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; transition: all 0.3s ease;';
-                
-                // Icon ve text ekle
-                const icon = document.createElement('i');
-                icon.className = value.icon || 'fas fa-link';
-                icon.style.cssText = 'font-size: 24px; margin-bottom: 5px; transition: transform 0.2s ease;';
-                
-                const text = document.createElement('span');
-                text.textContent = value.name;
-                text.style.cssText = 'font-size: 11px; font-weight: 500;';
-                
-                // Hover efektleri
-                btn.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-2px)';
-                    this.style.boxShadow = '0 4px 12px rgba(0,123,255,0.3)';
-                    icon.style.transform = 'scale(1.1)';
-                });
-                
-                btn.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = 'none';
-                    icon.style.transform = 'scale(1)';
-                });
-                
-                btn.appendChild(icon);
-                btn.appendChild(text);
-                btn.onclick = () => addSocialLink('socialLinksContainer', key);
-                platformsContainer.appendChild(btn);
             });
         }
         
