@@ -235,15 +235,22 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     
     // Profil fotoğrafı URL'sini hazırla
     $photoUrl = '/kisisel_qr/assets/images/default-profile.svg';
-    if (!empty($profile['photo_data'])) {
-        $photoDataArr = json_decode($profile['photo_data'], true);
-        if ($photoDataArr && isset($photoDataArr['filename'])) {
-            $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoDataArr['filename']);
-        }
-    } elseif (!empty($profile['photo_url'])) {
-        $photoUrl = $profile['photo_url'];
-        if (strpos($photoUrl, '/kisisel_qr/') === false) {
-            $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoUrl);
+    $hasActualPhoto = false;
+    
+    // Eğer fotoğraf gizli değilse ve fotoğraf varsa göster
+    if (!$profile['photo_hidden']) {
+        if (!empty($profile['photo_data'])) {
+            $photoDataArr = json_decode($profile['photo_data'], true);
+            if ($photoDataArr && isset($photoDataArr['filename'])) {
+                $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoDataArr['filename']);
+                $hasActualPhoto = true;
+            }
+        } elseif (!empty($profile['photo_url'])) {
+            $photoUrl = $profile['photo_url'];
+            if (strpos($photoUrl, '/kisisel_qr/') === false) {
+                $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoUrl);
+            }
+            $hasActualPhoto = true;
         }
     }
     
@@ -381,7 +388,7 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                                     <div class="profile-photo-container position-relative">
                                         <img src="<?= $photoUrl ?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" 
                                              class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-                                        <?php if ($photoUrl !== '/kisisel_qr/assets/images/default-profile.svg'): ?>
+                                        <?php if ($hasActualPhoto): ?>
                                         <div class="photo-actions position-absolute top-0 end-0">
                                             <button type="button" class="btn btn-sm btn-danger rounded-circle p-1" 
                                                     id="removePhotoBtn" title="Fotoğrafı Kaldır" style="width:24px;height:24px;">
@@ -394,13 +401,24 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                                         <input type="file" name="photo" id="editPhotoInput" accept="image/*" 
                                                class="form-control mb-2" style="max-width:250px;">
                                         <div class="btn-group btn-group-sm">
-                                            <?php if ($photoUrl !== '/kisisel_qr/assets/images/default-profile.svg'): ?>
-                                            <button type="button" class="btn btn-outline-danger" id="hidePhotoBtn">
-                                                <i class="fas fa-eye-slash me-1"></i>Gizle
-                                            </button>
-                                            <button type="button" class="btn btn-outline-warning" id="deletePhotoBtn">
-                                                <i class="fas fa-trash me-1"></i>Kaldır
-                                            </button>
+                                            <?php 
+                                            // Gerçek fotoğraf varsa
+                                            if ($hasActualPhoto): ?>
+                                                <button type="button" class="btn btn-outline-danger" id="hidePhotoBtn">
+                                                    <i class="fas fa-eye-slash me-1"></i>Gizle
+                                                </button>
+                                                <button type="button" class="btn btn-outline-warning" id="deletePhotoBtn">
+                                                    <i class="fas fa-trash me-1"></i>Kaldır
+                                                </button>
+                                            <?php 
+                                            // Fotoğraf gizli ama var ise
+                                            elseif ($profile['photo_hidden'] && (!empty($profile['photo_data']) || !empty($profile['photo_url']))): ?>
+                                                <button type="button" class="btn btn-outline-success" id="showPhotoBtn">
+                                                    <i class="fas fa-eye me-1"></i>Göster
+                                                </button>
+                                                <button type="button" class="btn btn-outline-warning" id="deletePhotoBtn">
+                                                    <i class="fas fa-trash me-1"></i>Kaldır
+                                                </button>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -695,6 +713,30 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                 document.getElementById('profilePhotoPreview').src = '/kisisel_qr/assets/images/default-profile.svg';
                 hidePhotoActions();
                 showSuccessMessage('Fotoğraf kaldırıldı. Değişiklikleri kaydetmeyi unutmayın!');
+            }
+        });
+        
+        // Fotoğraf gösterme butonu (gizli fotoğrafı tekrar göster)
+        document.getElementById('showPhotoBtn')?.addEventListener('click', function() {
+            if (confirm('Profil fotoğrafınızı tekrar herkese göstermek istediğinize emin misiniz?')) {
+                document.getElementById('photoActionInput').value = 'show';
+                // Gerçek fotoğrafı göster (PHP'den photoUrl'yi al)
+                <?php if (!empty($profile['photo_data'])): ?>
+                    <?php $photoDataArr = json_decode($profile['photo_data'], true); ?>
+                    <?php if ($photoDataArr && isset($photoDataArr['filename'])): ?>
+                        document.getElementById('profilePhotoPreview').src = '/kisisel_qr/public/uploads/profiles/<?= htmlspecialchars($photoDataArr['filename']) ?>';
+                    <?php endif; ?>
+                <?php elseif (!empty($profile['photo_url'])): ?>
+                    <?php 
+                    $realPhotoUrl = $profile['photo_url'];
+                    if (strpos($realPhotoUrl, '/kisisel_qr/') === false) {
+                        $realPhotoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($realPhotoUrl);
+                    }
+                    ?>
+                    document.getElementById('profilePhotoPreview').src = '<?= $realPhotoUrl ?>';
+                <?php endif; ?>
+                showPhotoActions();
+                showSuccessMessage('Fotoğraf tekrar görünür hale getirildi. Değişiklikleri kaydetmeyi unutmayın!');
             }
         });
         

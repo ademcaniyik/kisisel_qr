@@ -196,6 +196,13 @@ class UserProfileManager {
                     $types .= "i";
                     $this->log("Fotoğraf gizlendi");
                     
+                } elseif ($data['photo_action'] === 'show') {
+                    // Fotoğrafı tekrar göster (photo_hidden = 0 yap)
+                    $updateFields[] = "photo_hidden = ?";
+                    $params[] = 0;
+                    $types .= "i";
+                    $this->log("Fotoğraf tekrar gösterildi");
+                    
                 } elseif ($data['photo_action'] === 'delete') {
                     // Fotoğrafı kalıcı olarak sil
                     if (!empty($profile['photo_data'])) {
