@@ -31,14 +31,25 @@ class WhatsAppWidget {
     
     shouldShowOnCurrentPage() {
         const currentPage = this.getCurrentPageName();
-        return this.config.showOnPages.includes(currentPage);
+        console.log('WhatsApp Widget - Current page:', currentPage);
+        console.log('WhatsApp Widget - Show on pages:', this.config.showOnPages);
+        return this.config.showOnPages.includes(currentPage) || this.config.showOnPages.includes('*');
     }
     
     getCurrentPageName() {
         const path = window.location.pathname;
         const filename = path.split('/').pop();
         
-        if (!filename || filename === '') {
+        console.log('WhatsApp Widget - Full path:', path);
+        console.log('WhatsApp Widget - Filename:', filename);
+        
+        // Ana sayfa kontrolleri
+        if (!filename || filename === '' || filename === '/' || path.endsWith('/')) {
+            return 'index';
+        }
+        
+        // index.php kontrolü
+        if (filename === 'index.php') {
             return 'index';
         }
         
@@ -46,6 +57,8 @@ class WhatsAppWidget {
     }
     
     createWidget() {
+        console.log('WhatsApp Widget - Creating widget...');
+        
         const widget = document.createElement('div');
         widget.className = 'whatsapp-widget';
         widget.id = 'whatsappWidget';
@@ -64,6 +77,8 @@ class WhatsAppWidget {
         `;
         
         document.body.appendChild(widget);
+        
+        console.log('WhatsApp Widget - Widget created and added to DOM');
         
         // Global referans oluştur
         window.whatsappWidget = this;
@@ -159,13 +174,15 @@ class WhatsAppWidget {
 
 // Auto-initialize widget when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('WhatsApp Widget - DOMContentLoaded fired, initializing...');
+    
     // Default configuration - istediğiniz zaman değiştirebilirsiniz
     new WhatsAppWidget({
         phoneNumber: '905349334631',
         message: 'Merhaba! Kişisel QR sistemi hakkında bilgi almak istiyorum. Yardımcı olabilir misiniz?',
         tooltipText: 'Merhaba! Size nasıl yardımcı olabilirim? 💬',
         buttonText: 'Yardım',
-        showOnPages: ['index'], // Sadece ana sayfada göster
+        showOnPages: ['*'], // TÜM sayfalarda göster (debug için)
         hideOnModals: true,
         analytics: true
     });
