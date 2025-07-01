@@ -47,201 +47,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="assets/css/landing.css" rel="stylesheet">
-    
-    <!-- Inline WhatsApp Widget CSS -->
-    <style>
-        /* WhatsApp Widget Styles */
-        .whatsapp-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-            cursor: pointer;
-            animation: whatsapp-pulse 2s infinite;
-        }
-
-        .whatsapp-button {
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5);
-        }
-
-        .whatsapp-button i {
-            font-size: 24px;
-            z-index: 2;
-        }
-
-        .whatsapp-text {
-            position: absolute;
-            left: -80px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            color: #25d366;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .whatsapp-widget:hover .whatsapp-text {
-            opacity: 1;
-            left: -90px;
-        }
-
-        .whatsapp-tooltip {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            background: white;
-            color: #333;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            pointer-events: none;
-            border: 1px solid rgba(37, 211, 102, 0.2);
-        }
-
-        .whatsapp-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid white;
-        }
-
-        .whatsapp-widget:hover .whatsapp-tooltip {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* WhatsApp Widget Animations */
-        @keyframes whatsapp-pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Responsive WhatsApp Widget */
-        @media (max-width: 768px) {
-            .whatsapp-widget {
-                bottom: 20px;
-                right: 20px;
-            }
-            
-            .whatsapp-button {
-                width: 55px;
-                height: 55px;
-            }
-            
-            .whatsapp-button i {
-                font-size: 22px;
-            }
-            
-            .whatsapp-tooltip {
-                font-size: 13px;
-                padding: 10px 14px;
-                right: -10px;
-            }
-        }
-
-        /* Modal açıkken WhatsApp widget'ını gizle */
-        body.modal-open .whatsapp-widget {
-            display: none;
-        }
-
-        /* Toast notification styles */
-        .toast-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            padding: 15px 20px;
-            min-width: 280px;
-            transform: translateX(350px);
-            transition: all 0.3s ease;
-            border-left: 4px solid #007bff;
-        }
-
-        .toast-notification.show {
-            transform: translateX(0);
-        }
-
-        .toast-notification.toast-success {
-            border-left-color: #28a745;
-        }
-
-        .toast-notification.toast-error {
-            border-left-color: #dc3545;
-        }
-
-        .toast-notification.toast-warning {
-            border-left-color: #ffc107;
-        }
-
-        .toast-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast-content i {
-            font-size: 18px;
-            color: #007bff;
-        }
-
-        .toast-success .toast-content i {
-            color: #28a745;
-        }
-
-        .toast-error .toast-content i {
-            color: #dc3545;
-        }
-
-        .toast-warning .toast-content i {
-            color: #ffc107;
-        }
-    </style>
-    
-    <!-- WhatsApp Widget (Modüler) -->
-    <link href="assets/css/whatsapp-widget.css" rel="stylesheet">
 </head>
 
 <body>
@@ -1002,6 +807,17 @@
         </div>
     </div>
 
+    <!-- WhatsApp Widget -->
+    <div class="whatsapp-widget" id="whatsappWidget">
+        <div class="whatsapp-button" onclick="openWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-text">Yardım</span>
+        </div>
+        <div class="whatsapp-tooltip">
+            Merhaba! Size nasıl yardımcı olabilirim? 💬
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1063,12 +879,29 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Inline JavaScript (Restored from original) -->
+
     <script>
+        // WhatsApp Widget Function
+        function openWhatsApp() {
+            const phoneNumber = '905349334631';
+            const message = 'Merhaba! Kişisel QR sistemi hakkında bilgi almak istiyorum. Yardımcı olabilir misiniz?';
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            // Analytics tracking (isteğe bağlı)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'whatsapp_widget_click', {
+                    'event_category': 'engagement',
+                    'event_label': 'help_request'
+                });
+            }
+            
+            // WhatsApp'ı yeni sekmede aç
+            window.open(whatsappUrl, '_blank');
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -1084,13 +917,106 @@
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
             } else {
-                navbar.classList.remove('scrolled');
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
             }
         });
 
-        // Contact form submission
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+                const increment = target / 100;
+                let current = 0;
+
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        if (counter.textContent.includes('%')) {
+                            counter.textContent = Math.ceil(current) + '%';
+                        } else if (counter.textContent.includes('+')) {
+                            counter.textContent = Math.ceil(current) + '+';
+                        } else {
+                            counter.textContent = Math.ceil(current);
+                        }
+                        setTimeout(updateCounter, 50);
+                    } else {
+                        counter.textContent = counter.textContent; // Reset to original
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-on-scroll');
+
+                    // Trigger counter animation when stats section is visible
+                    if (entry.target.classList.contains('stats')) {
+                        animateCounters();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animation
+        document.querySelectorAll('section, .feature-card, .testimonial-card, .pricing-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // WhatsApp button click tracking and fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            // WhatsApp Widget Modal Control
+            const whatsappWidget = document.getElementById('whatsappWidget');
+            const orderModal = document.getElementById('orderModal');
+            
+            // Modal açıldığında widget'ı gizle
+            if (orderModal) {
+                orderModal.addEventListener('show.bs.modal', function() {
+                    if (whatsappWidget) {
+                        whatsappWidget.style.display = 'none';
+                    }
+                });
+                
+                // Modal kapandığında widget'ı göster
+                orderModal.addEventListener('hidden.bs.modal', function() {
+                    if (whatsappWidget) {
+                        whatsappWidget.style.display = 'block';
+                    }
+                });
+            }
+
+            // WhatsApp buttons event listeners
+            document.querySelectorAll('[href*="wa.me"]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Analytics tracking can be added here
+                    console.log('WhatsApp button clicked:', this.href);
+                });
+            });
+
+            // Special handling for order WhatsApp link
+            const whatsappLink = document.getElementById('whatsappLink');
+            if (whatsappLink) {
+                whatsappLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    generateWhatsAppMessage();
+                });
+            }
+        });
+
+        // Form submission handling (if needed)
         function handleFormSubmit(event) {
             event.preventDefault();
             // Handle form submission
@@ -1272,8 +1198,8 @@
                     let message = `🏷️ *QR Sticker Siparişi* (#${result.order_id})\n\n`;
                     message += `👤 *Ad Soyad:* ${customerName}\n`;
                     message += `📱 *Telefon:* ${customerPhone}\n`;
-                    message += `\n📦 *Teslimat Bilgileri:*\n`;
-                    message += `📍 *Adres:* ${fullAddress}\n`;
+                    message += `\n� *Teslimat Bilgileri:*\n`;
+                    message += `�📍 *Adres:* ${fullAddress}\n`;
                     message += `👨‍💼 *Alıcı:* ${deliveryData.name}\n`;
                     message += `📞 *Alıcı Tel:* ${deliveryData.phone}\n`;
                     if (customerBio) message += `📝 *Bio:* ${customerBio}\n`;
@@ -1365,8 +1291,8 @@
             message += `👤 *Ad Soyad:* ${customerName}\n`;
             message += `📱 *Telefon:* ${customerPhone}\n`;
             if (fullAddress) {
-                message += `\n📦 *Teslimat Bilgileri:*\n`;
-                message += `📍 *Adres:* ${fullAddress}\n`;
+                message += `\n� *Teslimat Bilgileri:*\n`;
+                message += `�📍 *Adres:* ${fullAddress}\n`;
                 if (deliveryData.name) message += `👨‍💼 *Alıcı:* ${deliveryData.name}\n`;
                 if (deliveryData.phone) message += `📞 *Alıcı Tel:* ${deliveryData.phone}\n`;
             }
