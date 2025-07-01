@@ -383,12 +383,14 @@ if ($result) {
                                         <td><?php echo date('d.m.Y H:i', strtotime($profile['updated_at'])); ?></td>
                                         <td>
                                             <?php
-                                            // İlgili QR kodlarını getir
-                                            $qrQuery = "SELECT id, created_at FROM qr_codes WHERE profile_id = ?";
-                                            $qrStmt = $connection->prepare($qrQuery);
-                                            $qrStmt->bind_param("i", $profile['id']);
-                                            $qrStmt->execute();
-                                            $qrResult = $qrStmt->get_result();
+                                            // QR Pool'dan profil için atanmış QR kodlarını getir
+                                            $qrPoolQuery = "SELECT pool_id, qr_code_id, edit_token, edit_code, status, created_at, assigned_at 
+                                                          FROM qr_pool WHERE profile_id = ? AND status IN ('assigned', 'delivered') 
+                                                          ORDER BY assigned_at DESC";
+                                            $qrPoolStmt = $connection->prepare($qrPoolQuery);
+                                            $qrPoolStmt->bind_param("i", $profile['id']);
+                                            $qrPoolStmt->execute();
+                                            $qrPoolResult = $qrPoolStmt->get_result();
                                             ?>
                                             <button class="btn btn-sm btn-primary" onclick="editProfile(<?php echo $profile['id']; ?>)">
                                                 <i class="fas fa-edit"></i>
@@ -422,19 +424,47 @@ if ($result) {
                                                     <i class="fas fa-qrcode"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
+                                                    <?php 
+                                                    $qrPoolResult->data_seek(0); // Reset pointer
+                                                    $hasAssignedQR = false;
+                                                    while ($qrPool = $qrPoolResult->fetch_assoc()): 
+                                                        $hasAssignedQR = true;
+                                                    ?>
+                                                    <li class="dropdown-header">
+                                                        <small class="text-muted">Atanmış QR: <?= htmlspecialchars($qrPool['pool_id']) ?></small>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="<?= getBasePath() ?>/public/qr_codes/<?php echo $qrPool['qr_code_id']; ?>.png" download>
+                                                        <i class="fas fa-download"></i> QR İndir (<?= htmlspecialchars($qrPool['pool_id']) ?>)
+                                                    </a></li>
+                                                    <li><a class="dropdown-item" href="<?= getBasePath() ?>/profile.php?qr_id=<?= htmlspecialchars($qrPool['qr_code_id']) ?>" target="_blank">
+                                                        <i class="fas fa-external-link-alt"></i> QR ile Profili Aç
+                                                    </a></li>
+                                                    <li><a class="dropdown-item" href="<?= getBasePath() ?>/edit/<?= htmlspecialchars($qrPool['edit_token']) ?>" target="_blank">
+                                                        <i class="fas fa-edit"></i> Edit Sayfası
+                                                    </a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li class="px-3">
+                                                        <small class="text-muted">
+                                                            <strong>Edit Kodu:</strong> <?= htmlspecialchars($qrPool['edit_code']) ?><br>
+                                                            <strong>Status:</strong> 
+                                                            <span class="badge bg-<?= $qrPool['status'] === 'assigned' ? 'warning' : 'success' ?>">
+                                                                <?= ucfirst($qrPool['status']) ?>
+                                                            </span><br>
+                                                            <strong>Atanma:</strong> <?= date('d.m.Y H:i', strtotime($qrPool['assigned_at'])) ?>
+                                                        </small>
+                                                    </li>
+                                                    <?php endwhile; ?>
+                                                    
+                                                    <?php if (!$hasAssignedQR): ?>
                                                     <li><a class="dropdown-item" href="#" onclick="createQRForProfile(<?php echo $profile['id']; ?>)">
                                                         <i class="fas fa-plus"></i> Yeni QR Oluştur
                                                     </a></li>
-                                                    <?php while ($qr = $qrResult->fetch_assoc()): ?>
-                                                    <li class="d-flex align-items-center justify-content-between px-2">
-                                                        <a class="dropdown-item flex-grow-1" href="<?= getBasePath() ?>/public/qr_codes/<?php echo $qr['id']; ?>.png" download>
-                                                            <i class="fas fa-download"></i> QR #<?php echo substr($qr['id'], 0, 8); ?>
-                                                        </a>
-                                                        <span class="text-muted small ms-2">Oluşturulma: <?php echo date('d.m.Y H:i', strtotime($qr['created_at'])); ?></span>
-                                                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . getBasePath() . '/public/qr_codes/' . $qr['id']; ?>.png')" title="Kopyala"><i class="fas fa-copy"></i></button>
-                                                        <button class="btn btn-sm btn-danger ms-2" onclick="deleteQR('<?php echo $qr['id']; ?>', <?php echo $profile['id']; ?>)"><i class="fas fa-trash"></i></button>
-                                                    </li>
-                                                    <?php endwhile; ?>
+                                                    <?php else: ?>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item text-primary" href="#" onclick="createQRForProfile(<?php echo $profile['id']; ?>)">
+                                                        <i class="fas fa-plus"></i> Ek QR Oluştur
+                                                    </a></li>
+                                                    <?php endif; ?>
                                                 </ul>
                                             </div>
                                         </td>
