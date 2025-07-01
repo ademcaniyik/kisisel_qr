@@ -168,7 +168,7 @@ class OrderManager {
         $shipping_address = isset($data['shipping_address']) ? $data['shipping_address'] : '';
         
         $stmt->bind_param(
-            "sssssiissi",
+            "sssssidssi",
             $data['customer_name'],
             $data['customer_phone'],
             $data['customer_email'],
