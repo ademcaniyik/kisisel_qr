@@ -238,6 +238,21 @@
         .toast-warning .toast-content i {
             color: #ffc107;
         }
+
+        /* Loading button styles */
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     
     <!-- WhatsApp Widget (Modüler) -->

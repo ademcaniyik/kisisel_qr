@@ -77,6 +77,17 @@ function prevStep() {
 }
 
 async function completeOrder() {
+    // Butonu kontrol et ve devre dışı bırak
+    const completeOrderBtn = document.getElementById('completeOrderBtn');
+    if (completeOrderBtn.disabled) {
+        return; // Zaten tıklanmış, işlemi durdur
+    }
+    
+    // Butonu devre dışı bırak
+    completeOrderBtn.disabled = true;
+    const originalText = completeOrderBtn.innerHTML;
+    completeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Siparişiniz Oluşturuluyor...';
+    
     try {
         // Prepare form data for file upload
         const formData = new FormData();
@@ -218,11 +229,19 @@ async function completeOrder() {
         } else {
             console.error('Sipariş kaydedilirken hata:', result.message);
             alert('Sipariş kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.');
+            
+            // Hata durumunda butonu tekrar aktif hale getir
+            completeOrderBtn.disabled = false;
+            completeOrderBtn.innerHTML = originalText;
         }
 
     } catch (error) {
         console.error('Sipariş işlemi sırasında hata:', error);
         alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        
+        // Hata durumunda butonu tekrar aktif hale getir
+        completeOrderBtn.disabled = false;
+        completeOrderBtn.innerHTML = originalText;
     }
 }
 
