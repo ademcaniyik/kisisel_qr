@@ -150,6 +150,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? ($profile['name'] ?? '');
             log_edit_error('updateProfile çağrısı: $profileId=' . $profileId . ', $name=' . $name . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $socialLinks=' . json_encode($socialLinks) . ', $photoUrl=' . $photoUrl . ', $photoData=' . $photoData);
             try {
+                // ProfileID kontrolü
+                log_edit_error('ProfileID kontrol: ' . $profileId);
+                $checkProfile = $profileManager->getProfile($profileId);
+                log_edit_error('Profil mevcut mu: ' . ($checkProfile ? 'Evet' : 'Hayır'));
+                if ($checkProfile) {
+                    log_edit_error('Mevcut profil detayları: ' . json_encode($checkProfile));
+                }
+                
                 $updateResult = $profileManager->updateProfile($profileId, $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
                 log_edit_error('updateProfile sonucu: ' . var_export($updateResult, true));
             } catch (Exception $e) {

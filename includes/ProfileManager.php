@@ -405,7 +405,12 @@ class ProfileManager {
      */
     public function updateProfile($profileId, $name, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null, $socialLinks = null, $photoUrl = null, $photoData = null) {
         try {
+            error_log("[DEBUG] UpdateProfile başladı - ProfileID: " . $profileId);
+            error_log("[DEBUG] Gelen Veriler: name=$name, phone=$phone, bio=$bio, iban=$iban, blood_type=$blood_type, theme=$theme");
+            
             $sql = "UPDATE profiles SET name = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ?, photo_url = ?, photo_data = ? WHERE id = ?";
+            error_log("[DEBUG] SQL: " . $sql);
+            
             $stmt = $this->connection->prepare($sql);
             
             if (!$stmt) {
@@ -416,12 +421,19 @@ class ProfileManager {
             
             $stmt->bind_param("sssssssssi", $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $photoUrl, $photoData, $profileId);
             
-            if (!$stmt->execute()) {
+            $executeResult = $stmt->execute();
+            error_log("[DEBUG] Execute sonucu: " . ($executeResult ? "Başarılı" : "Başarısız"));
+            error_log("[DEBUG] MySQL Error: " . $stmt->error);
+            error_log("[DEBUG] MySQL Errno: " . $stmt->errno);
+            
+            if (!$executeResult) {
                 throw new Exception("Güncelleme hatası: " . $stmt->error);
             }
 
+            error_log("[DEBUG] Etkilenen kayıt sayısı: " . $stmt->affected_rows);
             if ($stmt->affected_rows === 0) {
                 // Kayıt bulunamadı veya değişiklik yapılmadı
+                error_log("[DEBUG] Kayıt güncellenmedi: ID=" . $profileId);
                 $stmt->close();
                 return false;
             }
