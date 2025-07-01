@@ -289,7 +289,7 @@ if (!$theme) {
     <meta property="og:description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti ve iletişim bilgileri.">
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>">
-    <?php if (!empty($profile['photo_url']) && empty($profile['photo_hidden'])): ?>
+    <?php if (!empty($profile['photo_url']) && !$profile['photo_hidden']): ?>
         <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr<?php echo htmlspecialchars($profile['photo_url']); ?>">
     <?php else: ?>
         <meta property="og:image" content="https://acdisoftware.com.tr/kisisel_qr/assets/images/default-profile.jpg">
@@ -307,7 +307,7 @@ if (!$theme) {
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<?php echo htmlspecialchars($profile['name']); ?> - Kişisel QR Profil">
     <meta name="twitter:description" content="<?php echo htmlspecialchars($profile['name']); ?> adlı kişinin dijital kartviziti ve iletişim bilgileri.">
-    <?php if (!empty($profile['photo_url']) && empty($profile['photo_hidden'])): ?>
+    <?php if (!empty($profile['photo_url']) && !$profile['photo_hidden']): ?>
         <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/<?php echo htmlspecialchars($profile['photo_url'] ?? ''); ?>">
     <?php else: ?>
         <meta name="twitter:image" content="https://yourdomain.com/kisisel_qr/assets/images/default-profile.jpg">
@@ -332,7 +332,7 @@ if (!$theme) {
             "name": "<?php echo addslashes(htmlspecialchars($profile['name'])); ?>",
             "description": "<?php echo addslashes(htmlspecialchars(substr(strip_tags($profile['bio']), 0, 200))); ?>",
             "url": "https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>",
-            <?php if (!empty($profile['photo_url']) && empty($profile['photo_hidden'])): ?> "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
+            <?php if (!empty($profile['photo_url']) && !$profile['photo_hidden']): ?> "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
             <?php endif; ?>
             <?php if (!empty($profile['phone'])): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
             <?php endif; ?>
@@ -415,8 +415,13 @@ if (!$theme) {
 <body class="theme-<?php echo htmlspecialchars(getThemeClass($profile['theme'] ?? 'default')); ?>" data-button-style="<?php echo htmlspecialchars($profile['button_style'] ?? 'default'); ?>">
     <div class="profile-container">
         <div class="profile-header">
-            <?php if (isset($profile['photo_url']) && $profile['photo_url'] && empty($profile['photo_hidden'])): ?>
+            <?php if (isset($profile['photo_url']) && $profile['photo_url'] && !$profile['photo_hidden']): ?>
                 <?php
+                // DEBUG: Fotoğraf verilerini kontrol et
+                echo "<!-- DEBUG: photo_url: " . htmlspecialchars($profile['photo_url']) . " -->";
+                echo "<!-- DEBUG: photo_data: " . htmlspecialchars($profile['photo_data'] ?? 'NULL') . " -->";
+                echo "<!-- DEBUG: photo_hidden: " . htmlspecialchars($profile['photo_hidden']) . " -->";
+                
                 // Modern responsive image display with WebP support
                 if (!empty($profile['photo_data'])) {
                     // Use optimized images if available
