@@ -1564,6 +1564,23 @@
             selectedSocialMedias.push(socialMediaItem);
             renderSocialMediaItem(socialMediaItem, selectedSocialMedias.length - 1);
             updatePlatformButton(platformKey, true);
+            
+            // Eklenen sosyal medya input'una scroll yap
+            setTimeout(() => {
+                const newItem = document.querySelector('.social-media-item:last-child');
+                if (newItem) {
+                    newItem.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    
+                    // Input alanına fokus ver
+                    const input = newItem.querySelector('.social-username-input');
+                    if (input) {
+                        input.focus();
+                    }
+                }
+            }, 100);
         }
 
         function renderSocialMediaItem(item, index) {

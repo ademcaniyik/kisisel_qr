@@ -33,8 +33,13 @@ class ProfileManager {
             
             // Fotoğraf işleme
             $photoData = null;
+            $photoUrl = null;
             if (isset($orderData['photo_file']) && $orderData['photo_file']['error'] === UPLOAD_ERR_OK) {
                 $photoData = $this->processUploadedPhoto($orderData['photo_file']);
+                // photo_url'yi de oluştur
+                if ($photoData && isset($photoData['filename'])) {
+                    $photoUrl = '/public/uploads/profiles/' . $photoData['filename'];
+                }
             }
             
             // Profil verileri hazırla
@@ -47,6 +52,7 @@ class ProfileManager {
                 'iban' => $this->extractIbanFromOrder($orderData),
                 'blood_type' => $this->extractBloodTypeFromOrder($orderData),
                 'social_links' => json_encode($socialLinks, JSON_UNESCAPED_UNICODE),
+                'photo_url' => $photoUrl,
                 'photo_data' => $photoData ? json_encode($photoData, JSON_UNESCAPED_UNICODE) : null
             ];
             
@@ -93,7 +99,7 @@ class ProfileManager {
      * Profil oluştur
      */
     private function createProfile($data) {
-        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, iban, blood_type, social_links, photo_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO profiles (name, bio, phone, theme, slug, iban, blood_type, social_links, photo_url, photo_data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connection->prepare($sql);
         
         if (!$stmt) {
@@ -101,7 +107,7 @@ class ProfileManager {
         }
         
         $stmt->bind_param(
-            "sssssssss",
+            "ssssssssss",
             $data['name'],
             $data['bio'],
             $data['phone'],
@@ -110,6 +116,7 @@ class ProfileManager {
             $data['iban'],
             $data['blood_type'],
             $data['social_links'],
+            $data['photo_url'],
             $data['photo_data']
         );
         
