@@ -155,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (Exception $e) {
                 log_edit_error('updateProfile Exception: ' . $e->getMessage());
                 $updateResult = false;
+                $errorMessage = $e->getMessage();
             }
             ob_end_clean();
             if ($updateResult) {
@@ -163,7 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             } else {
                 log_edit_error('updateProfile false döndü. $profileId=' . $profileId . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $photoUrl=' . $photoUrl);
-                echo '<div class="alert alert-danger">Profil güncellenemedi. updateProfile false döndü.</div>';
+                $errorDetails = isset($errorMessage) ? ': ' . htmlspecialchars($errorMessage) : ' (Detay mevcut değil)';
+                echo '<div class="alert alert-danger">Profil güncellenemedi' . $errorDetails . '</div>';
             }
         } catch (Exception $ex) {
             ob_end_clean();

@@ -404,13 +404,36 @@ class ProfileManager {
      * Profil güncelle (temel bilgiler + sosyal medya + fotoğraf)
      */
     public function updateProfile($profileId, $name, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null, $socialLinks = null, $photoUrl = null, $photoData = null) {
-        $sql = "UPDATE profiles SET name = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ?, photo_url = ?, photo_data = ? WHERE id = ?";
-        $stmt = $this->connection->prepare($sql);
-        $socialLinksJson = is_array($socialLinks) ? json_encode($socialLinks, JSON_UNESCAPED_UNICODE) : $socialLinks;
-        $stmt->bind_param("sssssssssi", $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $photoUrl, $photoData, $profileId);
-        $stmt->execute();
-        $stmt->close();
-        return true;
+        try {
+            $sql = "UPDATE profiles SET name = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ?, photo_url = ?, photo_data = ? WHERE id = ?";
+            $stmt = $this->connection->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Prepare hatası: " . $this->connection->error);
+            }
+
+            $socialLinksJson = is_array($socialLinks) ? json_encode($socialLinks, JSON_UNESCAPED_UNICODE) : $socialLinks;
+            
+            $stmt->bind_param("sssssssssi", $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $photoUrl, $photoData, $profileId);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Güncelleme hatası: " . $stmt->error);
+            }
+
+            if ($stmt->affected_rows === 0) {
+                // Kayıt bulunamadı veya değişiklik yapılmadı
+                $stmt->close();
+                return false;
+            }
+
+            $stmt->close();
+            return true;
+
+        } catch (Exception $e) {
+            // Hata mesajını loglayabilirsiniz
+            error_log("Profil güncelleme hatası (ID: $profileId): " . $e->getMessage());
+            throw $e;
+        }
     }
 }
 ?>
