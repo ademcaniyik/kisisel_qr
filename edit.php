@@ -36,12 +36,13 @@ function getSanitizedPostData() {
         $data['social_links'] = [];
     } elseif (is_string($socialLinks)) {
         $decoded = json_decode($socialLinks, true);
-        $data['social_links'] = ($decoded === null) ? [] : $decoded;
-    } else {
+        $data['social_links'] = ($decoded === null) ? [] : $decoded;    } else {
         $data['social_links'] = is_array($socialLinks) ? $socialLinks : [];
     }
     
-
+    // Fotoğraf aksiyonu
+    $data['photo_action'] = trim(Utilities::sanitizeInput($_POST['photo_action'] ?? ''));
+    
     return $data;
 }
 
@@ -262,6 +263,47 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     .text-purple {
         color: #9146ff !important;
     }
+    
+    /* Profil fotoğrafı aksiyon butonları */
+    .profile-photo-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .photo-actions {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    
+    .profile-photo-container:hover .photo-actions {
+        opacity: 1;
+    }
+    
+    .photo-actions .btn {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .photo-controls .btn-group {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .photo-controls .btn {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    @media (max-width: 576px) {
+        .photo-controls .btn-group {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .photo-controls .btn {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
     </style>
     <div class="container py-5">
         <?php if ($alertMessage): ?>
@@ -335,11 +377,37 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                             <div class="mb-3">
                                 <label class="form-label">Profil Fotoğrafı</label>
                                 <div class="d-flex align-items-center gap-3">
-                                    <img src="<?= $photoUrl ?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" 
-                                         class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-                                    <input type="file" name="photo" id="editPhotoInput" accept="image/*" 
-                                           class="form-control" style="max-width:250px;">
+                                    <div class="profile-photo-container position-relative">
+                                        <img src="<?= $photoUrl ?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" 
+                                             class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+                                        <?php if ($photoUrl !== '/kisisel_qr/assets/images/default-profile.svg'): ?>
+                                        <div class="photo-actions position-absolute top-0 end-0">
+                                            <button type="button" class="btn btn-sm btn-danger rounded-circle p-1" 
+                                                    id="removePhotoBtn" title="Fotoğrafı Kaldır" style="width:24px;height:24px;">
+                                                <i class="fas fa-times" style="font-size:10px;"></i>
+                                            </button>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="photo-controls">
+                                        <input type="file" name="photo" id="editPhotoInput" accept="image/*" 
+                                               class="form-control mb-2" style="max-width:250px;">
+                                        <div class="btn-group btn-group-sm">
+                                            <?php if ($photoUrl !== '/kisisel_qr/assets/images/default-profile.svg'): ?>
+                                            <button type="button" class="btn btn-outline-danger" id="hidePhotoBtn">
+                                                <i class="fas fa-eye-slash me-1"></i>Gizle
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning" id="deletePhotoBtn">
+                                                <i class="fas fa-trash me-1"></i>Kaldır
+                                            </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
+                                <small class="form-text text-muted">JPG, PNG veya GIF formatında resim yükleyebilirsiniz (Max: 2MB)</small>
+                                
+                                <!-- Hidden input for photo actions -->
+                                <input type="hidden" name="photo_action" id="photoActionInput" value="">
                             </div>
                             
                             <div class="mb-3">
@@ -592,10 +660,79 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('profilePhotoPreview').src = e.target.result;
+                    // Yeni fotoğraf seçildiğinde butonları göster
+                    showPhotoActions();
                 };
                 reader.readAsDataURL(this.files[0]);
             }
         });
+        
+        // Fotoğraf gizleme butonu
+        document.getElementById('hidePhotoBtn')?.addEventListener('click', function() {
+            if (confirm('Profil fotoğrafınızı gizlemek istediğinize emin misiniz?')) {
+                document.getElementById('photoActionInput').value = 'hide';
+                document.getElementById('profilePhotoPreview').src = '/kisisel_qr/assets/images/default-profile.svg';
+                hidePhotoActions();
+                showSuccessMessage('Fotoğraf gizlendi. Değişiklikleri kaydetmeyi unutmayın!');
+            }
+        });
+        
+        // Fotoğraf silme butonu
+        document.getElementById('deletePhotoBtn')?.addEventListener('click', function() {
+            if (confirm('Profil fotoğrafınızı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                document.getElementById('photoActionInput').value = 'delete';
+                document.getElementById('profilePhotoPreview').src = '/kisisel_qr/assets/images/default-profile.svg';
+                hidePhotoActions();
+                showSuccessMessage('Fotoğraf silindi. Değişiklikleri kaydetmeyi unutmayın!');
+            }
+        });
+        
+        // Fotoğraf X butonu (köşedeki)
+        document.getElementById('removePhotoBtn')?.addEventListener('click', function() {
+            if (confirm('Profil fotoğrafınızı kaldırmak istediğinize emin misiniz?')) {
+                document.getElementById('photoActionInput').value = 'delete';
+                document.getElementById('profilePhotoPreview').src = '/kisisel_qr/assets/images/default-profile.svg';
+                hidePhotoActions();
+                showSuccessMessage('Fotoğraf kaldırıldı. Değişiklikleri kaydetmeyi unutmayın!');
+            }
+        });
+        
+        // Yardımcı fonksiyonlar
+        function showPhotoActions() {
+            const hideBtn = document.getElementById('hidePhotoBtn');
+            const deleteBtn = document.getElementById('deletePhotoBtn');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            if (hideBtn) hideBtn.style.display = 'inline-block';
+            if (deleteBtn) deleteBtn.style.display = 'inline-block';
+            if (removeBtn) removeBtn.style.display = 'block';
+        }
+        
+        function hidePhotoActions() {
+            const hideBtn = document.getElementById('hidePhotoBtn');
+            const deleteBtn = document.getElementById('deletePhotoBtn');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            if (hideBtn) hideBtn.style.display = 'none';
+            if (deleteBtn) deleteBtn.style.display = 'none';
+            if (removeBtn) removeBtn.style.display = 'none';
+        }
+        
+        function showSuccessMessage(message) {
+            // Basit alert yerine daha güzel bir bildirim sistemi kullanabilirsiniz
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show mt-2';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.profile-photo-container').parentNode.appendChild(alertDiv);
+            
+            // 3 saniye sonra otomatik kapat
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
 
         // Form değişikliklerini izle
         let formChanged = false;

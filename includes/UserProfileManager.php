@@ -180,6 +180,42 @@ class UserProfileManager {
                 }
             }
             
+            // Fotoğraf aksiyon işlemleri (gizle/sil)
+            if (!empty($data['photo_action'])) {
+                $this->log("Fotoğraf aksiyonu: " . $data['photo_action']);
+                
+                if ($data['photo_action'] === 'hide') {
+                    // Fotoğrafı gizle (URL'yi null yap ama dosyayı silme)
+                    $updateFields[] = "photo_url = ?";
+                    $params[] = null;
+                    $types .= "s";
+                    $this->log("Fotoğraf gizlendi");
+                    
+                } elseif ($data['photo_action'] === 'delete') {
+                    // Fotoğrafı kalıcı olarak sil
+                    if (!empty($profile['photo_data'])) {
+                        $oldPhotoData = json_decode($profile['photo_data'], true);
+                        if ($oldPhotoData && !empty($oldPhotoData['filename'])) {
+                            $this->log("Fotoğraf kalıcı olarak siliniyor: " . $oldPhotoData['filename']);
+                            $imageOptimizer = new ImageOptimizer();
+                            $deleteResult = $imageOptimizer->deleteImageFiles($oldPhotoData['filename']);
+                            $this->log("Silme sonucu:", $deleteResult);
+                        }
+                    }
+                    
+                    // Veritabanından da temizle
+                    $updateFields[] = "photo_url = ?";
+                    $params[] = null;
+                    $types .= "s";
+                    
+                    $updateFields[] = "photo_data = ?";
+                    $params[] = null;
+                    $types .= "s";
+                    
+                    $this->log("Fotoğraf kalıcı olarak silindi");
+                }
+            }
+            
             // Değişiklik yoksa çık
             if (empty($updateFields)) {
                 $this->log("Değişiklik tespit edilmedi");
