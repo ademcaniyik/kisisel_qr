@@ -1,13 +1,45 @@
 <?php
-// Profil Edit QR ile yönlendirme ve şifre kontrolü
+/**
+ * Profil Edit QR ile yönlendirme ve şifre kontrolü
+ * Optimize edilmiş versiyon - Mantık hataları düzeltildi
+ */
+
 define('ROOT', __DIR__);
 require_once ROOT . '/includes/QRPoolManager.php';
 require_once ROOT . '/includes/ProfileManager.php';
 require_once ROOT . '/includes/template_helpers.php';
 require_once ROOT . '/includes/utilities.php';
 
+// Error reporting (production'da kapatılmalı)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Sınıf örnekleri
 $qrPoolManager = new QRPoolManager();
 $profileManager = new ProfileManager();
+
+/**
+ * Loglama fonksiyonları
+ */
+function log_edit_error($msg) {
+    $logFile = __DIR__ . '/logs/edit_error_log.txt';
+    if (!is_dir(dirname($logFile))) {
+        mkdir(dirname($logFile), 0755, true);
+    }
+    $date = date('Y-m-d H:i:s');
+    $logMessage = "[$date] $msg\n";
+    error_log($logMessage);
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
+
+function log_edit_debug($msg, $data = null) {
+    $logMessage = $msg;
+    if ($data !== null) {
+        $logMessage .= "\nData: " . (is_scalar($data) ? $data : json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+    log_edit_error("[DEBUG] " . $logMessage);
+}
 
 /**
  * POST verilerini güvenli şekilde al ve sanitize et
@@ -29,33 +61,45 @@ function getSanitizedPostData() {
         $data['social_links'] = [];
     } elseif (is_string($socialLinks)) {
         $decoded = json_decode($socialLinks, true);
-        if ($decoded === null) {
-            error_log("[DEBUG] social_links JSON decode hatası: " . json_last_error_msg());
-            $data['social_links'] = [];
-        } else {
-            $data['social_links'] = $decoded;
-        }
+        $data['social_links'] = ($decoded === null) ? [] : $decoded;
     } else {
         $data['social_links'] = is_array($socialLinks) ? $socialLinks : [];
     }
     
-    // Debug log
-    error_log("[DEBUG] Sanitized POST data: " . json_encode($data));
-    
+    log_edit_debug('Sanitized POST data', $data);
     return $data;
 }
 
-// URL: /edit/{edit_token}
-$editToken = null;
-if (isset($_GET['token'])) {
-    $editToken = $_GET['token'];
-} else {
+/**
+ * Telefon numaralarını normalize et
+ */
+function normalizePhone($phone, $addCountryCode = false) {
+    $normalized = preg_replace('/\D+/', '', $phone);
+    if ($addCountryCode && !empty($normalized)) {
+        $normalized = '90' . $normalized;
+    }
+    return $normalized;
+}
+
+// Session başlat
+session_start();
+
+// CSRF token oluştur
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrfToken = $_SESSION['csrf_token'];
+
+// Edit token'ı al
+$editToken = $_GET['token'] ?? null;
+if (!$editToken) {
     $requestUri = $_SERVER['REQUEST_URI'];
-    if (preg_match('#/edit/([a-zA-Z0-9]+)#', $requestUri, $m)) {
-        $editToken = $m[1];
+    if (preg_match('#/edit/([a-zA-Z0-9]+)#', $requestUri, $matches)) {
+        $editToken = $matches[1];
     }
 }
 
+// Edit token kontrolü
 if (!$editToken) {
     http_response_code(404);
     echo '<h2>Geçersiz edit QR!</h2>';
@@ -82,137 +126,116 @@ if (!$qr['profile_id']) {
     exit;
 }
 
-session_start();
-// CSRF token oluştur (her oturumda bir kez)
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-$csrfToken = $_SESSION['csrf_token'];
-
-// Şifre kontrolü
-$showForm = true;
+// Değişkenler
 $editCode = $qr['edit_code'];
 $profileId = $qr['profile_id'];
+$showForm = true;
+$loginError = false;
+$loginErrorType = '';
 
-// DEBUG: Hata ayıklama için error reporting aç
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+// POST işlemleri
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    ob_start();
-    // Hata log fonksiyonu
-    function log_edit_error($msg) {
-        $logFile = __DIR__ . '/logs/edit_error_log.txt';
-        $date = date('Y-m-d H:i:s');
-        $logMessage = "[$date] $msg\n";
-        error_log($logMessage); // Aynı zamanda PHP error_log'a da yaz
-        file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
-    }
-    
-    // Debug log fonksiyonu - daha detaylı çıktı için
-    function log_edit_debug($msg, $data = null) {
-        $logMessage = $msg;
-        if ($data !== null) {
-            if (is_array($data) || is_object($data)) {
-                $logMessage .= "\nData: " . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-            } else {
-                $logMessage .= "\nData: " . $data;
-            }
-        }
-        log_edit_error("[DEBUG] " . $logMessage);
-    }
-    
-    // Her postta loga yaz (form post edildi mi?)
     log_edit_error('Form post edildi. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-    log_edit_debug('POST verileri:', $_POST);
-    log_edit_debug('SESSION verileri:', $_SESSION);
-    // CSRF token kontrolü (hem profil güncelleme hem şifre giriş için)
-    if ((isset($_POST['save_profile']) || isset($_POST['edit_code'])) && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? ''))) {
-        log_edit_error('CSRF token hatası. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-        ob_clean(); // Sadece mevcut tamponu temizle
+    log_edit_debug('POST verileri', $_POST);
+    
+    // CSRF token kontrolü
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $csrfToken) {
+        log_edit_error('CSRF token hatası');
+        http_response_code(403);
         echo '<p style="color:red">Güvenlik hatası: Geçersiz CSRF token.</p>';
         exit;
     }
-    $inputCode = $_POST['edit_code'] ?? '';
-    $inputPhone = $_POST['phone_check'] ?? '';
-    $profilePhone = $profileManager->getProfile($profileId)['phone'] ?? '';
-    $loginError = false;
-    $loginErrorType = '';
-    // Şifre ve telefon kontrolü
-    // Telefon numaralarını normalize et (sadece rakamlar)
-    $inputPhoneNorm = '90' . preg_replace('/\D+/', '', $inputPhone); // Başına 90 ekle
-    $profilePhoneNorm = preg_replace('/\D+/', '', $profilePhone);
-    if ($inputCode === $editCode && $inputPhoneNorm === $profilePhoneNorm) {
-        log_edit_error('Şifre ve telefon doğru, oturum açılıyor.');
-        session_regenerate_id(true); // Session fixation önlemi
-        $_SESSION['edit_auth_'.$editToken] = true; // Oturum doğrulamasını tekrar setle
-        ob_end_clean(); // Tüm tamponu temizle, hiçbir çıktı olmasın
-        // Pretty URL varsa tekrar ?token= ekleme
-        $redirectUrl = $_SERVER['REQUEST_URI'];
-        if (strpos($redirectUrl, '/edit/') !== false) {
-            $redirectUrl = preg_replace('/\?.*/', '', $redirectUrl); // varsa query string'i temizle
-        } else {
-            $redirectUrl = '/kisisel_qr/edit/' . urlencode($editToken);
+    
+    // Giriş işlemi
+    if (isset($_POST['edit_code']) && isset($_POST['phone_check'])) {
+        $inputCode = trim($_POST['edit_code']);
+        $inputPhone = trim($_POST['phone_check']);
+        
+        // Profil bilgilerini al
+        $profile = $profileManager->getProfile($profileId);
+        if (!$profile) {
+            echo '<h2>Profil bulunamadı.</h2>';
+            exit;
         }
-        header('Location: ' . $redirectUrl);
-        exit;
+        
+        // Telefon numaralarını normalize et
+        $inputPhoneNorm = normalizePhone($inputPhone, true);
+        $profilePhoneNorm = normalizePhone($profile['phone']);
+        
+        log_edit_debug('Giriş denemesi', [
+            'input_code' => $inputCode,
+            'expected_code' => $editCode,
+            'input_phone_norm' => $inputPhoneNorm,
+            'profile_phone_norm' => $profilePhoneNorm
+        ]);
+        
+        // Doğrulama
+        $codeValid = ($inputCode === $editCode);
+        $phoneValid = ($inputPhoneNorm === $profilePhoneNorm);
+        
+        if ($codeValid && $phoneValid) {
+            log_edit_error('Şifre ve telefon doğru, oturum açılıyor');
+            session_regenerate_id(true);
+            $_SESSION['edit_auth_' . $editToken] = true;
+            
+            // Redirect
+            $redirectUrl = '/kisisel_qr/edit/' . urlencode($editToken);
+            header('Location: ' . $redirectUrl);
+            exit;
+        } else {
+            log_edit_error('Giriş başarısız');
+            $loginError = true;
+            if (!$codeValid && !$phoneValid) {
+                $loginErrorType = 'both';
+            } elseif (!$codeValid) {
+                $loginErrorType = 'code';
+            } else {
+                $loginErrorType = 'phone';
+            }
+        }
     }
     
-    if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
-        log_edit_error('Profil güncelleme branchine girildi. profileId=' . $profileId);
+    // Profil güncelleme işlemi
+    if (isset($_POST['save_profile'])) {
+        if (!($_SESSION['edit_auth_' . $editToken] ?? false)) {
+            log_edit_error('Oturum doğrulaması başarısız');
+            echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
+            unset($_SESSION['edit_auth_' . $editToken]);
+            exit;
+        }
+        
+        log_edit_error('Profil güncelleme başlıyor. ProfileId: ' . $profileId);
+        
         try {
-            $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
-            log_edit_debug('Mevcut profil detayları:', [
-                'id' => $profileId,
-                'profile' => $profile,
-                'session' => $_SESSION,
-                'post_data' => $_POST
-            ]);
+            // Mevcut profil bilgilerini al
+            $profile = $profileManager->getProfile($profileId);
             if (!$profile) {
-                log_edit_error('HATA: profileId=' . $profileId . ' ile profil bulunamadı, updateProfile çağrılmayacak!');
-                echo '<div class="alert alert-danger">Profil bulunamadı, güncelleme yapılamadı. Lütfen yöneticinizle iletişime geçin.</div>';
-                return;
+                throw new Exception('Profil bulunamadı');
             }
-
-            // Güvenli veri işleme
+            
+            // POST verilerini sanitize et
             $postData = getSanitizedPostData();
-            log_edit_debug('Sanitize edilmiş POST verileri:', $postData);
             
-            // Telefon numarasını ülke kodu ile birleştir
+            // Telefon numarasını işle
             $countryCode = Utilities::sanitizeInput($_POST['country_code'] ?? '+90');
-            $phone = $countryCode . preg_replace('/\D+/', '', $postData['phone']);
+            $phone = $countryCode . $postData['phone'];
             
-            log_edit_debug('İşlenen telefon numarası:', [
-                'country_code' => $countryCode,
+            // Güncellenecek verileri hazırla
+            $updateData = [
+                'name' => $postData['name'] ?: $profile['name'],
                 'phone' => $phone,
-                'raw_phone' => $postData['phone']
-            ]);
-            // Mevcut verileri güvenli şekilde al ve değişiklik olup olmadığını kontrol et
-            $name = $postData['name'] ?: $profile['name'];
-            $bio = $postData['bio'] !== $profile['bio'] ? $postData['bio'] : $profile['bio'];
-            $iban = $postData['iban'] !== $profile['iban'] ? $postData['iban'] : $profile['iban'];
-            $blood_type = $postData['blood_type'] !== $profile['blood_type'] ? $postData['blood_type'] : $profile['blood_type'];
-            $theme = $postData['theme'] !== $profile['theme'] ? $postData['theme'] : $profile['theme'];
+                'bio' => $postData['bio'],
+                'iban' => $postData['iban'],
+                'blood_type' => $postData['blood_type'],
+                'theme' => $postData['theme'],
+                'social_links' => $postData['social_links']
+            ];
             
-            // Social links özel işleme
-            $socialLinks = [];
-            if (!empty($postData['social_links'])) {
-                $socialLinks = $postData['social_links'];
-            } elseif (!empty($profile['social_links'])) {
-                // Mevcut social links'i koru
-                $existingLinks = json_decode($profile['social_links'], true);
-                if (is_array($existingLinks)) {
-                    $socialLinks = $existingLinks;
-                }
-            }
-
             // Fotoğraf yükleme işlemi
             $photoUrl = $profile['photo_url'] ?? null;
             $photoData = $profile['photo_data'] ?? null;
             
             if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-                require_once ROOT . '/includes/ImageOptimizer.php';
                 try {
                     $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
                     if ($photoDataArr && isset($photoDataArr['filename'])) {
@@ -223,133 +246,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     log_edit_error('Fotoğraf yükleme hatası: ' . $e->getMessage());
                 }
             }
-
-            // Değişiklikleri logla
-            log_edit_error('updateProfile çağrısı başlıyor - Veriler:');
-            log_edit_error('- Temel bilgiler: name=' . $name . ', phone=' . $phone);
-            log_edit_error('- Bio ve tema: bio=' . $bio . ', theme=' . $theme);
-            log_edit_error('- Diğer: iban=' . $iban . ', blood_type=' . $blood_type);
-            log_edit_error('- Social links: ' . json_encode($socialLinks));
             
-            // Mevcut verilerle karşılaştır
-            log_edit_error('Mevcut profil verileri:');
-            log_edit_error('- Temel bilgiler: name=' . $profile['name'] . ', phone=' . $profile['phone']);
-            log_edit_error('- Bio ve tema: bio=' . $profile['bio'] . ', theme=' . $profile['theme']);
-            log_edit_error('- Diğer: iban=' . $profile['iban'] . ', blood_type=' . $profile['blood_type']);
-            log_edit_error('- Social links: ' . $profile['social_links']);
-
-            try {
-                // Değişiklikleri detaylı kontrol et
-                $changes = [];
-                if ($phone !== $profile['phone']) $changes['phone'] = ['old' => $profile['phone'], 'new' => $phone];
-                if ($bio !== $profile['bio']) $changes['bio'] = ['old' => $profile['bio'], 'new' => $bio];
-                if ($iban !== $profile['iban']) $changes['iban'] = ['old' => $profile['iban'], 'new' => $iban];
-                if ($blood_type !== $profile['blood_type']) $changes['blood_type'] = ['old' => $profile['blood_type'], 'new' => $blood_type];
-                if ($theme !== $profile['theme']) $changes['theme'] = ['old' => $profile['theme'], 'new' => $theme];
-                
-                // Social links karşılaştırması
-                $oldSocialLinks = is_string($profile['social_links']) ? json_decode($profile['social_links'], true) : [];
-                $oldSocialLinks = is_array($oldSocialLinks) ? $oldSocialLinks : [];
-                if (json_encode($socialLinks) !== json_encode($oldSocialLinks)) {
-                    $changes['social_links'] = ['old' => $oldSocialLinks, 'new' => $socialLinks];
+            // Değişiklikleri kontrol et
+            $hasChanges = false;
+            $changes = [];
+            
+            foreach ($updateData as $key => $value) {
+                if ($key === 'social_links') {
+                    $oldSocialLinks = json_decode($profile['social_links'] ?? '[]', true) ?: [];
+                    if (json_encode($value) !== json_encode($oldSocialLinks)) {
+                        $changes[$key] = ['old' => $oldSocialLinks, 'new' => $value];
+                        $hasChanges = true;
+                    }
+                } elseif (($profile[$key] ?? '') !== $value) {
+                    $changes[$key] = ['old' => $profile[$key] ?? '', 'new' => $value];
+                    $hasChanges = true;
                 }
-                
-                log_edit_debug('Tespit edilen değişiklikler:', $changes);
-                
-                if (empty($changes) && !isset($_FILES['photo'])) {
-                    log_edit_debug('Değişiklik tespit edilmedi, güncelleme yapılmayacak');
-                    ob_end_clean();
-                    echo '<div class="alert alert-info">Herhangi bir değişiklik yapılmadı.</div>';
-                    exit;
-                }
-
-                // Değişiklikleri uygula
-                log_edit_debug('Güncellenecek veriler:', [
-                    'profile_id' => $profileId,
-                    'name' => $name,
-                    'phone' => $phone,
-                    'bio' => $bio,
-                    'iban' => $iban,
-                    'blood_type' => $blood_type,
-                    'theme' => $theme,
-                    'social_links' => $socialLinks,
-                    'photo_url' => $photoUrl,
-                    'has_photo_data' => !empty($photoData)
-                ]);
-
+            }
+            
+            // Fotoğraf değişikliği kontrolü
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                $hasChanges = true;
+            }
+            
+            log_edit_debug('Tespit edilen değişiklikler', $changes);
+            
+            if (!$hasChanges) {
+                $_SESSION['profile_update_message'] = 'Herhangi bir değişiklik yapılmadı.';
+                $_SESSION['profile_update_type'] = 'info';
+            } else {
+                // Güncellemeyi yap
                 $updateResult = $profileManager->updateProfile(
-                    $profileId, $name, $phone, $bio, $iban, 
-                    $blood_type, $theme, $socialLinks, $photoUrl, $photoData
+                    $profileId,
+                    $updateData['name'],
+                    $updateData['phone'],
+                    $updateData['bio'],
+                    $updateData['iban'],
+                    $updateData['blood_type'],
+                    $updateData['theme'],
+                    $updateData['social_links'],
+                    $photoUrl,
+                    $photoData
                 );
                 
-                // updateProfile sonucunu ve güncel profil verilerini logla
-                log_edit_debug('updateProfile sonucu:', ['success' => $updateResult]);
-                $updatedProfile = $profileManager->getProfile($profileId);
-                log_edit_debug('Güncellenmiş profil:', $updatedProfile);
-                
                 if ($updateResult) {
+                    log_edit_error('Profil başarıyla güncellendi');
                     $_SESSION['profile_update_success'] = true;
                     $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi.';
-                    ob_clean(); // Sadece mevcut tamponu temizle
-                    header('Location: /kisisel_qr/edit/' . urlencode($editToken));
-                    exit;
+                    $_SESSION['profile_update_type'] = 'success';
+                } else {
+                    log_edit_error('Profil güncelleme başarısız');
+                    $_SESSION['profile_update_message'] = 'Profil güncellenemedi. Lütfen tekrar deneyiniz.';
+                    $_SESSION['profile_update_type'] = 'warning';
                 }
-                
-                log_edit_error('Profil güncelleme başarısız');
-                ob_clean(); // Sadece mevcut tamponu temizle
-                echo '<div class="alert alert-warning">Profil güncellenemedi. Lütfen tekrar deneyiniz.</div>';
-                
-            } catch (Exception $e) {
-                log_edit_error('Güncelleme hatası: ' . $e->getMessage());
-                ob_clean(); // Sadece mevcut tamponu temizle
-                echo '<div class="alert alert-danger">Profil güncellenirken bir hata oluştu: ' . htmlspecialchars($e->getMessage()) . '</div>';
             }
-        } catch (Exception $ex) {
-            log_edit_error('Exception: ' . $ex->getMessage());
-            ob_clean(); // Sadece mevcut tamponu temizle
-            echo '<div class="alert alert-danger">Bir hata oluştu: ' . htmlspecialchars($ex->getMessage()) . '</div>';
+            
+            // Redirect
+            header('Location: /kisisel_qr/edit/' . urlencode($editToken));
+            exit;
+            
+        } catch (Exception $e) {
+            log_edit_error('Güncelleme hatası: ' . $e->getMessage());
+            $_SESSION['profile_update_message'] = 'Profil güncellenirken bir hata oluştu: ' . $e->getMessage();
+            $_SESSION['profile_update_type'] = 'danger';
+            header('Location: /kisisel_qr/edit/' . urlencode($editToken));
+            exit;
         }
-    }
-    
-    if (isset($_POST['save_profile']) && !($_SESSION['edit_auth_'.$editToken] ?? false)) {
-        log_edit_error('Oturum doğrulaması başarısız branchine girildi.');
-        ob_end_clean();
-        echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
-        unset($_SESSION['edit_auth_'.$editToken]);
-    }
-    
-    if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
-        log_edit_error('Şifre veya telefon hatalı branchine girildi.');
-        if ($inputCode !== $editCode && $inputPhone !== $profilePhone) {
-            $loginError = true;
-            $loginErrorType = 'both';
-        } else if ($inputCode !== $editCode) {
-            $loginError = true;
-            $loginErrorType = 'code';
-        } else if ($inputPhone !== $profilePhone) {
-            $loginError = true;
-            $loginErrorType = 'phone';
-        }
-    }
-    // Profil güncelleme branchine hiç girilmediyse logla
-    if (isset($_POST['save_profile']) && !($_SESSION['edit_auth_'.$editToken] ?? false)) {
-        log_edit_error('save_profile var ama session edit_auth yok, güncelleme branchine girilmedi!');
     }
 }
 
-// Profil düzenleme ekranı sadece doğrulama varsa gösterilsin
-if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
+// Profil düzenleme ekranı - sadece oturum doğrulaması varsa
+if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     $profile = $profileManager->getProfile($profileId);
     if (!$profile) {
         echo '<h2>Profil bulunamadı.</h2>';
         exit;
     }
-    $showSuccess = false;
-    if (isset($_SESSION['profile_update_success']) && $_SESSION['profile_update_success']) {
-        $showSuccess = true;
-        unset($_SESSION['profile_update_success']);
+    
+    // Başarı/hata mesajları
+    $alertMessage = '';
+    $alertType = '';
+    
+    if (isset($_SESSION['profile_update_message'])) {
+        $alertMessage = $_SESSION['profile_update_message'];
+        $alertType = $_SESSION['profile_update_type'] ?? 'info';
+        unset($_SESSION['profile_update_message'], $_SESSION['profile_update_type'], $_SESSION['profile_update_success']);
     }
-    // Profil fotoğrafı önizlemesi için photo_data veya photo_url kullan
+    
+    // Profil fotoğrafı URL'sini hazırla
     $photoUrl = '/kisisel_qr/assets/images/default-profile.svg';
     if (!empty($profile['photo_data'])) {
         $photoDataArr = json_decode($profile['photo_data'], true);
@@ -362,21 +346,24 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
             $photoUrl = '/kisisel_qr/public/uploads/profiles/' . htmlspecialchars($photoUrl);
         }
     }
+    
     renderPageHeader('Profil Düzenle - Kişisel QR', ['/kisisel_qr/assets/css/profile-edit.css']);
     ?>
     <div class="container py-5">
-        <?php if ($showSuccess): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert" id="profileSuccessAlert">
-            <strong>Başarılı!</strong> Profiliniz başarıyla güncellendi.
+        <?php if ($alertMessage): ?>
+        <div class="alert alert-<?= $alertType ?> alert-dismissible fade show" role="alert" id="profileAlert">
+            <strong><?= $alertType === 'success' ? 'Başarılı!' : ($alertType === 'danger' ? 'Hata!' : 'Bilgi:') ?></strong> 
+            <?= htmlspecialchars($alertMessage) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <script>
         setTimeout(function(){
-            var alert = document.getElementById('profileSuccessAlert');
+            var alert = document.getElementById('profileAlert');
             if(alert) alert.classList.remove('show');
-        }, 3500);
+        }, 5000);
         </script>
         <?php endif; ?>
+        
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="card shadow-lg">
@@ -385,12 +372,14 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                     </div>
                     <div class="card-body">
                         <form id="editProfileForm" method="post" enctype="multipart/form-data" autocomplete="off">
-                            <input type="hidden" name="csrf_token" value="<?=$csrfToken?>">
-                            <input type="hidden" name="name" value="<?=htmlspecialchars($profile['name'])?>">
+                            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                            
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Soyad *</label>
-                                    <input type="text" class="form-control" name="name" value="<?=htmlspecialchars($profile['name'])?>" readonly style="background:#f5f5f5;cursor:not-allowed;">
+                                    <input type="text" class="form-control" name="name" 
+                                           value="<?= htmlspecialchars($profile['name']) ?>" 
+                                           readonly style="background:#f5f5f5;cursor:not-allowed;">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Telefon *</label>
@@ -399,84 +388,102 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                         $phoneRaw = $profile['phone'] ?? '';
                                         $countryCode = '+90';
                                         $phoneNumber = '';
-                                        if (preg_match('/^(\+\d{1,3})(\d{10,})$/', $phoneRaw, $m)) {
-                                            $countryCode = $m[1];
-                                            $phoneNumber = $m[2];
-                                        } elseif (preg_match('/^(\+\d{1,3})(.*)$/', $phoneRaw, $m)) {
-                                            $countryCode = $m[1];
-                                            $phoneNumber = trim($m[2]);
+                                        
+                                        if (preg_match('/^(\+\d{1,3})(\d{10,})$/', $phoneRaw, $matches)) {
+                                            $countryCode = $matches[1];
+                                            $phoneNumber = $matches[2];
                                         } elseif (preg_match('/^(\d{10,})$/', $phoneRaw)) {
-                                            $countryCode = '+90';
                                             $phoneNumber = $phoneRaw;
                                         }
                                         ?>
-                                        <select class="form-control country-dropdown me-2" name="country_code" id="editCountryCode" style="max-width:110px;">
-                                            <option value="+90" data-flag="🇹🇷" <?=($countryCode==='+90')?'selected':''?>>🇹🇷 +90</option>
-                                            <option value="+1" data-flag="🇺🇸" <?=($countryCode==='+1')?'selected':''?>>🇺🇸 +1</option>
-                                            <option value="+44" data-flag="🇬🇧" <?=($countryCode==='+44')?'selected':''?>>🇬🇧 +44</option>
-                                            <option value="+49" data-flag="🇩🇪" <?=($countryCode==='+49')?'selected':''?>>🇩🇪 +49</option>
-                                            <option value="+33" data-flag="🇫🇷" <?=($countryCode==='+33')?'selected':''?>>🇫🇷 +33</option>
-                                            <option value="+971" data-flag="🇦🇪" <?=($countryCode==='+971')?'selected':''?>>🇦🇪 +971</option>
-                                            <option value="+966" data-flag="🇸🇦" <?=($countryCode==='+966')?'selected':''?>>🇸🇦 +966</option>
-                                            <option value="+7" data-flag="🇷🇺" <?=($countryCode==='+7')?'selected':''?>>🇷🇺 +7</option>
-                                            <option value="+86" data-flag="🇨🇳" <?=($countryCode==='+86')?'selected':''?>>🇨🇳 +86</option>
-                                            <option value="+91" data-flag="🇮🇳" <?=($countryCode==='+91')?'selected':''?>>🇮🇳 +91</option>
+                                        <select class="form-control country-dropdown me-2" name="country_code" 
+                                                id="editCountryCode" style="max-width:110px;">
+                                            <option value="+90" <?= $countryCode === '+90' ? 'selected' : '' ?>>🇹🇷 +90</option>
+                                            <option value="+1" <?= $countryCode === '+1' ? 'selected' : '' ?>>🇺🇸 +1</option>
+                                            <option value="+44" <?= $countryCode === '+44' ? 'selected' : '' ?>>🇬🇧 +44</option>
+                                            <option value="+49" <?= $countryCode === '+49' ? 'selected' : '' ?>>🇩🇪 +49</option>
+                                            <option value="+33" <?= $countryCode === '+33' ? 'selected' : '' ?>>🇫🇷 +33</option>
+                                            <option value="+971" <?= $countryCode === '+971' ? 'selected' : '' ?>>🇦🇪 +971</option>
+                                            <option value="+966" <?= $countryCode === '+966' ? 'selected' : '' ?>>🇸🇦 +966</option>
+                                            <option value="+7" <?= $countryCode === '+7' ? 'selected' : '' ?>>🇷🇺 +7</option>
+                                            <option value="+86" <?= $countryCode === '+86' ? 'selected' : '' ?>>🇨🇳 +86</option>
+                                            <option value="+91" <?= $countryCode === '+91' ? 'selected' : '' ?>>🇮🇳 +91</option>
                                         </select>
-                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" title="Sadece rakam, 10-15 hane arası.">
+                                        <input type="tel" class="form-control phone-number-input" name="phone" 
+                                               id="editPhone" value="<?= htmlspecialchars($phoneNumber) ?>" 
+                                               required placeholder="555 555 55 55" maxlength="20">
                                     </div>
                                     <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                                 </div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Profil Fotoğrafı</label>
                                 <div class="d-flex align-items-center gap-3">
-                                    <img src="<?=$photoUrl?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
-                                    <input type="file" name="photo" id="editPhotoInput" accept="image/*" class="form-control" style="max-width:250px;">
+                                    <img src="<?= $photoUrl ?>" alt="Profil Fotoğrafı" id="profilePhotoPreview" 
+                                         class="profile-photo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">
+                                    <input type="file" name="photo" id="editPhotoInput" accept="image/*" 
+                                           class="form-control" style="max-width:250px;">
                                 </div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Kısa Yazı (Bio)</label>
-                                <textarea class="form-control" name="bio" rows="2" placeholder="Kendinizi tanıtın..."><?=htmlspecialchars($profile['bio'] ?? '')?></textarea>
+                                <textarea class="form-control" name="bio" rows="2" 
+                                          placeholder="Kendinizi tanıtın..."><?= htmlspecialchars($profile['bio'] ?? '') ?></textarea>
                             </div>
+                            
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">IBAN</label>
-                                    <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="24" pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$" title="TR ile başlayan 26 haneli IBAN.">
+                                    <input type="text" class="form-control" name="iban" 
+                                           value="<?= htmlspecialchars($profile['iban'] ?? '') ?>" 
+                                           placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="26">
                                     <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Kan Grubu</label>
                                     <select class="form-select" name="blood_type">
                                         <option value="">Seçiniz</option>
-                                        <option value="A+" <?=($profile['blood_type'] ?? '')==='A+'?'selected':''?>>A Rh+</option>
-                                        <option value="A-" <?=($profile['blood_type'] ?? '')==='A-'?'selected':''?>>A Rh-</option>
-                                        <option value="B+" <?=($profile['blood_type'] ?? '')==='B+'?'selected':''?>>B Rh+</option>
-                                        <option value="B-" <?=($profile['blood_type'] ?? '')==='B-'?'selected':''?>>B Rh-</option>
-                                        <option value="AB+" <?=($profile['blood_type'] ?? '')==='AB+'?'selected':''?>>AB Rh+</option>
-                                        <option value="AB-" <?=($profile['blood_type'] ?? '')==='AB-'?'selected':''?>>AB Rh-</option>
-                                        <option value="0+" <?=($profile['blood_type'] ?? '')==='0+'?'selected':''?>>0 Rh+</option>
-                                        <option value="0-" <?=($profile['blood_type'] ?? '')==='0-'?'selected':''?>>0 Rh-</option>
+                                        <?php
+                                        $bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'];
+                                        foreach ($bloodTypes as $type) {
+                                            $selected = ($profile['blood_type'] ?? '') === $type ? 'selected' : '';
+                                            echo "<option value=\"$type\" $selected>$type</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Tema Seçimi</label>
                                 <select class="form-select" name="theme" id="editTheme">
-                                    <option value="default" <?=($profile['theme'] ?? '')==='default'?'selected':''?>>Sade Temiz (Varsayılan)</option>
-                                    <option value="blue" <?=($profile['theme'] ?? '')==='blue'?'selected':''?>>Deniz Mavisi</option>
-                                    <option value="nature" <?=($profile['theme'] ?? '')==='nature'?'selected':''?>>Günbatımı Sıcak</option>
-                                    <option value="elegant" <?=($profile['theme'] ?? '')==='elegant'?'selected':''?>>Doğa Yeşil</option>
-                                    <option value="gold" <?=($profile['theme'] ?? '')==='gold'?'selected':''?>>Altın Lüks</option>
-                                    <option value="purple" <?=($profile['theme'] ?? '')==='purple'?'selected':''?>>Kraliyet Moru</option>
-                                    <option value="dark" <?=($profile['theme'] ?? '')==='dark'?'selected':''?>>Karanlık Siyah</option>
-                                    <option value="ocean" <?=($profile['theme'] ?? '')==='ocean'?'selected':''?>>Sakura Pembe</option>
-                                    <option value="minimal" <?=($profile['theme'] ?? '')==='minimal'?'selected':''?>>Şık Mor</option>
-                                    <option value="pastel" <?=($profile['theme'] ?? '')==='pastel'?'selected':''?>>Pastel Rüya</option>
-                                    <option value="retro" <?=($profile['theme'] ?? '')==='retro'?'selected':''?>>Retro Synthwave</option>
-                                    <option value="neon" <?=($profile['theme'] ?? '')==='neon'?'selected':''?>>Neon Siber</option>
+                                    <?php
+                                    $themes = [
+                                        'default' => 'Sade Temiz (Varsayılan)',
+                                        'blue' => 'Deniz Mavisi',
+                                        'nature' => 'Günbatımı Sıcak',
+                                        'elegant' => 'Doğa Yeşil',
+                                        'gold' => 'Altın Lüks',
+                                        'purple' => 'Kraliyet Moru',
+                                        'dark' => 'Karanlık Siyah',
+                                        'ocean' => 'Sakura Pembe',
+                                        'minimal' => 'Şık Mor',
+                                        'pastel' => 'Pastel Rüya',
+                                        'retro' => 'Retro Synthwave',
+                                        'neon' => 'Neon Siber'
+                                    ];
+                                    
+                                    foreach ($themes as $value => $label) {
+                                        $selected = ($profile['theme'] ?? 'default') === $value ? 'selected' : '';
+                                        echo "<option value=\"$value\" $selected>$label</option>";
+                                    }
+                                    ?>
                                 </select>
                                 <small class="form-text text-muted">Profilinizde kullanılacak görsel tema</small>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">Sosyal Medya Hesapları</label>
                                 <div class="card border-0 bg-light mb-3">
@@ -491,32 +498,84 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                 </div>
                                 <div id="socialLinksContainer"></div>
                             </div>
+                            
                             <input type="hidden" name="social_links" id="socialLinksInput">
-                            <button type="submit" name="save_profile" class="btn btn-primary w-100" style="font-size:1.1rem;" id="saveProfileBtn">Kaydet</button>
+                            <button type="submit" name="save_profile" class="btn btn-primary w-100" 
+                                    style="font-size:1.1rem;" id="saveProfileBtn">Kaydet</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
     <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Telefon input mask
-      var editPhone = document.getElementById('editPhone');
-      if(editPhone && window.IMask){
-        IMask(editPhone, { mask: '000 000 00 00' });
-      }
-      // Kaydet butonuna loading animasyonu
-      var editForm = document.getElementById('editProfileForm');
-      var saveBtn = document.getElementById('saveProfileBtn');
-      if(editForm && saveBtn){
-        editForm.addEventListener('submit', function(){
-          saveBtn.disabled = true;
-          saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Kaydediliyor...';
+        // Telefon input mask
+        var editPhone = document.getElementById('editPhone');
+        if(editPhone && window.IMask){
+            IMask(editPhone, { mask: '000 000 00 00' });
+        }
+        
+        // Form submit handling
+        var editForm = document.getElementById('editProfileForm');
+        var saveBtn = document.getElementById('saveProfileBtn');
+        if(editForm && saveBtn){
+            editForm.addEventListener('submit', function(){
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Kaydediliyor...';
+            });
+        }
+    });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // CSRF token'ı tüm AJAX istekleri için otomatik ekle
+        var csrfToken = '<?= $csrfToken ?>';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
         });
-      }
+
+        // Fotoğraf önizleme
+        document.getElementById('editPhotoInput')?.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePhotoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Form değişikliklerini izle
+        let formChanged = false;
+        const editForm = document.getElementById('editProfileForm');
+        
+        if (editForm) {
+            const formElements = editForm.querySelectorAll('input, select, textarea');
+            formElements.forEach(element => {
+                element.addEventListener('change', () => {
+                    formChanged = true;
+                });
+            });
+
+            // Sayfa yenileme veya kapatma öncesi uyarı
+            window.addEventListener('beforeunload', (e) => {
+                if (formChanged) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+
+            // Form gönderildiğinde uyarıyı devre dışı bırak
+            editForm.addEventListener('submit', () => {
+                formChanged = false;
+            });
+        }
     });
     </script>
     <?php
@@ -524,51 +583,69 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
     exit;
 }
 
-// Modern ve şık şifre giriş ekranı (This part is shown if session auth is false)
-if ($showForm) {
-    renderPageHeader('Profil Düzenleme Şifresi | Kişisel QR', ['/kisisel_qr/assets/css/landing.css']);
-    ?>
-    <div class="container">
-        <div class="card edit-pass-card">
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <i class="fas fa-lock fa-2x text-primary mb-2"></i>
-                    <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
-                    <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
-                </div>
-                <?php if (!empty($loginError)) {
-    if ($loginErrorType === 'both') {
-        echo '<div class="alert alert-danger">Şifre ve telefon numarası hatalı!</div>';
-    } else if ($loginErrorType === 'code') {
-        echo '<div class="alert alert-danger">Şifre hatalı!</div>';
-    } else if ($loginErrorType === 'phone') {
-        echo '<div class="alert alert-danger">Telefon numarası hatalı!</div>';
-    }
-} ?>
-                <form method="post" autocomplete="off">
-                    <input type="hidden" name="csrf_token" value="<?=$csrfToken?>">
-                    <div class="mb-3">
-                        <label class="form-label">Edit Şifresi</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            <input type="password" name="edit_code" id="editCodeInput" class="form-control" placeholder="Şifrenizi girin" required autofocus pattern="[A-Za-z0-9]{4,}" title="En az 4 karakter, harf ve rakam içerebilir.">
-                            <button type="button" class="btn btn-outline-secondary" tabindex="-1" id="toggleEditCode"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            <span class="input-group-text" style="min-width:48px;">+90</span>
-                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="13" required title="Sadece rakam, 10 hane (5xx xxx xx xx)" id="loginPhoneInput">
-                        </div>
-                        <small class="form-text text-muted">Telefon numaranızın başında +90 sabit, sadece numarayı giriniz.</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
-                </form>
+// Şifre giriş ekranı
+renderPageHeader('Profil Düzenleme Şifresi | Kişisel QR', ['/kisisel_qr/assets/css/landing.css']);
+?>
+<div class="container">
+    <div class="card edit-pass-card">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <i class="fas fa-lock fa-2x text-primary mb-2"></i>
+                <h4 class="fw-bold">Profil Düzenleme Şifresi</h4>
+                <p class="text-muted mb-0">Profil bilgilerini güncellemek için size verilen şifreyi giriniz.</p>
             </div>
+            
+            <?php if ($loginError): ?>
+                <div class="alert alert-danger">
+                    <?php
+                    switch ($loginErrorType) {
+                        case 'both':
+                            echo 'Şifre ve telefon numarası hatalı!';
+                            break;
+                        case 'code':
+                            echo 'Şifre hatalı!';
+                            break;
+                        case 'phone':
+                            echo 'Telefon numarası hatalı!';
+                            break;
+                    }
+                    ?>
+                </div>
+            <?php endif; ?>
+            
+            <form method="post" autocomplete="off">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                
+                <div class="mb-3">
+                    <label class="form-label">Edit Şifresi</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" name="edit_code" id="editCodeInput" class="form-control" 
+                               placeholder="Şifrenizi girin" required autofocus>
+                        <button type="button" class="btn btn-outline-secondary" tabindex="-1" id="toggleEditCode">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        <span class="input-group-text" style="min-width:48px;">+90</span>
+                        <input type="tel" name="phone_check" class="form-control" 
+                               placeholder="5xx xxx xx xx" maxlength="13" required id="loginPhoneInput">
+                    </div>
+                    <small class="form-text text-muted">Telefon numaranızın başında +90 sabit, sadece numarayı giriniz.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
+            </form>
         </div>
     </div>
+</div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -595,4 +672,3 @@ if ($showForm) {
     <?php
     renderPageFooter();
     exit; // Exit after showing the password form
-}
