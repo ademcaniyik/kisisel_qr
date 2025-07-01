@@ -380,13 +380,17 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                             <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                         </div>
                         <div class="col-12 mt-2">
-                            <div class="form-check">
+                            <div class="form-check privacy-option">
                                 <input class="form-check-input" type="checkbox" name="phone_hidden" id="phoneHiddenCheck" 
                                        value="1" <?= !empty($profile['phone_hidden']) ? 'checked' : '' ?>>
                                 <label class="form-check-label" for="phoneHiddenCheck">
+                                    <i class="fas fa-eye-slash me-1"></i>
                                     Telefon numaram profilimde görünmesin
                                 </label>
-                                <small class="form-text text-muted d-block">İşaretlediğinizde telefon numaranız sadece size görünür, ziyaretçiler göremez</small>
+                                <small class="form-text text-muted d-block">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    İşaretlediğinizde telefon numaranız sadece size görünür, ziyaretçiler göremez
+                                </small>
                             </div>
                         </div>
                     </div>

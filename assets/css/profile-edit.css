@@ -258,3 +258,35 @@
         .text-purple {
             color: #9146ff !important;
         }
+
+        /* Privacy Options Styling */
+        .privacy-option {
+            background: rgba(52, 152, 219, 0.05);
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .privacy-option:hover {
+            background: rgba(52, 152, 219, 0.08);
+            border-color: rgba(52, 152, 219, 0.2);
+        }
+
+        .privacy-option .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .privacy-option .form-check-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .privacy-option .form-check-label i {
+            color: var(--primary-color);
+        }
+
+        .privacy-option .form-text i {
+            color: #6c757d;
+        }

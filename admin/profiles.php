@@ -900,7 +900,7 @@ if ($result) {
                         </div>
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
-                        <p><strong>Telefon:</strong> <span id="view_phone"></span> <small id="view_phone_hidden" class="text-muted" style="display: none;">(Gizli)</small></p>
+                        <p><strong>Telefon:</strong> <span id="view_phone"></span> <small id="view_phone_hidden" class="badge bg-secondary ms-2" style="display: none;">Gizli</small></p>
                         
                         <!-- İban Bilgisi - Modern Kart Tasarımı -->
                         <div class="mb-4">
