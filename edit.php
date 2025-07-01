@@ -43,8 +43,17 @@ function getSanitizedPostData() {
     // Fotoğraf aksiyonu
     $data['photo_action'] = trim(Utilities::sanitizeInput($_POST['photo_action'] ?? ''));
     
-    // Telefon gizleme ayarı
-    $data['phone_hidden'] = isset($_POST['phone_hidden']) ? 1 : 0;
+    // Telefon gizleme ayarı - checkbox ve hidden input'tan alınan değerleri kontrol et
+    $phoneHiddenFromCheckbox = isset($_POST['phone_hidden']) ? 1 : 0;
+    $phoneHiddenFromState = isset($_POST['phone_hidden_state']) ? (int)$_POST['phone_hidden_state'] : 0;
+    
+    // Checkbox işaretliyse 1, değilse 0
+    $data['phone_hidden'] = $phoneHiddenFromCheckbox;
+    
+    // Debug log
+    error_log("DEBUG: phone_hidden checkbox: " . (isset($_POST['phone_hidden']) ? $_POST['phone_hidden'] : 'yok'));
+    error_log("DEBUG: phone_hidden_state: " . (isset($_POST['phone_hidden_state']) ? $_POST['phone_hidden_state'] : 'yok'));
+    error_log("DEBUG: phone_hidden final değeri: " . $data['phone_hidden']);
     
     return $data;
 }
@@ -387,6 +396,8 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                             <div class="form-check privacy-option">
                                 <input class="form-check-input" type="checkbox" name="phone_hidden" id="phoneHiddenCheck" 
                                        value="1" <?= !empty($profile['phone_hidden']) ? 'checked' : '' ?>>
+                                <input type="hidden" name="phone_hidden_state" id="phoneHiddenState" 
+                                       value="<?= !empty($profile['phone_hidden']) ? '1' : '0' ?>">
                                 <label class="form-check-label" for="phoneHiddenCheck">
                                     <i class="fas fa-eye-slash me-1"></i>
                                     Telefon numaram profilimde görünmesin
@@ -663,6 +674,10 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                 });
                 document.getElementById('socialLinksInput').value = JSON.stringify(socialLinks);
                 
+                // Debug: Telefon gizleme durumunu kontrol et
+                const phoneHiddenCheckbox = document.getElementById('phoneHiddenCheck');
+                console.log('Phone hidden checkbox checked:', phoneHiddenCheckbox ? phoneHiddenCheckbox.checked : 'Checkbox bulunamadı');
+                
                 // save_profile parametresini ekle (eğer yoksa)
                 if (!editForm.querySelector('input[name="save_profile"]')) {
                     const saveProfileInput = document.createElement('input');
@@ -825,15 +840,18 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     document.addEventListener('DOMContentLoaded', function() {
         // Telefon gizlilik checkbox'ı için dinamik metin
         var phoneHiddenCheck = document.getElementById('phoneHiddenCheck');
+        var phoneHiddenState = document.getElementById('phoneHiddenState');
         var phoneHiddenLabel = document.querySelector('label[for="phoneHiddenCheck"]');
         var phoneHiddenDesc = phoneHiddenLabel?.parentElement.querySelector('.form-text');
         function updatePhoneHiddenTexts() {
             if (phoneHiddenCheck.checked) {
                 phoneHiddenLabel.innerHTML = '<i class="fas fa-eye me-1"></i> Telefon numaram profilimde görüntülensin';
                 if (phoneHiddenDesc) phoneHiddenDesc.innerHTML = '<i class="fas fa-info-circle me-1"></i> Telefon numaranız profilinizde <b>gizli</b> olarak kaydedildi. Sadece siz ve yöneticiler görebilir.';
+                if (phoneHiddenState) phoneHiddenState.value = '1';
             } else {
                 phoneHiddenLabel.innerHTML = '<i class="fas fa-eye-slash me-1"></i> Telefon numaram profilimde görünmesin';
                 if (phoneHiddenDesc) phoneHiddenDesc.innerHTML = '<i class="fas fa-info-circle me-1"></i> İşaretlerseniz telefon numaranız sadece size görünür, ziyaretçiler göremez.';
+                if (phoneHiddenState) phoneHiddenState.value = '0';
             }
         }
         if (phoneHiddenCheck && phoneHiddenLabel) {

@@ -132,7 +132,10 @@ class UserProfileManager {
             }
             
             // Telefon numarası gizleme ayarı
-            $phoneHidden = isset($data['phone_hidden']) ? 1 : 0;
+            $phoneHidden = isset($data['phone_hidden']) ? (int)$data['phone_hidden'] : 0;
+            $this->log("DEBUG: Gelen phone_hidden değeri: " . (isset($data['phone_hidden']) ? $data['phone_hidden'] : 'yok'));
+            $this->log("DEBUG: Hesaplanan phoneHidden: " . $phoneHidden);
+            $this->log("DEBUG: Mevcut profile phone_hidden: " . $profile['phone_hidden']);
             if ($phoneHidden !== (int)$profile['phone_hidden']) {
                 $this->log("Telefon gizleme ayarı değişiyor: '{$profile['phone_hidden']}' -> '{$phoneHidden}'");
                 $updateFields[] = "phone_hidden = ?";
