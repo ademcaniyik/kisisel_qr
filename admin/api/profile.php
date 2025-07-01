@@ -386,7 +386,7 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Geçersiz profil ID']);
                 exit();
             }
-            $stmt = $connection->prepare("SELECT id, name, bio, phone, theme, photo_url, social_links, iban, blood_type FROM profiles WHERE id = ?");
+            $stmt = $connection->prepare("SELECT id, name, bio, phone, theme, photo_url, social_links, iban, blood_type, phone_hidden, photo_hidden FROM profiles WHERE id = ?");
             $stmt->bind_param("i", $profileId);
             $stmt->execute();
             $result = $stmt->get_result();

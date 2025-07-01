@@ -334,7 +334,7 @@ if (!$theme) {
             "url": "https://yourdomain.com/profile.php?<?php echo $qrId ? 'qr_id=' . $qrId : 'slug=' . $slug; ?>",
             <?php if (!empty($profile['photo_url']) && !$profile['photo_hidden']): ?> "image": "https://yourdomain.com/kisisel_qr/<?php echo addslashes(htmlspecialchars($profile['photo_url'] ?? '')); ?>",
             <?php endif; ?>
-            <?php if (!empty($profile['phone'])): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
+            <?php if (!empty($profile['phone']) && !$profile['phone_hidden']): ?> "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>",
             <?php endif; ?>
             <?php if (!empty($profile['email'])): ?> "email": "<?php echo addslashes(htmlspecialchars($profile['email'])); ?>",
             <?php endif; ?>
@@ -379,7 +379,7 @@ if (!$theme) {
             "contactPoint": {
                 "@type": "ContactPoint",
                 "contactType": "personal"
-                <?php if (!empty($profile['phone'])): ?>,
+                <?php if (!empty($profile['phone']) && !$profile['phone_hidden']): ?>,
                     "telephone": "<?php echo addslashes(htmlspecialchars($profile['phone'])); ?>"
                 <?php endif; ?>
                 <?php if (!empty($profile['email'])): ?>,
@@ -447,7 +447,7 @@ if (!$theme) {
                 </div>
             <?php endif; ?>
 
-            <?php if ($profile['phone']): ?>
+            <?php if ($profile['phone'] && !$profile['phone_hidden']): ?>
                 <div class="contact-info">
                     <div class="contact-buttons-row">
                         <a href="tel:<?php echo htmlspecialchars($profile['phone']); ?>" class="contact-btn phone-btn">

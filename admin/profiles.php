@@ -900,7 +900,7 @@ if ($result) {
                         </div>
                         <h5 id="view_name"></h5>
                         <p id="view_bio"></p>
-                        <p><strong>Telefon:</strong> <span id="view_phone"></span></p>
+                        <p><strong>Telefon:</strong> <span id="view_phone"></span> <small id="view_phone_hidden" class="text-muted" style="display: none;">(Gizli)</small></p>
                         
                         <!-- İban Bilgisi - Modern Kart Tasarımı -->
                         <div class="mb-4">
@@ -1169,6 +1169,13 @@ if ($result) {
                     $('#view_name').text(res.profile.name);
                     $('#view_bio').text(res.profile.bio);
                     $('#view_phone').text(res.profile.phone);
+                    
+                    // Telefon gizlilik durumunu göster
+                    if (res.profile.phone_hidden == 1) {
+                        $('#view_phone_hidden').show();
+                    } else {
+                        $('#view_phone_hidden').hide();
+                    }
                     
                     // İban gösterimi - Modern ve okunabilir
                     if (res.profile.iban && res.profile.iban.trim() !== '') {

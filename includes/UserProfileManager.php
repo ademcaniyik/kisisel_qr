@@ -131,6 +131,17 @@ class UserProfileManager {
                 }
             }
             
+            // Telefon numarası gizleme ayarı
+            $phoneHidden = isset($data['phone_hidden']) ? 1 : 0;
+            if ($phoneHidden !== (int)$profile['phone_hidden']) {
+                $this->log("Telefon gizleme ayarı değişiyor: '{$profile['phone_hidden']}' -> '{$phoneHidden}'");
+                $updateFields[] = "phone_hidden = ?";
+                $params[] = $phoneHidden;
+                $types .= "i";
+            } else {
+                $this->log("Telefon gizleme ayarı değişmedi: mevcut='{$profile['phone_hidden']}', yeni='{$phoneHidden}'");
+            }
+            
             // Sosyal medya bağlantıları
             $newSocialLinksJson = json_encode($socialLinks, JSON_UNESCAPED_UNICODE);
             if ($newSocialLinksJson !== $profile['social_links']) {

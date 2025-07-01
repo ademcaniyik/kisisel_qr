@@ -376,11 +376,20 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
                                         </select>
                                         <input type="tel" class="form-control phone-number-input" name="phone" 
                                                id="editPhone" value="<?= htmlspecialchars($phoneNumber) ?>" 
-                                               required placeholder="555 555 55 55" maxlength="20">
-                                    </div>
-                                    <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
-                                </div>
+                                               required placeholder="555 555 55 55" maxlength="20">                            </div>
+                            <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="phone_hidden" id="phoneHiddenCheck" 
+                                       value="1" <?= !empty($profile['phone_hidden']) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="phoneHiddenCheck">
+                                    Telefon numaram profilimde görünmesin
+                                </label>
+                                <small class="form-text text-muted d-block">İşaretlediğinizde telefon numaranız sadece size görünür, ziyaretçiler göremez</small>
                             </div>
+                        </div>
+                    </div>
                             
                             <div class="mb-3">
                                 <label class="form-label">Profil Fotoğrafı</label>
