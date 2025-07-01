@@ -23,38 +23,111 @@ body {
     overflow-x: hidden;
 }
 
-/* Navigation */
-.navbar {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+/* Navigation - Glassmorphism Design */
+.glassmorphism-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
-    padding: 0.8rem 0;
+    padding: 1rem 0;
 }
 
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--primary-color) !important;
+.glassmorphism-header .navbar-brand {
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.nav-link {
+.glassmorphism-header .qr-brand-icon {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.glassmorphism-header .qr-brand-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.glassmorphism-header .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
     font-weight: 500;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 8px;
     transition: all 0.3s ease;
-    padding: 0.5rem 1rem !important;
+    margin: 0 0.2rem;
+    position: relative;
 }
 
-.nav-link:hover {
-    color: var(--primary-color) !important;
+.glassmorphism-header .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white !important;
+    transform: translateY(-1px);
 }
 
-.navbar-toggler {
-    border: none;
-    padding: 0.25rem 0.5rem;
+.glassmorphism-header .navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 0.4rem 0.6rem;
 }
 
-.navbar-toggler:focus {
-    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+.glassmorphism-header .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.glassmorphism-header .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Scroll effect for glassmorphism header */
+.glassmorphism-header.scrolled {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile responsive for glassmorphism header */
+@media (max-width: 768px) {
+    .glassmorphism-header .navbar-brand {
+        font-size: 1.4rem;
+    }
+    
+    .glassmorphism-header .qr-brand-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+        margin-right: 10px;
+    }
+    
+    .glassmorphism-header .navbar-collapse {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 10px;
+        margin-top: 1rem;
+        padding: 1rem;
+    }
+    
+    .glassmorphism-header .nav-link {
+        padding: 0.8rem 1rem !important;
+        margin: 0.2rem 0;
+        border-radius: 6px;
+    }
 }
 
 /* Hero Section */

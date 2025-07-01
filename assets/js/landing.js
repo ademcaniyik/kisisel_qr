@@ -1,14 +1,12 @@
-// Navbar scroll efekti
+// Glassmorphism Navbar scroll efekti
 document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.querySelector('.glassmorphism-header');
     
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
-            navbar.style.padding = '0.5rem 0';
-            navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            navbar?.classList.add('scrolled');
         } else {
-            navbar.style.padding = '1rem 0';
-            navbar.style.boxShadow = 'none';
+            navbar?.classList.remove('scrolled');
         }
     });
     
@@ -22,6 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth',
                     block: 'start'
                 });
+            }
+        });
+    });
+
+    // Mobile menu auto-close
+    const navLinks = document.querySelectorAll('.glassmorphism-header .nav-link');
+    const navbarCollapse = document.querySelector('.glassmorphism-header .navbar-collapse');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navbarCollapse?.classList.contains('show')) {
+                const navbarToggler = document.querySelector('.glassmorphism-header .navbar-toggler');
+                navbarToggler?.click();
             }
         });
     });
