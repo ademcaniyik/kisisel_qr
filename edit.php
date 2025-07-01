@@ -221,7 +221,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Güncelleme verilerini hazırla
             $updateData = [
-                'name' => $postData['name'],
                 'phone' => $postData['phone'],
                 'country_code' => Utilities::sanitizeInput($_POST['country_code'] ?? '+90'),
                 'bio' => $postData['bio'],
@@ -245,11 +244,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($updateResult) {
                 log_edit_error('Profil başarıyla güncellendi. EditToken: ' . $editToken);
                 $_SESSION['profile_update_success'] = true;
-                $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi.';
+                $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi! Değişiklikler anında yayına alındı.';
                 $_SESSION['profile_update_type'] = 'success';
             } else {
                 log_edit_error('Değişiklik yapılmadı. EditToken: ' . $editToken);
-                $_SESSION['profile_update_message'] = 'Herhangi bir değişiklik yapılmadı.';
+                $_SESSION['profile_update_message'] = 'Herhangi bir değişiklik yapılmadı veya aynı bilgiler girildi.';
                 $_SESSION['profile_update_type'] = 'info';
             }
             
@@ -300,7 +299,18 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     }
     
     renderPageHeader('Profil Düzenle - Kişisel QR', ['/kisisel_qr/assets/css/profile-edit.css']);
+    
+    // Sosyal medya linklerini hazırla
+    $socialLinks = [];
+    if (!empty($profile['social_links'])) {
+        $decoded = json_decode($profile['social_links'], true);
+        $socialLinks = is_array($decoded) ? $decoded : [];
+    }
     ?>
+    <script>
+    // Sosyal medya verilerini JavaScript'e gönder
+    window.existingSocialLinks = <?= json_encode($socialLinks, JSON_UNESCAPED_UNICODE) ?>;
+    </script>
     <div class="container py-5">
         <?php if ($alertMessage): ?>
         <div class="alert alert-<?= $alertType ?> alert-dismissible fade show" role="alert" id="profileAlert">
@@ -461,10 +471,34 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
         </div>
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
     <script src="/kisisel_qr/assets/js/profile-manager.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Sosyal medya verilerini yükle
+        if (typeof window.existingSocialLinks !== 'undefined' && window.existingSocialLinks) {
+            // var existingSocialLinks olduğunu kontrol et, varsa sosyal medya linklerini yükle
+            Object.entries(window.existingSocialLinks).forEach(([platform, url]) => {
+                if (url && url.trim()) {
+                    addSocialLink('socialLinksContainer', platform, url);
+                }
+            });
+        }
+        
+        // Sosyal medya platform butonlarını oluştur
+        const platformsContainer = document.getElementById('socialPlatformsButtons');
+        if (platformsContainer && typeof socialPlatforms !== 'undefined') {
+            Object.entries(socialPlatforms).forEach(([key, value]) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn btn-outline-secondary btn-sm me-2 mb-2';
+                btn.innerHTML = `<i class="fas fa-plus me-1"></i>${value.name}`;
+                btn.onclick = () => addSocialLink('socialLinksContainer', key);
+                platformsContainer.appendChild(btn);
+            });
+        }
+        
         // Telefon input mask
         var editPhone = document.getElementById('editPhone');
         if(editPhone && window.IMask){
@@ -475,7 +509,19 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
         var editForm = document.getElementById('editProfileForm');
         var saveBtn = document.getElementById('saveProfileBtn');
         if(editForm && saveBtn){
-            editForm.addEventListener('submit', function(){
+            editForm.addEventListener('submit', function(e){
+                // Sosyal medya verilerini hidden input'a yaz
+                const socialLinks = {};
+                const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
+                socialInputs.forEach(group => {
+                    const platform = group.querySelector('select').value;
+                    const urlInput = group.querySelector('input[type="url"], input[type="email"], input[type="tel"]');
+                    if (urlInput && urlInput.value.trim()) {
+                        socialLinks[platform] = urlInput.value.trim();
+                    }
+                });
+                document.getElementById('socialLinksInput').value = JSON.stringify(socialLinks);
+                
                 saveBtn.disabled = true;
                 saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Kaydediliyor...';
             });
@@ -486,11 +532,13 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
     document.addEventListener('DOMContentLoaded', function() {
         // CSRF token'ı tüm AJAX istekleri için otomatik ekle
         var csrfToken = '<?= $csrfToken ?>';
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
+        if (typeof $ !== 'undefined') {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+        }
 
         // Fotoğraf önizleme
         document.getElementById('editPhotoInput')?.addEventListener('change', function(e) {

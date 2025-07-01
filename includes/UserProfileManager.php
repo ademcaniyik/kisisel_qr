@@ -72,7 +72,9 @@ class UserProfileManager {
             
             // Telefon numarasını formatla
             if (!empty($data['phone'])) {
-                $data['phone'] = $this->formatPhoneNumber($data['phone'], $data['country_code'] ?? '+90');
+                $countryCode = $data['country_code'] ?? '+90';
+                $data['phone'] = $this->formatPhoneNumber($data['phone'], $countryCode);
+                $this->log("Telefon formatlandı: " . $data['phone']);
             }
             
             // IBAN formatını kontrol et
@@ -102,9 +104,12 @@ class UserProfileManager {
             
             // Telefon kontrolü
             if (!empty($data['phone']) && $data['phone'] !== $profile['phone']) {
+                $this->log("Telefon değişiyor: '{$profile['phone']}' -> '{$data['phone']}'");
                 $updateFields[] = "phone = ?";
                 $params[] = $data['phone'];
                 $types .= "s";
+            } else {
+                $this->log("Telefon değişmedi veya boş: mevcut='{$profile['phone']}', yeni='{$data['phone']}'");
             }
             
             // Diğer alanlar
@@ -117,18 +122,26 @@ class UserProfileManager {
             
             foreach ($fieldMap as $field => $type) {
                 if (isset($data[$field]) && $data[$field] !== $profile[$field]) {
+                    $this->log("'{$field}' değişiyor: '{$profile[$field]}' -> '{$data[$field]}'");
                     $updateFields[] = "{$field} = ?";
                     $params[] = $data[$field];
                     $types .= $type;
+                } else {
+                    $this->log("'{$field}' değişmedi: mevcut='{$profile[$field]}', yeni='" . ($data[$field] ?? 'null') . "'");
                 }
             }
             
             // Sosyal medya bağlantıları
             $newSocialLinksJson = json_encode($socialLinks, JSON_UNESCAPED_UNICODE);
             if ($newSocialLinksJson !== $profile['social_links']) {
+                $this->log("Sosyal medya değişiyor");
+                $this->log("Eski: " . $profile['social_links']);
+                $this->log("Yeni: " . $newSocialLinksJson);
                 $updateFields[] = "social_links = ?";
                 $params[] = $newSocialLinksJson;
                 $types .= "s";
+            } else {
+                $this->log("Sosyal medya değişmedi");
             }
             
             // Fotoğraf yükleme işlemi
@@ -203,9 +216,15 @@ class UserProfileManager {
         // Sadece rakamları al
         $number = preg_replace('/\D+/', '', $phone);
         
-        // Ülke kodu kontrolü
-        if (strpos($number, '90') === 0) {
-            $number = substr($number, 2);
+        // Boşsa olduğu gibi döndür
+        if (empty($number)) {
+            return $phone;
+        }
+        
+        // Ülke kodu kontrolü - eğer numarada ülke kodu varsa çıkar
+        $countryCodeNumber = str_replace('+', '', $countryCode);
+        if (strpos($number, $countryCodeNumber) === 0) {
+            $number = substr($number, strlen($countryCodeNumber));
         }
         
         // Başındaki 0'ı kaldır
@@ -213,9 +232,13 @@ class UserProfileManager {
             $number = substr($number, 1);
         }
         
-        // Ülke kodunu ekle
-        $countryCode = str_replace('+', '', $countryCode);
-        return '+' . $countryCode . $number;
+        // Türkiye için özel kontrol
+        if ($countryCode === '+90' && strlen($number) === 10) {
+            return '+90' . $number;
+        }
+        
+        // Diğer ülkeler için
+        return $countryCode . $number;
     }
     
     /**
