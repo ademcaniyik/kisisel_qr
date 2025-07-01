@@ -4,9 +4,46 @@ define('ROOT', __DIR__);
 require_once ROOT . '/includes/QRPoolManager.php';
 require_once ROOT . '/includes/ProfileManager.php';
 require_once ROOT . '/includes/template_helpers.php';
+require_once ROOT . '/includes/utilities.php';
 
 $qrPoolManager = new QRPoolManager();
 $profileManager = new ProfileManager();
+
+/**
+ * POST verilerini güvenli şekilde al ve sanitize et
+ */
+function getSanitizedPostData() {
+    $data = [];
+    
+    // Temel alanları sanitize et
+    $data['name'] = trim(Utilities::sanitizeInput($_POST['name'] ?? ''));
+    $data['phone'] = preg_replace('/\D+/', '', Utilities::sanitizeInput($_POST['phone'] ?? ''));
+    $data['bio'] = trim(Utilities::sanitizeInput($_POST['bio'] ?? ''));
+    $data['iban'] = trim(str_replace(' ', '', strtoupper(Utilities::sanitizeInput($_POST['iban'] ?? ''))));
+    $data['blood_type'] = trim(Utilities::sanitizeInput($_POST['blood_type'] ?? ''));
+    $data['theme'] = trim(Utilities::sanitizeInput($_POST['theme'] ?? 'default'));
+    
+    // Social links'i işle
+    $socialLinks = $_POST['social_links'] ?? '';
+    if (empty($socialLinks)) {
+        $data['social_links'] = [];
+    } elseif (is_string($socialLinks)) {
+        $decoded = json_decode($socialLinks, true);
+        if ($decoded === null) {
+            error_log("[DEBUG] social_links JSON decode hatası: " . json_last_error_msg());
+            $data['social_links'] = [];
+        } else {
+            $data['social_links'] = $decoded;
+        }
+    } else {
+        $data['social_links'] = is_array($socialLinks) ? $socialLinks : [];
+    }
+    
+    // Debug log
+    error_log("[DEBUG] Sanitized POST data: " . json_encode($data));
+    
+    return $data;
+}
 
 // URL: /edit/{edit_token}
 $editToken = null;
@@ -68,16 +105,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function log_edit_error($msg) {
         $logFile = __DIR__ . '/logs/edit_error_log.txt';
         $date = date('Y-m-d H:i:s');
-        file_put_contents($logFile, "[$date] $msg\n", FILE_APPEND | LOCK_EX);
+        $logMessage = "[$date] $msg\n";
+        error_log($logMessage); // Aynı zamanda PHP error_log'a da yaz
+        file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
     }
+    
+    // Debug log fonksiyonu - daha detaylı çıktı için
+    function log_edit_debug($msg, $data = null) {
+        $logMessage = $msg;
+        if ($data !== null) {
+            if (is_array($data) || is_object($data)) {
+                $logMessage .= "\nData: " . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            } else {
+                $logMessage .= "\nData: " . $data;
+            }
+        }
+        log_edit_error("[DEBUG] " . $logMessage);
+    }
+    
     // Her postta loga yaz (form post edildi mi?)
     log_edit_error('Form post edildi. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-    log_edit_error('POST: ' . json_encode($_POST));
-    log_edit_error('SESSION: ' . json_encode($_SESSION));
+    log_edit_debug('POST verileri:', $_POST);
+    log_edit_debug('SESSION verileri:', $_SESSION);
     // CSRF token kontrolü (hem profil güncelleme hem şifre giriş için)
     if ((isset($_POST['save_profile']) || isset($_POST['edit_code'])) && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? ''))) {
         log_edit_error('CSRF token hatası. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-        ob_end_clean();
+        ob_clean(); // Sadece mevcut tamponu temizle
         echo '<p style="color:red">Güvenlik hatası: Geçersiz CSRF token.</p>';
         exit;
     }
@@ -104,36 +157,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         header('Location: ' . $redirectUrl);
         exit;
-    } else if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
+    }
+    
+    if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
         log_edit_error('Profil güncelleme branchine girildi. profileId=' . $profileId);
         try {
             $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
-            log_edit_error('Güncel profile: ' . json_encode($profile));
+            log_edit_debug('Mevcut profil detayları:', [
+                'id' => $profileId,
+                'profile' => $profile,
+                'session' => $_SESSION,
+                'post_data' => $_POST
+            ]);
             if (!$profile) {
                 log_edit_error('HATA: profileId=' . $profileId . ' ile profil bulunamadı, updateProfile çağrılmayacak!');
                 echo '<div class="alert alert-danger">Profil bulunamadı, güncelleme yapılamadı. Lütfen yöneticinizle iletişime geçin.</div>';
-                ob_end_clean();
                 return;
             }
+
+            // Güvenli veri işleme
+            $postData = getSanitizedPostData();
+            log_edit_debug('Sanitize edilmiş POST verileri:', $postData);
+            
             // Telefon numarasını ülke kodu ile birleştir
-            $countryCode = $_POST['country_code'] ?? '+90';
-            $phoneNumber = $_POST['phone'] ?? '';
-            $phone = $countryCode . preg_replace('/\D+/', '', $phoneNumber);
-            $bio = $_POST['bio'] ?? '';
-            $iban = $_POST['iban'] ?? '';
-            $blood_type = $_POST['blood_type'] ?? '';
-            $theme = $_POST['theme'] ?? '';
-            $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
-            // social_links boş string ise boş array yap
-            if ($socialLinks === '' || $socialLinks === null) {
-                $socialLinks = [];
-            } elseif (is_string($socialLinks)) {
-                $decoded = json_decode($socialLinks, true);
-                if (is_array($decoded)) $socialLinks = $decoded;
+            $countryCode = Utilities::sanitizeInput($_POST['country_code'] ?? '+90');
+            $phone = $countryCode . preg_replace('/\D+/', '', $postData['phone']);
+            
+            log_edit_debug('İşlenen telefon numarası:', [
+                'country_code' => $countryCode,
+                'phone' => $phone,
+                'raw_phone' => $postData['phone']
+            ]);
+            // Mevcut verileri güvenli şekilde al ve değişiklik olup olmadığını kontrol et
+            $name = $postData['name'] ?: $profile['name'];
+            $bio = $postData['bio'] !== $profile['bio'] ? $postData['bio'] : $profile['bio'];
+            $iban = $postData['iban'] !== $profile['iban'] ? $postData['iban'] : $profile['iban'];
+            $blood_type = $postData['blood_type'] !== $profile['blood_type'] ? $postData['blood_type'] : $profile['blood_type'];
+            $theme = $postData['theme'] !== $profile['theme'] ? $postData['theme'] : $profile['theme'];
+            
+            // Social links özel işleme
+            $socialLinks = [];
+            if (!empty($postData['social_links'])) {
+                $socialLinks = $postData['social_links'];
+            } elseif (!empty($profile['social_links'])) {
+                // Mevcut social links'i koru
+                $existingLinks = json_decode($profile['social_links'], true);
+                if (is_array($existingLinks)) {
+                    $socialLinks = $existingLinks;
+                }
             }
+
             // Fotoğraf yükleme işlemi
             $photoUrl = $profile['photo_url'] ?? null;
             $photoData = $profile['photo_data'] ?? null;
+            
             if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
                 require_once ROOT . '/includes/ImageOptimizer.php';
                 try {
@@ -146,45 +223,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     log_edit_error('Fotoğraf yükleme hatası: ' . $e->getMessage());
                 }
             }
-            // name alanı readonly olduğu için POST ile gelmeyebilir, gelmiyorsa profilden al
-            $name = $_POST['name'] ?? ($profile['name'] ?? '');
-            log_edit_error('updateProfile çağrısı: $profileId=' . $profileId . ', $name=' . $name . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $socialLinks=' . json_encode($socialLinks) . ', $photoUrl=' . $photoUrl . ', $photoData=' . $photoData);
+
+            // Değişiklikleri logla
+            log_edit_error('updateProfile çağrısı başlıyor - Veriler:');
+            log_edit_error('- Temel bilgiler: name=' . $name . ', phone=' . $phone);
+            log_edit_error('- Bio ve tema: bio=' . $bio . ', theme=' . $theme);
+            log_edit_error('- Diğer: iban=' . $iban . ', blood_type=' . $blood_type);
+            log_edit_error('- Social links: ' . json_encode($socialLinks));
+            
+            // Mevcut verilerle karşılaştır
+            log_edit_error('Mevcut profil verileri:');
+            log_edit_error('- Temel bilgiler: name=' . $profile['name'] . ', phone=' . $profile['phone']);
+            log_edit_error('- Bio ve tema: bio=' . $profile['bio'] . ', theme=' . $profile['theme']);
+            log_edit_error('- Diğer: iban=' . $profile['iban'] . ', blood_type=' . $profile['blood_type']);
+            log_edit_error('- Social links: ' . $profile['social_links']);
+
             try {
-                // ProfileID kontrolü
-                log_edit_error('ProfileID kontrol: ' . $profileId);
-                $checkProfile = $profileManager->getProfile($profileId);
-                log_edit_error('Profil mevcut mu: ' . ($checkProfile ? 'Evet' : 'Hayır'));
-                if ($checkProfile) {
-                    log_edit_error('Mevcut profil detayları: ' . json_encode($checkProfile));
+                // Değişiklikleri detaylı kontrol et
+                $changes = [];
+                if ($phone !== $profile['phone']) $changes['phone'] = ['old' => $profile['phone'], 'new' => $phone];
+                if ($bio !== $profile['bio']) $changes['bio'] = ['old' => $profile['bio'], 'new' => $bio];
+                if ($iban !== $profile['iban']) $changes['iban'] = ['old' => $profile['iban'], 'new' => $iban];
+                if ($blood_type !== $profile['blood_type']) $changes['blood_type'] = ['old' => $profile['blood_type'], 'new' => $blood_type];
+                if ($theme !== $profile['theme']) $changes['theme'] = ['old' => $profile['theme'], 'new' => $theme];
+                
+                // Social links karşılaştırması
+                $oldSocialLinks = is_string($profile['social_links']) ? json_decode($profile['social_links'], true) : [];
+                $oldSocialLinks = is_array($oldSocialLinks) ? $oldSocialLinks : [];
+                if (json_encode($socialLinks) !== json_encode($oldSocialLinks)) {
+                    $changes['social_links'] = ['old' => $oldSocialLinks, 'new' => $socialLinks];
                 }
                 
-                $updateResult = $profileManager->updateProfile($profileId, $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
-                log_edit_error('updateProfile sonucu: ' . var_export($updateResult, true));
+                log_edit_debug('Tespit edilen değişiklikler:', $changes);
+                
+                if (empty($changes) && !isset($_FILES['photo'])) {
+                    log_edit_debug('Değişiklik tespit edilmedi, güncelleme yapılmayacak');
+                    ob_end_clean();
+                    echo '<div class="alert alert-info">Herhangi bir değişiklik yapılmadı.</div>';
+                    exit;
+                }
+
+                // Değişiklikleri uygula
+                log_edit_debug('Güncellenecek veriler:', [
+                    'profile_id' => $profileId,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'bio' => $bio,
+                    'iban' => $iban,
+                    'blood_type' => $blood_type,
+                    'theme' => $theme,
+                    'social_links' => $socialLinks,
+                    'photo_url' => $photoUrl,
+                    'has_photo_data' => !empty($photoData)
+                ]);
+
+                $updateResult = $profileManager->updateProfile(
+                    $profileId, $name, $phone, $bio, $iban, 
+                    $blood_type, $theme, $socialLinks, $photoUrl, $photoData
+                );
+                
+                // updateProfile sonucunu ve güncel profil verilerini logla
+                log_edit_debug('updateProfile sonucu:', ['success' => $updateResult]);
+                $updatedProfile = $profileManager->getProfile($profileId);
+                log_edit_debug('Güncellenmiş profil:', $updatedProfile);
+                
+                if ($updateResult) {
+                    $_SESSION['profile_update_success'] = true;
+                    $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi.';
+                    ob_clean(); // Sadece mevcut tamponu temizle
+                    header('Location: /kisisel_qr/edit/' . urlencode($editToken));
+                    exit;
+                }
+                
+                log_edit_error('Profil güncelleme başarısız');
+                ob_clean(); // Sadece mevcut tamponu temizle
+                echo '<div class="alert alert-warning">Profil güncellenemedi. Lütfen tekrar deneyiniz.</div>';
+                
             } catch (Exception $e) {
-                log_edit_error('updateProfile Exception: ' . $e->getMessage());
-                $updateResult = false;
-                $errorMessage = $e->getMessage();
-            }
-            ob_end_clean();
-            if ($updateResult) {
-                $_SESSION['profile_update_success'] = true;
-                header('Location: /kisisel_qr/edit/' . urlencode($editToken));
-                exit;
-            } else {
-                log_edit_error('updateProfile false döndü. $profileId=' . $profileId . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $photoUrl=' . $photoUrl);
-                $errorDetails = isset($errorMessage) ? ': ' . htmlspecialchars($errorMessage) : ' (Detay mevcut değil)';
-                echo '<div class="alert alert-danger">Profil güncellenemedi' . $errorDetails . '</div>';
+                log_edit_error('Güncelleme hatası: ' . $e->getMessage());
+                ob_clean(); // Sadece mevcut tamponu temizle
+                echo '<div class="alert alert-danger">Profil güncellenirken bir hata oluştu: ' . htmlspecialchars($e->getMessage()) . '</div>';
             }
         } catch (Exception $ex) {
-            ob_end_clean();
             log_edit_error('Exception: ' . $ex->getMessage());
+            ob_clean(); // Sadece mevcut tamponu temizle
             echo '<div class="alert alert-danger">Bir hata oluştu: ' . htmlspecialchars($ex->getMessage()) . '</div>';
         }
-    } else if (isset($_POST['save_profile'])) {
+    }
+    
+    if (isset($_POST['save_profile']) && !($_SESSION['edit_auth_'.$editToken] ?? false)) {
         log_edit_error('Oturum doğrulaması başarısız branchine girildi.');
+        ob_end_clean();
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
         unset($_SESSION['edit_auth_'.$editToken]);
-    } else if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
+    }
+    
+    if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
         log_edit_error('Şifre veya telefon hatalı branchine girildi.');
         if ($inputCode !== $editCode && $inputPhone !== $profilePhone) {
             $loginError = true;

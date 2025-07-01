@@ -405,47 +405,162 @@ class ProfileManager {
      */
     public function updateProfile($profileId, $name, $phone, $bio = null, $iban = null, $blood_type = null, $theme = null, $socialLinks = null, $photoUrl = null, $photoData = null) {
         try {
-            error_log("[DEBUG] UpdateProfile başladı - ProfileID: " . $profileId);
-            error_log("[DEBUG] Gelen Veriler: name=$name, phone=$phone, bio=$bio, iban=$iban, blood_type=$blood_type, theme=$theme");
-            
-            $sql = "UPDATE profiles SET name = ?, phone = ?, bio = ?, iban = ?, blood_type = ?, theme = ?, social_links = ?, photo_url = ?, photo_data = ? WHERE id = ?";
-            error_log("[DEBUG] SQL: " . $sql);
-            
+            $this->debugLog("====== UpdateProfile BAŞLADI ======");
+            $this->debugLog("Profile ID", $profileId);
+            $this->debugLog("İşlenecek veriler", [
+                'name' => $name,
+                'phone' => $phone,
+                'bio' => $bio,
+                'iban' => $iban,
+                'blood_type' => $blood_type,
+                'theme' => $theme,
+                'social_links' => $socialLinks,
+                'photo_url' => $photoUrl,
+                'has_photo_data' => !empty($photoData)
+            ]);
+
+            // Önce mevcut profili kontrol et
+            $currentProfile = $this->getProfile($profileId);
+            if (!$currentProfile) {
+                $this->debugLog("Profil bulunamadı", $profileId);
+                return false;
+            }
+            $this->debugLog("Mevcut profil bulundu", $currentProfile);
+
+            // Değişiklikleri analiz et
+            $updateFields = [];
+            $params = [];
+            $types = "";
+
+            if (!empty($name) && $name !== $currentProfile['name']) {
+                $updateFields[] = "name = ?";
+                $params[] = $name;
+                $types .= "s";
+            }
+
+            if (!empty($phone) && $phone !== $currentProfile['phone']) {
+                $updateFields[] = "phone = ?";
+                $params[] = $phone;
+                $types .= "s";
+            }
+
+            if ($bio !== null && $bio !== $currentProfile['bio']) {
+                $updateFields[] = "bio = ?";
+                $params[] = $bio;
+                $types .= "s";
+            }
+
+            if ($iban !== null && $iban !== $currentProfile['iban']) {
+                $updateFields[] = "iban = ?";
+                $params[] = $iban;
+                $types .= "s";
+            }
+
+            if ($blood_type !== null && $blood_type !== $currentProfile['blood_type']) {
+                $updateFields[] = "blood_type = ?";
+                $params[] = $blood_type;
+                $types .= "s";
+            }
+
+            if ($theme !== null && $theme !== $currentProfile['theme']) {
+                $updateFields[] = "theme = ?";
+                $params[] = $theme;
+                $types .= "s";
+            }
+
+            // Social links özel işlem
+            $socialLinksJson = is_array($socialLinks) ? json_encode($socialLinks, JSON_UNESCAPED_UNICODE) : $socialLinks;
+            if ($socialLinksJson !== null && $socialLinksJson !== $currentProfile['social_links']) {
+                $updateFields[] = "social_links = ?";
+                $params[] = $socialLinksJson;
+                $types .= "s";
+            }
+
+            if ($photoUrl !== null && $photoUrl !== $currentProfile['photo_url']) {
+                $updateFields[] = "photo_url = ?";
+                $params[] = $photoUrl;
+                $types .= "s";
+            }
+
+            if ($photoData !== null && $photoData !== $currentProfile['photo_data']) {
+                $updateFields[] = "photo_data = ?";
+                $params[] = $photoData;
+                $types .= "s";
+            }
+
+            // Hiç değişiklik yoksa erken çık
+            if (empty($updateFields)) {
+                $this->debugLog("Değişiklik tespit edilmedi, güncelleme yapılmayacak");
+                return true; // Başarılı sayılır çünkü zaten güncel
+            }
+
+            // SQL sorgusunu hazırla
+            $sql = "UPDATE profiles SET " . implode(", ", $updateFields) . " WHERE id = ?";
+            $params[] = $profileId;
+            $types .= "i";
+
+            $this->debugLog("SQL Sorgusu", $sql);
+            $this->debugLog("Parametre tipleri", $types);
+            $this->debugLog("Parametreler", $params);
+
             $stmt = $this->connection->prepare($sql);
-            
             if (!$stmt) {
+                $this->debugLog("Prepare Hatası", $this->connection->error);
                 throw new Exception("Prepare hatası: " . $this->connection->error);
             }
 
-            $socialLinksJson = is_array($socialLinks) ? json_encode($socialLinks, JSON_UNESCAPED_UNICODE) : $socialLinks;
-            
-            $stmt->bind_param("sssssssssi", $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinksJson, $photoUrl, $photoData, $profileId);
-            
+            // bind_param için referans array'i hazırla
+            $bindParams = array($types);
+            for($i = 0; $i < count($params); $i++) {
+                $bindParams[] = &$params[$i];
+            }
+
+            $this->debugLog("Bind için hazırlanan parametreler", [
+                'types' => $types,
+                'params' => $params,
+                'bindParams' => $bindParams
+            ]);
+
+            // bind_param'i dinamik olarak çağır
+            if (!call_user_func_array(array($stmt, 'bind_param'), $bindParams)) {
+                $this->debugLog("Bind Hatası", $stmt->error);
+                throw new Exception("Parametre bağlama hatası: " . $stmt->error);
+            }
+
             $executeResult = $stmt->execute();
-            error_log("[DEBUG] Execute sonucu: " . ($executeResult ? "Başarılı" : "Başarısız"));
-            error_log("[DEBUG] MySQL Error: " . $stmt->error);
-            error_log("[DEBUG] MySQL Errno: " . $stmt->errno);
+            $this->debugLog("Execute sonucu", $executeResult);
             
             if (!$executeResult) {
+                $this->debugLog("MySQL Hatası", [
+                    'error' => $stmt->error,
+                    'errno' => $stmt->errno
+                ]);
                 throw new Exception("Güncelleme hatası: " . $stmt->error);
             }
 
-            error_log("[DEBUG] Etkilenen kayıt sayısı: " . $stmt->affected_rows);
-            if ($stmt->affected_rows === 0) {
-                // Kayıt bulunamadı veya değişiklik yapılmadı
-                error_log("[DEBUG] Kayıt güncellenmedi: ID=" . $profileId);
-                $stmt->close();
-                return false;
-            }
-
+            $this->debugLog("Etkilenen kayıt sayısı", $stmt->affected_rows);
+            $success = $stmt->affected_rows > 0;
             $stmt->close();
-            return true;
+
+            $this->debugLog("İşlem sonucu", $success);
+            return $success;
 
         } catch (Exception $e) {
-            // Hata mesajını loglayabilirsiniz
-            error_log("Profil güncelleme hatası (ID: $profileId): " . $e->getMessage());
+            $this->debugLog("HATA", $e->getMessage());
             throw $e;
         }
+    }
+
+    private function debugLog($message, $data = null) {
+        $logMessage = "[DEBUG] " . $message;
+        if ($data !== null) {
+            if (is_array($data) || is_object($data)) {
+                $logMessage .= ": " . json_encode($data, JSON_UNESCAPED_UNICODE);
+            } else {
+                $logMessage .= ": " . var_export($data, true);
+            }
+        }
+        error_log($logMessage);
     }
 }
 ?>
