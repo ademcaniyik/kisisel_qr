@@ -425,10 +425,17 @@ if ($result) {
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <?php 
-                                                    $qrPoolResult->data_seek(0); // Reset pointer
-                                                    $hasAssignedQR = false;
-                                                    while ($qrPool = $qrPoolResult->fetch_assoc()): 
-                                                        $hasAssignedQR = true;
+                                                    // QR Pool'dan profil için atanmış QR kodlarını tekrar getir (dropdown için)
+                                                    $qrPoolDropdownQuery = "SELECT pool_id, qr_code_id, edit_token, edit_code, status, created_at, assigned_at 
+                                                                          FROM qr_pool WHERE profile_id = ? AND status IN ('assigned', 'delivered') 
+                                                                          ORDER BY assigned_at DESC";
+                                                    $qrPoolDropdownStmt = $connection->prepare($qrPoolDropdownQuery);
+                                                    $qrPoolDropdownStmt->bind_param("i", $profile['id']);
+                                                    $qrPoolDropdownStmt->execute();
+                                                    $qrPoolDropdownResult = $qrPoolDropdownStmt->get_result();
+                                                    
+                                                    $hasAssignedQR = ($qrPoolDropdownResult->num_rows > 0);
+                                                    while ($qrPool = $qrPoolDropdownResult->fetch_assoc()): 
                                                     ?>
                                                     <li class="dropdown-header">
                                                         <small class="text-muted">Atanmış QR: <?= htmlspecialchars($qrPool['pool_id']) ?></small>
