@@ -393,9 +393,27 @@ if ($result) {
                                             <button class="btn btn-sm btn-primary" onclick="editProfile(<?php echo $profile['id']; ?>)">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-info" onclick="viewProfile(<?php echo $profile['id']; ?>)">
+                                            <?php
+                                            // Profil için aktif QR kodunu al
+                                            $qrQuery = "SELECT id FROM qr_codes WHERE profile_id = ? ORDER BY created_at DESC LIMIT 1";
+                                            $qrStmt = $connection->prepare($qrQuery);
+                                            $qrStmt->bind_param("i", $profile['id']);
+                                            $qrStmt->execute();
+                                            $qrResult = $qrStmt->get_result();
+                                            $qrRow = $qrResult->fetch_assoc();
+                                            
+                                            if ($qrRow): ?>
+                                            <a href="<?= getBasePath() ?>/profile.php?qr_id=<?= htmlspecialchars($qrRow['id']) ?>"
+                                               class="btn btn-sm btn-info"
+                                               target="_blank"
+                                               title="Profili yeni sekmede görüntüle">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <?php else: ?>
+                                            <button class="btn btn-sm btn-info" onclick="viewProfile(<?php echo $profile['id']; ?>)" title="Profil önizlemesi">
                                                 <i class="fas fa-eye"></i>
                                             </button>
+                                            <?php endif; ?>
                                             <button class="btn btn-sm btn-danger" onclick="deleteProfile(<?php echo $profile['id']; ?>)">
                                                 <i class="fas fa-trash"></i>
                                             </button>
