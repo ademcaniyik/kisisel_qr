@@ -57,10 +57,26 @@ $showForm = true;
 $editCode = $qr['edit_code'];
 $profileId = $qr['profile_id'];
 
+// DEBUG: Hata ayıklama için error reporting aç
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ob_start();
+    // Hata log fonksiyonu
+    function log_edit_error($msg) {
+        $logFile = __DIR__ . '/logs/edit_error_log.txt';
+        $date = date('Y-m-d H:i:s');
+        file_put_contents($logFile, "[$date] $msg\n", FILE_APPEND | LOCK_EX);
+    }
+    // Her postta loga yaz (form post edildi mi?)
+    log_edit_error('Form post edildi. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    log_edit_error('POST: ' . json_encode($_POST));
+    log_edit_error('SESSION: ' . json_encode($_SESSION));
     // CSRF token kontrolü (hem profil güncelleme hem şifre giriş için)
     if ((isset($_POST['save_profile']) || isset($_POST['edit_code'])) && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? ''))) {
+        log_edit_error('CSRF token hatası. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
         ob_end_clean();
         echo '<p style="color:red">Güvenlik hatası: Geçersiz CSRF token.</p>';
         exit;
@@ -72,61 +88,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $loginErrorType = '';
     // Şifre ve telefon kontrolü
     // Telefon numaralarını normalize et (sadece rakamlar)
-    $inputPhoneNorm = preg_replace('/\D+/', '', $inputPhone);
+    $inputPhoneNorm = '90' . preg_replace('/\D+/', '', $inputPhone); // Başına 90 ekle
     $profilePhoneNorm = preg_replace('/\D+/', '', $profilePhone);
     if ($inputCode === $editCode && $inputPhoneNorm === $profilePhoneNorm) {
+        log_edit_error('Şifre ve telefon doğru, oturum açılıyor.');
         session_regenerate_id(true); // Session fixation önlemi
-        $_SESSION['edit_auth_'.$editToken] = true;
+        $_SESSION['edit_auth_'.$editToken] = true; // Oturum doğrulamasını tekrar setle
         ob_end_clean(); // Tüm tamponu temizle, hiçbir çıktı olmasın
         // Pretty URL varsa tekrar ?token= ekleme
         $redirectUrl = $_SERVER['REQUEST_URI'];
         if (strpos($redirectUrl, '/edit/') !== false) {
-            // /edit/xxxxxx formatı, parametre eklemeye gerek yok
             $redirectUrl = preg_replace('/\?.*/', '', $redirectUrl); // varsa query string'i temizle
         } else {
-            // Sadece ?token= ile gelmişse, parametreli şekilde yönlendir
             $redirectUrl = '/kisisel_qr/edit/' . urlencode($editToken);
         }
         header('Location: ' . $redirectUrl);
         exit;
     } else if (isset($_POST['save_profile']) && ($_SESSION['edit_auth_'.$editToken] ?? false)) {
-        $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
-        // Telefon numarasını ülke kodu ile birleştir
-        $countryCode = $_POST['country_code'] ?? '+90';
-        $phoneNumber = $_POST['phone'] ?? '';
-        $phone = $countryCode . preg_replace('/\D+/', '', $phoneNumber);
-        $bio = $_POST['bio'] ?? '';
-        $iban = $_POST['iban'] ?? '';
-        $blood_type = $_POST['blood_type'] ?? '';
-        $theme = $_POST['theme'] ?? '';
-        $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
-        if (is_string($socialLinks)) {
-            $decoded = json_decode($socialLinks, true);
-            if (is_array($decoded)) $socialLinks = $decoded;
-        }
-        // Fotoğraf yükleme işlemi
-        $photoUrl = $profile['photo_url'] ?? null;
-        $photoData = $profile['photo_data'] ?? null;
-        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-            require_once ROOT . '/includes/ImageOptimizer.php';
-            try {
-                $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
-                if ($photoDataArr && isset($photoDataArr['filename'])) {
-                    $photoUrl = '/kisisel_qr/public/uploads/profiles/' . $photoDataArr['filename'];
-                    $photoData = json_encode($photoDataArr, JSON_UNESCAPED_UNICODE);
-                }
-            } catch (Exception $e) {
-                // Hata olursa eski fotoğrafı koru
+        log_edit_error('Profil güncelleme branchine girildi. profileId=' . $profileId);
+        try {
+            $profile = $profileManager->getProfile($profileId); // Her zaman güncel profili çek
+            log_edit_error('Güncel profile: ' . json_encode($profile));
+            if (!$profile) {
+                log_edit_error('HATA: profileId=' . $profileId . ' ile profil bulunamadı, updateProfile çağrılmayacak!');
+                echo '<div class="alert alert-danger">Profil bulunamadı, güncelleme yapılamadı. Lütfen yöneticinizle iletişime geçin.</div>';
+                ob_end_clean();
+                return;
             }
+            // Telefon numarasını ülke kodu ile birleştir
+            $countryCode = $_POST['country_code'] ?? '+90';
+            $phoneNumber = $_POST['phone'] ?? '';
+            $phone = $countryCode . preg_replace('/\D+/', '', $phoneNumber);
+            $bio = $_POST['bio'] ?? '';
+            $iban = $_POST['iban'] ?? '';
+            $blood_type = $_POST['blood_type'] ?? '';
+            $theme = $_POST['theme'] ?? '';
+            $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
+            // social_links boş string ise boş array yap
+            if ($socialLinks === '' || $socialLinks === null) {
+                $socialLinks = [];
+            } elseif (is_string($socialLinks)) {
+                $decoded = json_decode($socialLinks, true);
+                if (is_array($decoded)) $socialLinks = $decoded;
+            }
+            // Fotoğraf yükleme işlemi
+            $photoUrl = $profile['photo_url'] ?? null;
+            $photoData = $profile['photo_data'] ?? null;
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                require_once ROOT . '/includes/ImageOptimizer.php';
+                try {
+                    $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
+                    if ($photoDataArr && isset($photoDataArr['filename'])) {
+                        $photoUrl = '/kisisel_qr/public/uploads/profiles/' . $photoDataArr['filename'];
+                        $photoData = json_encode($photoDataArr, JSON_UNESCAPED_UNICODE);
+                    }
+                } catch (Exception $e) {
+                    log_edit_error('Fotoğraf yükleme hatası: ' . $e->getMessage());
+                }
+            }
+            // name alanı readonly olduğu için POST ile gelmeyebilir, gelmiyorsa profilden al
+            $name = $_POST['name'] ?? ($profile['name'] ?? '');
+            log_edit_error('updateProfile çağrısı: $profileId=' . $profileId . ', $name=' . $name . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $socialLinks=' . json_encode($socialLinks) . ', $photoUrl=' . $photoUrl . ', $photoData=' . $photoData);
+            try {
+                $updateResult = $profileManager->updateProfile($profileId, $name, $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
+                log_edit_error('updateProfile sonucu: ' . var_export($updateResult, true));
+            } catch (Exception $e) {
+                log_edit_error('updateProfile Exception: ' . $e->getMessage());
+                $updateResult = false;
+            }
+            ob_end_clean();
+            if ($updateResult) {
+                $_SESSION['profile_update_success'] = true;
+                header('Location: /kisisel_qr/edit/' . urlencode($editToken));
+                exit;
+            } else {
+                log_edit_error('updateProfile false döndü. $profileId=' . $profileId . ', $phone=' . $phone . ', $bio=' . $bio . ', $iban=' . $iban . ', $blood_type=' . $blood_type . ', $theme=' . $theme . ', $photoUrl=' . $photoUrl);
+                echo '<div class="alert alert-danger">Profil güncellenemedi. updateProfile false döndü.</div>';
+            }
+        } catch (Exception $ex) {
+            ob_end_clean();
+            log_edit_error('Exception: ' . $ex->getMessage());
+            echo '<div class="alert alert-danger">Bir hata oluştu: ' . htmlspecialchars($ex->getMessage()) . '</div>';
         }
-        $profileManager->updateProfile($profileId, $profile['name'], $phone, $bio, $iban, $blood_type, $theme, $socialLinks, $photoUrl, $photoData);
-        ob_end_clean();
-        header('Location: /kisisel_qr/edit/' . urlencode($editToken));
-        exit;
     } else if (isset($_POST['save_profile'])) {
+        log_edit_error('Oturum doğrulaması başarısız branchine girildi.');
         echo '<p style="color:red">Oturum doğrulaması başarısız. Lütfen tekrar giriş yapın.</p>';
         unset($_SESSION['edit_auth_'.$editToken]);
     } else if (isset($_POST['edit_code']) || isset($_POST['phone_check'])) {
+        log_edit_error('Şifre veya telefon hatalı branchine girildi.');
         if ($inputCode !== $editCode && $inputPhone !== $profilePhone) {
             $loginError = true;
             $loginErrorType = 'both';
@@ -137,6 +186,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $loginError = true;
             $loginErrorType = 'phone';
         }
+    }
+    // Profil güncelleme branchine hiç girilmediyse logla
+    if (isset($_POST['save_profile']) && !($_SESSION['edit_auth_'.$editToken] ?? false)) {
+        log_edit_error('save_profile var ama session edit_auth yok, güncelleme branchine girilmedi!');
     }
 }
 
@@ -189,6 +242,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                     <div class="card-body">
                         <form id="editProfileForm" method="post" enctype="multipart/form-data" autocomplete="off">
                             <input type="hidden" name="csrf_token" value="<?=$csrfToken?>">
+                            <input type="hidden" name="name" value="<?=htmlspecialchars($profile['name'])?>">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Soyad *</label>
@@ -224,7 +278,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                                             <option value="+86" data-flag="🇨🇳" <?=($countryCode==='+86')?'selected':''?>>🇨🇳 +86</option>
                                             <option value="+91" data-flag="🇮🇳" <?=($countryCode==='+91')?'selected':''?>>🇮🇳 +91</option>
                                         </select>
-                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" pattern="[0-9]{10,15}" title="Sadece rakam, 10-15 hane arası.">
+                                        <input type="tel" class="form-control phone-number-input" name="phone" id="editPhone" value="<?=htmlspecialchars($phoneNumber)?>" required placeholder="555 555 55 55" maxlength="20" title="Sadece rakam, 10-15 hane arası.">
                                     </div>
                                     <small class="form-text text-muted">Telefon numaranızı ülke kodu ile birlikte giriniz</small>
                                 </div>
@@ -243,7 +297,7 @@ if (($_SESSION['edit_auth_'.$editToken] ?? false)) {
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">IBAN</label>
-                                    <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32" pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$" title="TR ile başlayan 26 haneli IBAN.">
+                                    <input type="text" class="form-control" name="iban" value="<?=htmlspecialchars($profile['iban'] ?? '')?>" placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="24" pattern="^TR[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{2}$" title="TR ile başlayan 26 haneli IBAN.">
                                     <small class="form-text text-muted">TR ile başlayan 26 haneli İban numarası</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -361,9 +415,10 @@ if ($showForm) {
                         <label class="form-label">Profil oluştururken kullandığınız telefon numarası</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="20" required pattern="[0-9]{10,15}" title="Sadece rakam, 10-15 hane arası." id="loginPhoneInput">
+                            <span class="input-group-text" style="min-width:48px;">+90</span>
+                            <input type="tel" name="phone_check" class="form-control" placeholder="5xx xxx xx xx" maxlength="13" required title="Sadece rakam, 10 hane (5xx xxx xx xx)" id="loginPhoneInput">
                         </div>
-                        <small class="form-text text-muted">Güvenlik için telefon numaranız istenmektedir.</small>
+                        <small class="form-text text-muted">Telefon numaranızın başında +90 sabit, sadece numarayı giriniz.</small>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mt-2">Devam</button>
                 </form>
