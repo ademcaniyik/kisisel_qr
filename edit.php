@@ -817,6 +817,27 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
         }
     });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Telefon gizlilik checkbox'ı için dinamik metin
+        var phoneHiddenCheck = document.getElementById('phoneHiddenCheck');
+        var phoneHiddenLabel = document.querySelector('label[for="phoneHiddenCheck"]');
+        var phoneHiddenDesc = phoneHiddenLabel?.parentElement.querySelector('.form-text');
+        function updatePhoneHiddenTexts() {
+            if (phoneHiddenCheck.checked) {
+                phoneHiddenLabel.innerHTML = '<i class="fas fa-eye me-1"></i> Telefon numaram profilimde görüntülensin';
+                if (phoneHiddenDesc) phoneHiddenDesc.innerHTML = '<i class="fas fa-info-circle me-1"></i> Telefon numaranız profilinizde <b>gizli</b> olarak kaydedildi. Sadece siz ve yöneticiler görebilir.';
+            } else {
+                phoneHiddenLabel.innerHTML = '<i class="fas fa-eye-slash me-1"></i> Telefon numaram profilimde görünmesin';
+                if (phoneHiddenDesc) phoneHiddenDesc.innerHTML = '<i class="fas fa-info-circle me-1"></i> İşaretlerseniz telefon numaranız sadece size görünür, ziyaretçiler göremez.';
+            }
+        }
+        if (phoneHiddenCheck && phoneHiddenLabel) {
+            updatePhoneHiddenTexts();
+            phoneHiddenCheck.addEventListener('change', updatePhoneHiddenTexts);
+        }
+    });
+    </script>
     <?php
     renderPageFooter();
     exit;
