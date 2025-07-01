@@ -62,13 +62,10 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg glassmorphism-header fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <div class="qr-brand-icon">
-                    <i class="fas fa-qrcode"></i>
-                </div>
-                Kişisel QR
+                <i class="fas fa-qrcode me-2"></i>Kişisel QR
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
