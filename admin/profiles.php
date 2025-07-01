@@ -360,7 +360,7 @@ if ($result) {
                                         <td>
                                             <?php 
                                             $photoData = null;
-                                            if (!empty($profile['photo_data'])) {
+                                            if (!empty($profile['photo_data']) && empty($profile['photo_hidden'])) {
                                                 $photoData = json_decode($profile['photo_data'], true);
                                             }
                                             
@@ -374,6 +374,9 @@ if ($result) {
                                                 echo '</picture>';
                                             } else {
                                                 echo '<img src="' . getBasePath() . '/assets/images/default-profile.svg" alt="Varsayılan profil" class="profile-photo-admin" loading="lazy">';
+                                                if (!empty($profile['photo_hidden'])) {
+                                                    echo '<small class="text-muted d-block">Fotoğraf Gizli</small>';
+                                                }
                                             }
                                             ?>
                                         </td>
