@@ -37,11 +37,20 @@ class OrderManager {
             }
             
             // QR Pool'dan müsait QR ata
+            error_log("=== QR Assignment Debug ===");
+            error_log("Profile ID: " . $profileResult['profile_id']);
+            error_log("Attempting QR assignment...");
+            
             $qrAssignment = $qrPoolManager->assignAvailableQR($profileResult['profile_id'], $data);
+            
+            error_log("QR Assignment Result: " . json_encode($qrAssignment));
             
             if (!$qrAssignment['success']) {
                 throw new Exception("QR ataması başarısız: " . $qrAssignment['error']);
             }
+            
+            error_log("QR successfully assigned - Pool ID: " . $qrAssignment['pool_id'] . ", QR ID: " . $qrAssignment['qr_code_id']);
+            error_log("===========================");
             
             // Sipariş verisine profil ve QR bilgilerini ekle
             $data['profile_id'] = $profileResult['profile_id'];

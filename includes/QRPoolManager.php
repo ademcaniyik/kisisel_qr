@@ -96,24 +96,61 @@ class QRPoolManager {
      */
     public function assignAvailableQR($profileId, $orderData = null) {
         try {
+            error_log("=== QRPoolManager assignAvailableQR Debug ===");
+            error_log("ProfileID to assign: " . $profileId);
+            
+            // Önce bu profile zaten QR atanmış mı kontrol et (EN ÖNEMLİ KONTROL!)
+            $existingQuery = $this->db->prepare("SELECT * FROM qr_pool WHERE profile_id = ? AND status = 'assigned' LIMIT 1");
+            $existingQuery->bind_param("i", $profileId);
+            $existingQuery->execute();
+            $existingResult = $existingQuery->get_result();
+            
+            if ($existingResult->num_rows > 0) {
+                $existing = $existingResult->fetch_assoc();
+                error_log("WARNING: Profile $profileId already has QR assigned: " . $existing['qr_code_id']);
+                error_log("Returning existing QR instead of creating new one");
+                
+                // Mevcut QR'ı döndür
+                return [
+                    'success' => true,
+                    'qr_pool_id' => $existing['id'],
+                    'pool_id' => $existing['pool_id'],
+                    'qr_code_id' => $existing['qr_code_id'],
+                    'edit_token' => $existing['edit_token'],
+                    'edit_code' => $existing['edit_code'],
+                    'profile_url' => $this->getBaseUrl() . '/qr/' . $existing['qr_code_id'],
+                    'edit_url' => $this->getBaseUrl() . '/edit/' . $existing['edit_token']
+                ];
+            }
+            
             // Müsait QR bul
             $qrQuery = $this->db->query("SELECT * FROM qr_pool WHERE status = 'available' ORDER BY id ASC LIMIT 1");
             
+            error_log("Available QR count: " . $qrQuery->num_rows);
+            
             if ($qrQuery->num_rows === 0) {
+                error_log("ERROR: No available QR codes in pool!");
                 throw new Exception("Hiç müsait QR yok! Yeni batch oluşturun.");
             }
             
             $qrData = $qrQuery->fetch_assoc();
+            error_log("Selected QR for assignment: " . json_encode($qrData));
             
             // QR'ı profile ataма
             $updateStmt = $this->db->prepare("UPDATE qr_pool SET status = 'assigned', profile_id = ?, assigned_at = NOW() WHERE id = ?");
             $updateStmt->bind_param("ii", $profileId, $qrData['id']);
-            $updateStmt->execute();
+            $updateResult = $updateStmt->execute();
+            
+            error_log("QR Pool update result: " . ($updateResult ? 'SUCCESS' : 'FAILED'));
+            error_log("Affected rows: " . $updateStmt->affected_rows);
             
             // Mevcut qr_codes tablosuna da kaydet (geriye uyumluluk için)
             $qrCodeStmt = $this->db->prepare("INSERT INTO qr_codes (id, profile_id, created_at) VALUES (?, ?, NOW())");
             $qrCodeStmt->bind_param("si", $qrData['qr_code_id'], $profileId);
-            $qrCodeStmt->execute();
+            $qrCodeResult = $qrCodeStmt->execute();
+            
+            error_log("QR Codes table insert result: " . ($qrCodeResult ? 'SUCCESS' : 'FAILED'));
+            error_log("=== End QRPoolManager Debug ===");
             
             // QR görseli oluştur (fiziksel basım için)
             $this->generateQRImages($qrData);
@@ -440,6 +477,58 @@ class QRPoolManager {
             return ['success' => true];
         } else {
             return ['success' => false, 'error' => 'Güncelleme başarısız'];
+        }
+    }
+    
+    /**
+     * Duplicate QR atamaları temizle
+     * Bir profile birden fazla QR atandığında kullanılır
+     */
+    public function cleanupDuplicateAssignments($profileId = null) {
+        try {
+            $sql = "SELECT profile_id, COUNT(*) as qr_count FROM qr_pool WHERE profile_id IS NOT NULL";
+            if ($profileId) {
+                $sql .= " AND profile_id = ?";
+            }
+            $sql .= " GROUP BY profile_id HAVING COUNT(*) > 1";
+            
+            $stmt = $this->db->prepare($sql);
+            if ($profileId) {
+                $stmt->bind_param("i", $profileId);
+            }
+            $stmt->execute();
+            $duplicates = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            
+            $cleaned = 0;
+            foreach ($duplicates as $duplicate) {
+                $profileId = $duplicate['profile_id'];
+                
+                // En eski atamayı tut, diğerlerini temizle
+                $keepQuery = $this->db->prepare("SELECT id FROM qr_pool WHERE profile_id = ? ORDER BY assigned_at ASC LIMIT 1");
+                $keepQuery->bind_param("i", $profileId);
+                $keepQuery->execute();
+                $keepId = $keepQuery->get_result()->fetch_assoc()['id'];
+                
+                // Diğer atamaları temizle
+                $cleanupStmt = $this->db->prepare("UPDATE qr_pool SET profile_id = NULL, status = 'available', assigned_at = NULL WHERE profile_id = ? AND id != ?");
+                $cleanupStmt->bind_param("ii", $profileId, $keepId);
+                $cleanupStmt->execute();
+                $cleaned += $cleanupStmt->affected_rows;
+                
+                error_log("Profile $profileId: Kept QR ID $keepId, cleaned " . $cleanupStmt->affected_rows . " duplicates");
+            }
+            
+            return [
+                'success' => true,
+                'profiles_cleaned' => count($duplicates),
+                'qr_codes_freed' => $cleaned
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
         }
     }
     
