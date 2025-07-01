@@ -75,39 +75,28 @@ class OrderManager {
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : 'bank_transfer';
             $shipping_address = isset($data['shipping_address']) ? $data['shipping_address'] : '';
             
-            // Debug: Parametreleri logla
-            error_log("OrderManager bind_param debug:");
-            error_log("- customer_name: " . $data['customer_name']);
-            error_log("- customer_phone: " . $data['customer_phone']);
-            error_log("- customer_email: " . ($data['customer_email'] ?? 'null'));
-            error_log("- profile_id: " . $data['profile_id']);
-            error_log("- profile_slug: " . $data['profile_slug']);
-            error_log("- qr_pool_id: " . $data['qr_pool_id']);
-            error_log("- product_type: " . $data['product_type']);
-            error_log("- product_name: " . $data['product_name']);
-            error_log("- quantity: " . $data['quantity']);
-            error_log("- price: " . $data['price']);
-            error_log("- special_requests: " . ($data['special_requests'] ?? 'null'));
-            error_log("- shipping_address: " . $shipping_address);
-            error_log("- payment_method: " . $payment_method);
-            error_log("- whatsapp_sent: " . $whatsapp_sent);
+            // Debug: Tüm parametreleri kontrol et
+            error_log("=== OrderManager Debug ===");
+            error_log("SQL Placeholder count: 14");
+            error_log("Bind param type string: sssisssidssssi (length: " . strlen("sssisssidssssi") . ")");
+            error_log("=========================");
             
             $stmt->bind_param(
-                "ssississidssi",
-                $data['customer_name'],
-                $data['customer_phone'],
-                $data['customer_email'],
-                $data['profile_id'],
-                $data['profile_slug'],
-                $data['qr_pool_id'],
-                $data['product_type'],
-                $data['product_name'],
-                $data['quantity'],
-                $data['price'],
-                $data['special_requests'],
-                $shipping_address,
-                $payment_method,
-                $whatsapp_sent
+                "sssisssidssssi",
+                $data['customer_name'],        // s
+                $data['customer_phone'],       // s
+                $data['customer_email'],       // s
+                $data['profile_id'],           // i
+                $data['profile_slug'],         // s
+                $data['qr_pool_id'],          // i
+                $data['product_type'],         // s
+                $data['product_name'],         // s
+                $data['quantity'],             // i
+                $data['price'],                // d (decimal)
+                $data['special_requests'],     // s
+                $shipping_address,             // s
+                $payment_method,               // s
+                $whatsapp_sent                 // i
             );
             
             if ($stmt->execute()) {
