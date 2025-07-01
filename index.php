@@ -1061,6 +1061,17 @@
         </div>
     </footer>
 
+    <!-- WhatsApp Widget -->
+    <div class="whatsapp-widget" id="whatsappWidget">
+        <div class="whatsapp-button" onclick="openWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-text">Yardım</span>
+        </div>
+        <div class="whatsapp-tooltip">
+            Merhaba! Size nasıl yardımcı olabilirim? 💬
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -1960,6 +1971,24 @@
         document.getElementById('orderModal').addEventListener('shown.bs.modal', function() {
             updateThemePreview();
         });
+
+        // WhatsApp Widget Function
+        function openWhatsApp() {
+            const phoneNumber = '905349334631';
+            const message = 'Merhaba! Kişisel QR sistemi hakkında bilgi almak istiyorum. Yardımcı olabilir misiniz?';
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            // Analytics tracking (isteğe bağlı)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'whatsapp_widget_click', {
+                    'event_category': 'engagement',
+                    'event_label': 'help_request'
+                });
+            }
+            
+            // WhatsApp'ı yeni sekmede aç
+            window.open(whatsappUrl, '_blank');
+        }
     </script>
 </body>
 
