@@ -5,19 +5,17 @@
  */
 
 define('ROOT', __DIR__);
-require_once ROOT . '/includes/QRPoolManager.php';
-require_once ROOT . '/includes/ProfileManager.php';
 require_once ROOT . '/includes/template_helpers.php';
 require_once ROOT . '/includes/utilities.php';
+require_once ROOT . '/includes/UserProfileManager.php';
 
 // Error reporting (production'da kapatılmalı)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Sınıf örnekleri
-$qrPoolManager = new QRPoolManager();
-$profileManager = new ProfileManager();
+// Sınıf örneği
+$userProfileManager = new UserProfileManager();
 
 /**
  * Loglama fonksiyonları
@@ -81,7 +79,8 @@ function normalizePhone($phone, $addCountryCode = false) {
     return $normalized;
 }
 
-// Session başlat
+// Session timeout'u 30 dakika olarak ayarla
+session_set_cookie_params(1800);
 session_start();
 
 // CSRF token oluştur
@@ -106,37 +105,41 @@ if (!$editToken) {
     exit;
 }
 
-// QR havuzunda bu edit token var mı?
-$connection = Database::getInstance()->getConnection();
-$stmt = $connection->prepare("SELECT * FROM qr_pool WHERE edit_token = ?");
-$stmt->bind_param("s", $editToken);
-$stmt->execute();
-$result = $stmt->get_result();
-$qr = $result->fetch_assoc();
-
-if (!$qr) {
-    http_response_code(404);
-    echo '<h2>Geçersiz veya silinmiş edit QR!</h2>';
-    exit;
-}
-
-// Profil atanmış mı?
-if (!$qr['profile_id']) {
-    echo '<h2>Bu QR henüz bir profile atanmamış.</h2>';
+// QR token ile profil bilgilerini al
+try {
+    $profile = $userProfileManager->getProfileByEditToken($editToken);
+    if (!$profile) {
+        http_response_code(404);
+        echo '<h2>Geçersiz veya silinmiş edit QR!</h2>';
+        exit;
+    }
+    $editCode = $profile['edit_code'];
+    $profileId = $profile['id'];
+} catch (Exception $e) {
+    log_edit_error('Profil arama hatası: ' . $e->getMessage());
+    http_response_code(500);
+    echo '<h2>Sistem hatası: Profil bilgileri alınamadı.</h2>';
     exit;
 }
 
 // Değişkenler
-$editCode = $qr['edit_code'];
-$profileId = $qr['profile_id'];
 $showForm = true;
 $loginError = false;
 $loginErrorType = '';
 
 // POST işlemleri
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    log_edit_error('Form post edildi. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-    log_edit_debug('POST verileri', $_POST);
+    $submittedIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $submittedUrl = $_SERVER['REQUEST_URI'] ?? 'unknown';
+    log_edit_error('Form post edildi. IP: ' . $submittedIp . ', URL: ' . $submittedUrl);
+    log_edit_debug('POST verileri', [
+        'post' => $_POST,
+        'files' => isset($_FILES['photo']) ? [
+            'name' => $_FILES['photo']['name'],
+            'size' => $_FILES['photo']['size'],
+            'error' => $_FILES['photo']['error']
+        ] : 'no_file'
+    ]);
     
     // CSRF token kontrolü
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $csrfToken) {
@@ -152,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $inputPhone = trim($_POST['phone_check']);
         
         // Profil bilgilerini al
-        $profile = $profileManager->getProfile($profileId);
+        $profile = $userProfileManager->getProfileByEditToken($editToken);
         if (!$profile) {
             echo '<h2>Profil bulunamadı.</h2>';
             exit;
@@ -208,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         try {
             // Mevcut profil bilgilerini al
-            $profile = $profileManager->getProfile($profileId);
+            $profile = $userProfileManager->getProfileByEditToken($editToken);
             if (!$profile) {
                 throw new Exception('Profil bulunamadı');
             }
@@ -216,14 +219,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // POST verilerini sanitize et
             $postData = getSanitizedPostData();
             
-            // Telefon numarasını işle
-            $countryCode = Utilities::sanitizeInput($_POST['country_code'] ?? '+90');
-            $phone = $countryCode . $postData['phone'];
-            
-            // Güncellenecek verileri hazırla
+            // Güncelleme verilerini hazırla
             $updateData = [
-                'name' => $postData['name'] ?: $profile['name'],
-                'phone' => $phone,
+                'name' => $postData['name'],
+                'phone' => $postData['phone'],
+                'country_code' => Utilities::sanitizeInput($_POST['country_code'] ?? '+90'),
                 'bio' => $postData['bio'],
                 'iban' => $postData['iban'],
                 'blood_type' => $postData['blood_type'],
@@ -231,74 +231,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'social_links' => $postData['social_links']
             ];
             
-            // Fotoğraf yükleme işlemi
-            $photoUrl = $profile['photo_url'] ?? null;
-            $photoData = $profile['photo_data'] ?? null;
-            
+            // Fotoğraf varsa ekle
             if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-                try {
-                    $photoDataArr = $profileManager->processUploadedPhoto($_FILES['photo']);
-                    if ($photoDataArr && isset($photoDataArr['filename'])) {
-                        $photoUrl = '/kisisel_qr/public/uploads/profiles/' . $photoDataArr['filename'];
-                        $photoData = json_encode($photoDataArr, JSON_UNESCAPED_UNICODE);
-                    }
-                } catch (Exception $e) {
-                    log_edit_error('Fotoğraf yükleme hatası: ' . $e->getMessage());
-                }
+                $updateData['photo'] = $_FILES['photo'];
             }
             
-            // Değişiklikleri kontrol et
-            $hasChanges = false;
-            $changes = [];
+            // Debug için güncelleme verilerini logla
+            log_edit_debug('Güncelleme verileri:', $updateData);
             
-            foreach ($updateData as $key => $value) {
-                if ($key === 'social_links') {
-                    $oldSocialLinks = json_decode($profile['social_links'] ?? '[]', true) ?: [];
-                    if (json_encode($value) !== json_encode($oldSocialLinks)) {
-                        $changes[$key] = ['old' => $oldSocialLinks, 'new' => $value];
-                        $hasChanges = true;
-                    }
-                } elseif (($profile[$key] ?? '') !== $value) {
-                    $changes[$key] = ['old' => $profile[$key] ?? '', 'new' => $value];
-                    $hasChanges = true;
-                }
-            }
+            // Profili güncelle
+            $updateResult = $userProfileManager->updateProfile($editToken, $updateData);
             
-            // Fotoğraf değişikliği kontrolü
-            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-                $hasChanges = true;
-            }
-            
-            log_edit_debug('Tespit edilen değişiklikler', $changes);
-            
-            if (!$hasChanges) {
+            if ($updateResult) {
+                log_edit_error('Profil başarıyla güncellendi. EditToken: ' . $editToken);
+                $_SESSION['profile_update_success'] = true;
+                $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi.';
+                $_SESSION['profile_update_type'] = 'success';
+            } else {
+                log_edit_error('Değişiklik yapılmadı. EditToken: ' . $editToken);
                 $_SESSION['profile_update_message'] = 'Herhangi bir değişiklik yapılmadı.';
                 $_SESSION['profile_update_type'] = 'info';
-            } else {
-                // Güncellemeyi yap
-                $updateResult = $profileManager->updateProfile(
-                    $profileId,
-                    $updateData['name'],
-                    $updateData['phone'],
-                    $updateData['bio'],
-                    $updateData['iban'],
-                    $updateData['blood_type'],
-                    $updateData['theme'],
-                    $updateData['social_links'],
-                    $photoUrl,
-                    $photoData
-                );
-                
-                if ($updateResult) {
-                    log_edit_error('Profil başarıyla güncellendi');
-                    $_SESSION['profile_update_success'] = true;
-                    $_SESSION['profile_update_message'] = 'Profiliniz başarıyla güncellendi.';
-                    $_SESSION['profile_update_type'] = 'success';
-                } else {
-                    log_edit_error('Profil güncelleme başarısız');
-                    $_SESSION['profile_update_message'] = 'Profil güncellenemedi. Lütfen tekrar deneyiniz.';
-                    $_SESSION['profile_update_type'] = 'warning';
-                }
             }
             
             // Redirect
@@ -317,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Profil düzenleme ekranı - sadece oturum doğrulaması varsa
 if ($_SESSION['edit_auth_' . $editToken] ?? false) {
-    $profile = $profileManager->getProfile($profileId);
+    $profile = $userProfileManager->getProfileByEditToken($editToken);
     if (!$profile) {
         echo '<h2>Profil bulunamadı.</h2>';
         exit;
