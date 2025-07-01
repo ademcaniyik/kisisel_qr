@@ -150,6 +150,16 @@ class UserProfileManager {
                 $photoResult = $imageOptimizer->uploadAndOptimize($data['photo']);
                 
                 if ($photoResult['success']) {
+                    // Eski fotoğrafı sil (eğer varsa)
+                    if (!empty($profile['photo_data'])) {
+                        $oldPhotoData = json_decode($profile['photo_data'], true);
+                        if ($oldPhotoData && !empty($oldPhotoData['filename'])) {
+                            $this->log("Eski fotoğraf siliniyor: " . $oldPhotoData['filename']);
+                            $deleteResult = $imageOptimizer->deleteImageFiles($oldPhotoData['filename']);
+                            $this->log("Silme sonucu:", $deleteResult);
+                        }
+                    }
+                    
                     $photoData = [
                         'filename' => $photoResult['filename'],
                         'original_name' => $data['photo']['name'],
@@ -165,6 +175,8 @@ class UserProfileManager {
                     $updateFields[] = "photo_data = ?";
                     $params[] = json_encode($photoData, JSON_UNESCAPED_UNICODE);
                     $types .= "s";
+                    
+                    $this->log("Yeni fotoğraf eklendi: " . $photoResult['filename']);
                 }
             }
             

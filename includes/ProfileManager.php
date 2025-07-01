@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/utilities.php';
+require_once __DIR__ . '/ImageOptimizer.php';
 
 class ProfileManager {
     private $db;
@@ -477,6 +478,17 @@ class ProfileManager {
             }
 
             if ($photoUrl !== null && $photoUrl !== $currentProfile['photo_url']) {
+                // Eski fotoğrafı sil (eğer varsa ve yeni fotoğraf farklıysa)
+                if (!empty($currentProfile['photo_data'])) {
+                    $oldPhotoData = json_decode($currentProfile['photo_data'], true);
+                    if ($oldPhotoData && !empty($oldPhotoData['filename'])) {
+                        $this->debugLog("Eski fotoğraf siliniyor", $oldPhotoData['filename']);
+                        $imageOptimizer = new ImageOptimizer();
+                        $deleteResult = $imageOptimizer->deleteImageFiles($oldPhotoData['filename']);
+                        $this->debugLog("Eski fotoğraf silme sonucu", $deleteResult);
+                    }
+                }
+                
                 $updateFields[] = "photo_url = ?";
                 $params[] = $photoUrl;
                 $types .= "s";
