@@ -65,7 +65,28 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', user
             input.value = username; // Website ve WhatsApp için tam değer
         } else {
             // Diğer platformlar için sadece username kısmını göster
-            const cleanUsername = username.replace(/^https?:\/\/[^\/]+\//, '').replace(/\/$/, '');
+            let cleanUsername = username;
+            
+            // Platform-specific URL parsing
+            if (platform === 'linkedin' && username.includes('linkedin.com/in/')) {
+                cleanUsername = username.replace(/^https?:\/\/.*linkedin\.com\/in\//, '').replace(/\/$/, '');
+            } else if (platform === 'youtube' && username.includes('youtube.com/@')) {
+                cleanUsername = username.replace(/^https?:\/\/.*youtube\.com\/@/, '').replace(/\/$/, '');
+            } else if (platform === 'tiktok' && username.includes('/@')) {
+                cleanUsername = username.replace(/^https?:\/\/.*\/@/, '').replace(/\/$/, '');
+            } else if (platform === 'snapchat' && username.includes('/add/')) {
+                cleanUsername = username.replace(/^https?:\/\/.*\/add\//, '').replace(/\/$/, '');
+            } else if (platform === 'discord' && username.includes('discord.gg/')) {
+                cleanUsername = username.replace(/^https?:\/\/.*discord\.gg\//, '').replace(/\/$/, '');
+            } else if (platform === 'telegram' && username.includes('t.me/')) {
+                cleanUsername = username.replace(/^https?:\/\/.*t\.me\//, '').replace(/\/$/, '');
+            } else if (platform === 'twitch' && username.includes('twitch.tv/')) {
+                cleanUsername = username.replace(/^https?:\/\/.*twitch\.tv\//, '').replace(/\/$/, '');
+            } else {
+                // Genel URL parsing (Instagram, X, Facebook için)
+                cleanUsername = username.replace(/^https?:\/\/[^\/]+\//, '').replace(/\/$/, '');
+            }
+            
             input.value = cleanUsername;
         }
     }

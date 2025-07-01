@@ -86,6 +86,56 @@ body.theme-default .social-link:hover {
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
 }
 
+/* Varsayılan temada tüm sosyal medya butonları siyah-beyaz olsun */
+body.theme-default .social-link.facebook,
+body.theme-default .social-link.twitter,
+body.theme-default .social-link.instagram,
+body.theme-default .social-link.linkedin,
+body.theme-default .social-link.github,
+body.theme-default .social-link.youtube,
+body.theme-default .social-link.whatsapp,
+body.theme-default .social-link.tiktok,
+body.theme-default .social-link.pinterest,
+body.theme-default .social-link.spotify,
+body.theme-default .social-link.medium,
+body.theme-default .social-link.twitch,
+body.theme-default .social-link.discord,
+body.theme-default .social-link.reddit,
+body.theme-default .social-link.telegram,
+body.theme-default .social-link.snapchat,
+body.theme-default .social-link.website,
+body.theme-default .social-link.x {
+    background: #f8f9fa !important;
+    border: 1px solid #e9ecef !important;
+    color: #495057 !important;
+    transition: all 0.2s ease;
+}
+
+body.theme-default .social-link.facebook:hover,
+body.theme-default .social-link.twitter:hover,
+body.theme-default .social-link.instagram:hover,
+body.theme-default .social-link.linkedin:hover,
+body.theme-default .social-link.github:hover,
+body.theme-default .social-link.youtube:hover,
+body.theme-default .social-link.whatsapp:hover,
+body.theme-default .social-link.tiktok:hover,
+body.theme-default .social-link.pinterest:hover,
+body.theme-default .social-link.spotify:hover,
+body.theme-default .social-link.medium:hover,
+body.theme-default .social-link.twitch:hover,
+body.theme-default .social-link.discord:hover,
+body.theme-default .social-link.reddit:hover,
+body.theme-default .social-link.telegram:hover,
+body.theme-default .social-link.snapchat:hover,
+body.theme-default .social-link.website:hover,
+body.theme-default .social-link.x:hover {
+    background: #e9ecef !important;
+    border-color: #3498db !important;
+    color: #2c3e50 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
 body.theme-default .contact-btn {
     border: 1px solid #e9ecef;
     background: #ffffff;
