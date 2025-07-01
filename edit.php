@@ -43,6 +43,9 @@ function getSanitizedPostData() {
     // Fotoğraf aksiyonu
     $data['photo_action'] = trim(Utilities::sanitizeInput($_POST['photo_action'] ?? ''));
     
+    // Telefon gizleme ayarı
+    $data['phone_hidden'] = isset($_POST['phone_hidden']) ? 1 : 0;
+    
     return $data;
 }
 
@@ -182,7 +185,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'blood_type' => $postData['blood_type'],
                 'theme' => $postData['theme'],
                 'social_links' => $postData['social_links'],
-                'photo_action' => $postData['photo_action']
+                'photo_action' => $postData['photo_action'],
+                'phone_hidden' => $postData['phone_hidden']
             ];
             
             // Fotoğraf varsa ekle
