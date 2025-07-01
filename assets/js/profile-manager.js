@@ -1,17 +1,17 @@
 // Sosyal medya platform tanımları
 const socialPlatforms = {
-    instagram: { name: 'Instagram', placeholder: 'instagram.com/kullaniciadi', icon: 'fab fa-instagram' },
-    x: { name: 'X', placeholder: 'x.com/kullaniciadi', icon: 'fab fa-x-twitter' },
-    linkedin: { name: 'LinkedIn', placeholder: 'linkedin.com/in/kullaniciadi', icon: 'fab fa-linkedin' },
-    facebook: { name: 'Facebook', placeholder: 'facebook.com/kullaniciadi', icon: 'fab fa-facebook' },
-    youtube: { name: 'YouTube', placeholder: 'youtube.com/@kanal', icon: 'fab fa-youtube' },
-    tiktok: { name: 'TikTok', placeholder: 'tiktok.com/@kullaniciadi', icon: 'fab fa-tiktok' },
-    whatsapp: { name: 'WhatsApp', placeholder: '905XXXXXXXXX', icon: 'fab fa-whatsapp' },
-    website: { name: 'Website', placeholder: 'www.website.com', icon: 'fas fa-globe' },
-    snapchat: { name: 'Snapchat', placeholder: 'snapchat.com/add/kullaniciadi', icon: 'fab fa-snapchat' },
-    discord: { name: 'Discord', placeholder: 'discord.com/users/kullaniciadi', icon: 'fab fa-discord' },
-    telegram: { name: 'Telegram', placeholder: 't.me/kullaniciadi', icon: 'fab fa-telegram' },
-    twitch: { name: 'Twitch', placeholder: 'twitch.tv/kullaniciadi', icon: 'fab fa-twitch' }
+    instagram: { name: 'Instagram', placeholder: 'kullanici_adi', icon: 'fab fa-instagram' },
+    x: { name: 'X', placeholder: 'kullanici_adi', icon: 'fab fa-x-twitter' },
+    linkedin: { name: 'LinkedIn', placeholder: 'profil-adi', icon: 'fab fa-linkedin' },
+    facebook: { name: 'Facebook', placeholder: 'profil.adi', icon: 'fab fa-facebook' },
+    youtube: { name: 'YouTube', placeholder: 'kanal_adi', icon: 'fab fa-youtube' },
+    tiktok: { name: 'TikTok', placeholder: 'kullanici_adi', icon: 'fab fa-tiktok' },
+    whatsapp: { name: 'WhatsApp', placeholder: '905551234567', icon: 'fab fa-whatsapp' },
+    website: { name: 'Website', placeholder: 'https://website.com', icon: 'fas fa-globe' },
+    snapchat: { name: 'Snapchat', placeholder: 'kullanici_adi', icon: 'fab fa-snapchat' },
+    discord: { name: 'Discord', placeholder: 'sunucu_davet_kodu', icon: 'fab fa-discord' },
+    telegram: { name: 'Telegram', placeholder: 'kullanici_adi', icon: 'fab fa-telegram' },
+    twitch: { name: 'Twitch', placeholder: 'kanal_adi', icon: 'fab fa-twitch' }
 };
 
 $(document).ready(function() {
@@ -26,8 +26,8 @@ $(document).ready(function() {
     }
 });
 
-// Sosyal medya bağlantısı ekleme fonksiyonu (githubicin ile birebir)
-function addSocialLink(containerId = 'socialLinksContainer', platform = '', url = '') {
+// Sosyal medya bağlantısı ekleme fonksiyonu - Kullanıcı dostu username girişi
+function addSocialLink(containerId = 'socialLinksContainer', platform = '', username = '') {
     const container = document.getElementById(containerId);
     if (!container) return;
     const linkDiv = document.createElement('div');
@@ -47,19 +47,29 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
     input.className = 'form-control';
     input.required = true;
     
-    // Platform tipine göre input tipini ayarla
+    // Platform tipine göre input tipini ayarla - kullanıcı dostu
     if (platform === 'whatsapp') {
         input.type = 'tel';
-        input.placeholder = '905XXXXXXXXX';
+        input.placeholder = '905551234567';
     } else if (platform === 'website') {
         input.type = 'url';
-        input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : 'www.website.com';
+        input.placeholder = 'https://website.com';
     } else {
-        input.type = 'url';
+        input.type = 'text';
         input.placeholder = platform && socialPlatforms[platform] ? socialPlatforms[platform].placeholder : socialPlatforms[Object.keys(socialPlatforms)[0]].placeholder;
     }
     
-    if (url) input.value = url;
+    // Mevcut değeri ayarla - URL'den username çıkarma
+    if (username) {
+        if (platform === 'website' || platform === 'whatsapp') {
+            input.value = username; // Website ve WhatsApp için tam değer
+        } else {
+            // Diğer platformlar için sadece username kısmını göster
+            const cleanUsername = username.replace(/^https?:\/\/[^\/]+\//, '').replace(/\/$/, '');
+            input.value = cleanUsername;
+        }
+    }
+    
     select.addEventListener('change', (e) => {
         const plat = e.target.value;
         if (plat in socialPlatforms) {
@@ -68,11 +78,12 @@ function addSocialLink(containerId = 'socialLinksContainer', platform = '', url 
             // Platform'a göre input tipini güncelle
             if (plat === 'whatsapp') {
                 input.type = 'tel';
-                input.placeholder = '905XXXXXXXXX';
+                input.placeholder = '905551234567';
             } else if (plat === 'website') {
                 input.type = 'url';
+                input.placeholder = 'https://website.com';
             } else {
-                input.type = 'url';
+                input.type = 'text';
             }
         }
     });
@@ -154,14 +165,41 @@ async function createProfile() {
             formData.append('photo', photoInput.files[0]);
         }
         
-        // Sosyal medya bağlantılarını ekle
+        // Sosyal medya bağlantılarını ekle - kullanıcı adlarını URL'e dönüştür
         const socialLinks = {};
         const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
         socialInputs.forEach(group => {
             const platform = group.querySelector('select').value;
-            const url = group.querySelector('input[type="url"]').value;
-            if (url) {
-                socialLinks[platform] = url;
+            const userInput = group.querySelector('input').value.trim();
+            if (userInput) {
+                // Platform tipine göre tam URL oluştur
+                let fullUrl = userInput;
+                if (platform === 'instagram') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://instagram.com/${userInput}`;
+                } else if (platform === 'x') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://twitter.com/${userInput}`;
+                } else if (platform === 'linkedin') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://linkedin.com/in/${userInput}`;
+                } else if (platform === 'facebook') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://facebook.com/${userInput}`;
+                } else if (platform === 'youtube') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://youtube.com/@${userInput}`;
+                } else if (platform === 'tiktok') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://tiktok.com/@${userInput}`;
+                } else if (platform === 'snapchat') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://snapchat.com/add/${userInput}`;
+                } else if (platform === 'discord') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://discord.gg/${userInput}`;
+                } else if (platform === 'telegram') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://t.me/${userInput}`;
+                } else if (platform === 'twitch') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://twitch.tv/${userInput}`;
+                } else if (platform === 'whatsapp') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://wa.me/${userInput}`;
+                } else if (platform === 'website') {
+                    fullUrl = userInput.startsWith('http') ? userInput : `https://${userInput}`;
+                }
+                socialLinks[platform] = fullUrl;
             }
         });
         formData.append('socialLinks', JSON.stringify(socialLinks));

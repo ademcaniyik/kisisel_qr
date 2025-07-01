@@ -580,14 +580,42 @@ if ($_SESSION['edit_auth_' . $editToken] ?? false) {
         var saveBtn = document.getElementById('saveProfileBtn');
         if(editForm && saveBtn){
             editForm.addEventListener('submit', function(e){
-                // Sosyal medya verilerini hidden input'a yaz
+                // Sosyal medya verilerini hidden input'a yaz - kullanıcı adlarını URL'e dönüştür
                 const socialLinks = {};
                 const socialInputs = document.querySelectorAll('#socialLinksContainer .input-group');
                 socialInputs.forEach(group => {
                     const platform = group.querySelector('select').value;
-                    const urlInput = group.querySelector('input[type="url"], input[type="email"], input[type="tel"]');
+                    const urlInput = group.querySelector('input[type="url"], input[type="text"], input[type="tel"]');
                     if (urlInput && urlInput.value.trim()) {
-                        socialLinks[platform] = urlInput.value.trim();
+                        const userInput = urlInput.value.trim();
+                        // Platform tipine göre tam URL oluştur
+                        let fullUrl = userInput;
+                        if (platform === 'instagram') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://instagram.com/${userInput}`;
+                        } else if (platform === 'x') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://twitter.com/${userInput}`;
+                        } else if (platform === 'linkedin') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://linkedin.com/in/${userInput}`;
+                        } else if (platform === 'facebook') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://facebook.com/${userInput}`;
+                        } else if (platform === 'youtube') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://youtube.com/@${userInput}`;
+                        } else if (platform === 'tiktok') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://tiktok.com/@${userInput}`;
+                        } else if (platform === 'snapchat') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://snapchat.com/add/${userInput}`;
+                        } else if (platform === 'discord') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://discord.gg/${userInput}`;
+                        } else if (platform === 'telegram') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://t.me/${userInput}`;
+                        } else if (platform === 'twitch') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://twitch.tv/${userInput}`;
+                        } else if (platform === 'whatsapp') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://wa.me/${userInput}`;
+                        } else if (platform === 'website') {
+                            fullUrl = userInput.startsWith('http') ? userInput : `https://${userInput}`;
+                        }
+                        socialLinks[platform] = fullUrl;
                     }
                 });
                 document.getElementById('socialLinksInput').value = JSON.stringify(socialLinks);

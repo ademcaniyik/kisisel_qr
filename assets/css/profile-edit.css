@@ -1,4 +1,4 @@
-        :root {
+:root {
             --primary-color: #3498db;
             --secondary-color: #2ecc71;
             --accent-color: #e74c3c;
@@ -252,4 +252,9 @@
 
         .preview-toggle:hover {
             transform: scale(1.1);
+        }
+
+        /* Twitch icon için mor renk */
+        .text-purple {
+            color: #9146ff !important;
         }
