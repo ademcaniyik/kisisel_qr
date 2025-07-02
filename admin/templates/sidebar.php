@@ -55,6 +55,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php echo $currentPage === 'analytics.php' ? 'active' : ''; ?>" href="analytics.php">
+                        <i class="fas fa-chart-line me-2"></i>Site Analytics
+                        <span class="badge bg-info ms-2">YENİ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php echo $currentPage === 'logs.php' ? 'active' : ''; ?>" href="logs.php">
                         <i class="fas fa-file-alt me-2"></i>İşlem Logları
                     </a>

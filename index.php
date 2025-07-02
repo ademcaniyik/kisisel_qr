@@ -1,3 +1,9 @@
+<?php
+// Analytics tracking for homepage
+require_once 'includes/AnalyticsManager.php';
+$analytics = new AnalyticsManager();
+$analytics->trackPageVisit($_SERVER['REQUEST_URI'], 'Kişisel QR - Ana Sayfa');
+?>
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -1198,7 +1204,9 @@
 
     <!-- Order System JavaScript -->
     <script src="assets/js/order-system.js"></script>
-    </script>
+    
+    <!-- Analytics Tracking JavaScript -->
+    <script src="assets/js/analytics.js"></script>
 </body>
 
 </html>

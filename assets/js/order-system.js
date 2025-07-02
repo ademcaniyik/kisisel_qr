@@ -7,6 +7,15 @@
 function showOrderForm() {
     const modal = new bootstrap.Modal(document.getElementById('orderModal'));
     modal.show();
+    
+    // Analytics tracking - order button clicked
+    if (window.qrAnalytics) {
+        window.qrAnalytics.trackOrderButtonClick({
+            element_id: 'orderBtn',
+            element_text: 'Sipariş Ver',
+            page_url: window.location.href
+        });
+    }
 }
 
 function nextStep() {
@@ -27,6 +36,17 @@ function nextStep() {
     if (isValid) {
         document.getElementById('step1').style.display = 'none';
         document.getElementById('step2').style.display = 'block';
+        
+        // Analytics tracking - step 1 completed
+        if (window.qrAnalytics) {
+            window.qrAnalytics.trackOrderStep('step1', {
+                customer_name: document.getElementById('customerName').value,
+                has_phone: !!document.getElementById('customerPhone').value,
+                has_bio: !!document.getElementById('customerBio').value,
+                theme: document.getElementById('customerTheme').value
+            });
+        }
+        
         // Initialize payment method handling
         initPaymentMethods();
     }
@@ -47,10 +67,20 @@ function initPaymentMethods() {
                 document.getElementById('bankTransferInfo').style.display = 'block';
                 completeOrderBtn.textContent = 'Ödeme Yaptım, Sipariş Ver';
                 completeOrderBtn.className = 'btn btn-success';
+                
+                // Analytics tracking - payment method selected
+                if (window.qrAnalytics) {
+                    window.qrAnalytics.trackPaymentMethodSelect('bank_transfer');
+                }
             } else if (this.value === 'cash_on_delivery') {
                 document.getElementById('cashOnDeliveryInfo').style.display = 'block';
                 completeOrderBtn.textContent = 'Sipariş Ver';
                 completeOrderBtn.className = 'btn btn-warning';
+                
+                // Analytics tracking - payment method selected
+                if (window.qrAnalytics) {
+                    window.qrAnalytics.trackPaymentMethodSelect('cash_on_delivery');
+                }
             }
 
             // Update label borders
@@ -163,6 +193,26 @@ async function completeOrder() {
 
         if (result.success) {
             console.log('Sipariş başarıyla kaydedildi:', result.order_id);
+            
+            // Analytics tracking - order completed
+            if (window.qrAnalytics) {
+                window.qrAnalytics.trackOrderComplete({
+                    order_id: result.order_id,
+                    payment_method: paymentMethod,
+                    customer_name: customerName,
+                    total_time: Date.now() - qrAnalytics.sessionStartTime
+                });
+                
+                // Link order to analytics session
+                fetch('/admin/api/analytics.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'link_order',
+                        data: { order_id: result.order_id }
+                    })
+                });
+            }
 
             // Profil linki varsa ayarla
             if (result.profile && result.profile.profile_url) {
@@ -327,6 +377,11 @@ function updateThemePreview() {
     setTimeout(() => {
         previewElement.style.transform = 'scale(1)';
     }, 150);
+    
+    // Analytics tracking - theme change
+    if (window.qrAnalytics) {
+        window.qrAnalytics.trackThemeChange(selectedTheme);
+    }
 }
 
 // City-District Management
