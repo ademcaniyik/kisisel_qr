@@ -4,6 +4,10 @@
  * Site trafiği ve kullanıcı davranışı analizi
  */
 
+// Hata ayıklama için
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once '../config/security.php';
 require_once '../includes/AnalyticsManager.php';
 
@@ -13,20 +17,31 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-$analytics = new AnalyticsManager();
+try {
+    $analytics = new AnalyticsManager();
 
-// Tarih filtreleri
-$startDate = $_GET['start_date'] ?? date('Y-m-d', strtotime('-7 days'));
-$endDate = $_GET['end_date'] ?? date('Y-m-d');
+    // Tarih filtreleri
+    $startDate = $_GET['start_date'] ?? date('Y-m-d', strtotime('-7 days'));
+    $endDate = $_GET['end_date'] ?? date('Y-m-d');
 
-// Günlük istatistikleri hesapla (bugün için)
-$analytics->calculateDailyStats(date('Y-m-d'));
+    // Günlük istatistikleri hesapla (bugün için)
+    $analytics->calculateDailyStats(date('Y-m-d'));
 
-// Dashboard verilerini al
-$dashboardData = $analytics->getDashboardData($startDate, $endDate);
-$totalStats = $dashboardData['total_stats'];
-$dailyStats = $dashboardData['daily_stats'];
-$popularPages = $dashboardData['popular_pages'];
+    // Dashboard verilerini al
+    $dashboardData = $analytics->getDashboardData($startDate, $endDate);
+    $totalStats = $dashboardData['total_stats'];
+    $dailyStats = $dashboardData['daily_stats'];
+    $popularPages = $dashboardData['popular_pages'];
+    
+} catch (Exception $e) {
+    echo "<h1>Analytics Hatası</h1>";
+    echo "<p>Hata: " . $e->getMessage() . "</p>";
+    echo "<p>Dosya: " . $e->getFile() . "</p>";
+    echo "<p>Satır: " . $e->getLine() . "</p>";
+    echo "<pre>" . $e->getTraceAsString() . "</pre>";
+    echo "<a href='dashboard.php'>Dashboard'a dön</a>";
+    exit;
+}
 
 ?>
 <!DOCTYPE html>
