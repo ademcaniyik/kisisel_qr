@@ -487,7 +487,7 @@
                 <div class="col-lg-4">
                     <div class="testimonial-card">
                         <div class="testimonial-text">
-                            "Müşterilerimle iletişim kurmak hiç bu kadar kolay olmamıştı. QR kodumu kartvizitimde kullanıyorum, harika!"
+                            "Sosyal medyada takip etmek isteyenler'e hesap adımı söylemekle uğraşmıyorum. Çok pratik!"
                         </div>
                         <div class="testimonial-author">- Ahmet K., Emlak Uzmanı</div>
                     </div>
@@ -505,9 +505,9 @@
                 <div class="col-lg-4">
                     <div class="testimonial-card">
                         <div class="testimonial-text">
-                            "Restoranda masalara QR kod koyduk. Müşteriler menümüzü ve sosyal medyamızı kolayca buluyor."
+                            "Ben aracımda değilken bana ulaşmak isteyenler teknolojik bir şekilde bana hemen ulaşabiliyorlar. Çok kullanışlı."
                         </div>
-                        <div class="testimonial-author">- Mehmet T., Restoran Sahibi</div>
+                        <div class="testimonial-author">- Mehmet T., Araç Kurye</div>
                     </div>
                 </div>
             </div>

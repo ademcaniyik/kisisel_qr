@@ -1536,6 +1536,17 @@ if ($result) {
 
     // Profil oluşturma fonksiyonu güncelleme
     function createProfile() {
+        // Buton koruması - çift tıklama engellemek için
+        const createBtn = document.querySelector('#createProfileModal button[onclick="createProfile()"]');
+        if (createBtn.disabled) {
+            return; // Zaten işlem devam ediyor
+        }
+        
+        // Butonu devre dışı bırak
+        createBtn.disabled = true;
+        const originalText = createBtn.innerHTML;
+        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Oluşturuluyor...';
+        
         var form = document.getElementById('createProfileForm');
         var formData = new FormData(form);
         
@@ -1581,10 +1592,18 @@ if ($result) {
                     location.reload();
                 } else {
                     showToast('Profil oluşturulurken bir hata oluştu: ' + (res.message || ''), 'danger');
+                    
+                    // Hata durumunda butonu tekrar aktif hale getir
+                    createBtn.disabled = false;
+                    createBtn.innerHTML = originalText;
                 }
             },
             error: function() {
                 showToast('Sunucu hatası!', 'danger');
+                
+                // Hata durumunda butonu tekrar aktif hale getir
+                createBtn.disabled = false;
+                createBtn.innerHTML = originalText;
             }
         });
     }        // Eski addSocialLink fonksiyonunu modern versiyonla değiştirme
@@ -1613,6 +1632,13 @@ if ($result) {
             $('.social-platform-btn[data-container="socialLinksContainer"]')
                 .removeClass('disabled')
                 .prop('disabled', false);
+                
+            // Oluştur butonunu tekrar aktif hale getir
+            const createBtn = document.querySelector('#createProfileModal button[onclick="createProfile()"]');
+            if (createBtn) {
+                createBtn.disabled = false;
+                createBtn.innerHTML = 'Oluştur';
+            }
         });
 
         $('#editProfileModal').on('hidden.bs.modal', function() {

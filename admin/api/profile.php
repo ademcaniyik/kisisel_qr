@@ -62,6 +62,24 @@ try {
             $redirectUrl = $isDynamic ? Utilities::sanitizeInput($_POST['redirect_url']) : null;
             $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
             $slug = Utilities::generateSlug();
+            
+            // Çift profil oluşturmayı engellemek için son 30 saniyede aynı isim ve telefon ile profil oluşturulmuş mu kontrol et
+            $duplicateCheckStmt = $connection->prepare("SELECT id FROM profiles WHERE name = ? AND phone = ? AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
+            $duplicateCheckStmt->bind_param("ss", $name, $phone);
+            $duplicateCheckStmt->execute();
+            $duplicateResult = $duplicateCheckStmt->get_result();
+            
+            if ($duplicateResult->num_rows > 0) {
+                $existingProfile = $duplicateResult->fetch_assoc();
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Bu profil az önce oluşturulmuş. Çift profil oluşturmayı engellemek için 30 saniye bekleyin.',
+                    'existing_profile_id' => $existingProfile['id']
+                ]);
+                exit();
+            }
+            $duplicateCheckStmt->close();
+            
             $themeCheckStmt = $connection->prepare("SELECT theme_name FROM themes WHERE theme_name = ?");
             $themeCheckStmt->bind_param("s", $theme);
             $themeCheckStmt->execute();

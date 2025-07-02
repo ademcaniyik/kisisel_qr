@@ -394,7 +394,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-instagram',
         prefix: '@',
         baseUrl: 'https://instagram.com/',
-        placeholder: 'kullanici_adi',
+        placeholder: 'kullanıcı_adı',
         color: 'platform-instagram'
     },
     x: {
@@ -402,7 +402,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-twitter',
         prefix: '@',
         baseUrl: 'https://x.com/',
-        placeholder: 'kullanici_adi',
+        placeholder: 'kullanıcı_adı',
         color: 'platform-x'
     },
     linkedin: {
@@ -410,7 +410,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-linkedin',
         prefix: '',
         baseUrl: 'https://linkedin.com/in/',
-        placeholder: 'profil-adi',
+        placeholder: 'profil-adı',
         color: 'platform-linkedin'
     },
     facebook: {
@@ -418,7 +418,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-facebook',
         prefix: '',
         baseUrl: 'https://facebook.com/',
-        placeholder: 'profil.adi',
+        placeholder: 'profil-adı',
         color: 'platform-facebook'
     },
     youtube: {
@@ -426,7 +426,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-youtube',
         prefix: '',
         baseUrl: 'https://youtube.com/@',
-        placeholder: 'kanal_adi',
+        placeholder: 'kanal_adı',
         color: 'platform-youtube'
     },
     tiktok: {
@@ -434,7 +434,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-tiktok',
         prefix: '@',
         baseUrl: 'https://tiktok.com/@',
-        placeholder: 'kullanici_adi',
+        placeholder: 'kullanıcı_adı',
         color: 'platform-tiktok'
     },
     whatsapp: {
@@ -450,7 +450,7 @@ const socialMediaPlatforms = {
         icon: 'fas fa-globe',
         prefix: 'https://',
         baseUrl: '',
-        placeholder: 'ornek.com',
+        placeholder: 'www.acdisoftware.com.tr',
         color: 'platform-website'
     },
     snapchat: {
@@ -458,7 +458,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-snapchat',
         prefix: '',
         baseUrl: 'https://snapchat.com/add/',
-        placeholder: 'kullanici_adi',
+        placeholder: 'kullanıcı_adı',
         color: 'platform-snapchat'
     },
     discord: {
@@ -466,7 +466,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-discord',
         prefix: '#',
         baseUrl: '',
-        placeholder: 'kullanici#1234',
+        placeholder: 'kullanıcı#1234',
         color: 'platform-discord'
     },
     telegram: {
@@ -474,7 +474,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-telegram',
         prefix: '@',
         baseUrl: 'https://t.me/',
-        placeholder: 'kullanici_adi',
+        placeholder: 'kullanıcı_adı',
         color: 'platform-telegram'
     },
     twitch: {
@@ -482,7 +482,7 @@ const socialMediaPlatforms = {
         icon: 'fab fa-twitch',
         prefix: '',
         baseUrl: 'https://twitch.tv/',
-        placeholder: 'kanal_adi',
+        placeholder: 'kanal_adı',
         color: 'platform-twitch'
     }
 };
