@@ -1206,7 +1206,7 @@ $analytics->trackPageVisit($_SERVER['REQUEST_URI'], 'Kişisel QR - Ana Sayfa');
     <script src="assets/js/order-system.js"></script>
     
     <!-- Analytics Tracking JavaScript -->
-    <script src="assets/js/analytics.js"></script>
+    <script src="assets/js/analytics-tracking.js"></script>
 </body>
 
 </html>

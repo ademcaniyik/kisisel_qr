@@ -1,7 +1,7 @@
 <?php
 /**
  * Analytics Manager - Site trafiği ve kullanıcı davranışı analizi
- * Conversion tracking, user behavior tracking, session management
+ * analytics_tables.sql yapısına uygun olarak güncellenmiştir
  */
 
 require_once __DIR__ . '/../config/database.php';
@@ -78,33 +78,35 @@ class AnalyticsManager {
     }
     
     /**
-     * Sayfa ziyaretini kaydet
+     * Sayfa ziyaretini kaydet (page_visits tablosuna)
      */
     public function trackPageVisit($pageUrl, $pageTitle = '') {
         $ipAddress = $this->getClientIP();
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $referrer = $_SERVER['HTTP_REFERER'] ?? '';
         
-        // Sayfa ziyareti kaydet
+        // page_visits tablosuna kaydet
         $stmt = $this->db->prepare("
             INSERT INTO page_visits (session_id, ip_address, user_agent, page_url, page_title, referrer) 
             VALUES (?, ?, ?, ?, ?, ?)
         ");
         $stmt->bind_param("ssssss", $this->sessionId, $ipAddress, $userAgent, $pageUrl, $pageTitle, $referrer);
-        $stmt->execute();
+        $result = $stmt->execute();
         
-        // Oturum sayfa görüntüleme sayısını güncelle
+        // user_sessions tablosundaki sayfa görüntüleme sayısını güncelle
         $stmt = $this->db->prepare("
             UPDATE user_sessions 
-            SET total_page_views = total_page_views + 1 
+            SET total_page_views = total_page_views + 1, last_activity = NOW()
             WHERE session_id = ?
         ");
         $stmt->bind_param("s", $this->sessionId);
         $stmt->execute();
+        
+        return $result;
     }
     
     /**
-     * Kullanıcı olayını kaydet (buton tıklamaları, form etkileşimleri)
+     * Kullanıcı olayını kaydet (user_events tablosuna)
      */
     public function trackEvent($eventType, $eventName, $eventData = null, $pageUrl = null) {
         $pageUrl = $pageUrl ?? $_SERVER['REQUEST_URI'] ?? '';
@@ -115,14 +117,11 @@ class AnalyticsManager {
             VALUES (?, ?, ?, ?, ?)
         ");
         $stmt->bind_param("sssss", $this->sessionId, $eventType, $eventName, $eventDataJson, $pageUrl);
-        $stmt->execute();
-        
-        // Özel olaylar için ek işlemler
-        $this->handleSpecialEvents($eventType, $eventName, $eventData);
+        return $stmt->execute();
     }
     
     /**
-     * Sipariş funnel adımını kaydet
+     * Sipariş funnel adımını kaydet (order_funnel tablosuna)
      */
     public function trackOrderFunnel($step, $stepData = null) {
         // İlk ziyaretten bu ana kadar geçen süre
@@ -138,10 +137,12 @@ class AnalyticsManager {
             VALUES (?, ?, ?, ?)
         ");
         $stmt->bind_param("sssi", $this->sessionId, $step, $stepDataJson, $timeFromStart);
-        $stmt->execute();
+        $result = $stmt->execute();
         
         // Conversion durumunu güncelle
         $this->updateConversionStatus($step);
+        
+        return $result;
     }
     
     /**
@@ -206,12 +207,12 @@ class AnalyticsManager {
     }
     
     /**
-     * Günlük istatistikleri hesapla ve kaydet
+     * Günlük istatistikleri hesapla ve kaydet (daily_stats tablosuna)
      */
     public function calculateDailyStats($date = null) {
         $date = $date ?? date('Y-m-d');
         
-        // Toplam ziyaretçi sayısı
+        // Toplam ziyaretçi sayısı (user_sessions tablosundan)
         $totalVisitors = $this->db->query("
             SELECT COUNT(*) as count 
             FROM user_sessions 
@@ -225,38 +226,38 @@ class AnalyticsManager {
             WHERE DATE(first_visit) = '$date'
         ")->fetch_assoc()['count'];
         
-        // Toplam sayfa görüntüleme
+        // Toplam sayfa görüntüleme (page_visits tablosundan)
         $totalPageViews = $this->db->query("
             SELECT COUNT(*) as count 
             FROM page_visits 
             WHERE DATE(visited_at) = '$date'
         ")->fetch_assoc()['count'];
         
-        // Sipariş butonuna tıklama sayısı
+        // Sipariş butonuna tıklama sayısı (user_events tablosundan)
         $orderButtonClicks = $this->db->query("
             SELECT COUNT(*) as count 
             FROM user_events 
-            WHERE event_name = 'order_button_clicked' 
+            WHERE event_name LIKE '%order%button%' 
             AND DATE(created_at) = '$date'
         ")->fetch_assoc()['count'];
         
-        // Başlayan sipariş sayısı
+        // Başlayan sipariş sayısı (order_funnel tablosundan)
         $ordersStarted = $this->db->query("
-            SELECT COUNT(*) as count 
-            FROM user_sessions 
-            WHERE conversion_status IN ('order_started', 'order_completed') 
-            AND DATE(first_visit) = '$date'
+            SELECT COUNT(DISTINCT session_id) as count 
+            FROM order_funnel 
+            WHERE step IN ('order_clicked', 'step1_completed') 
+            AND DATE(completed_at) = '$date'
         ")->fetch_assoc()['count'];
         
         // Tamamlanan sipariş sayısı
         $ordersCompleted = $this->db->query("
             SELECT COUNT(*) as count 
-            FROM user_sessions 
-            WHERE conversion_status = 'order_completed' 
-            AND DATE(first_visit) = '$date'
+            FROM order_funnel 
+            WHERE step = 'order_completed' 
+            AND DATE(completed_at) = '$date'
         ")->fetch_assoc()['count'];
         
-        // Ortalama oturum süresi
+        // Ortalama oturum süresi (user_sessions tablosundan)
         $avgSessionDuration = $this->db->query("
             SELECT AVG(total_time_spent) as avg_duration 
             FROM user_sessions 
@@ -281,7 +282,7 @@ class AnalyticsManager {
             $conversionRate = ($ordersCompleted / $totalVisitors) * 100;
         }
         
-        // Günlük istatistikleri kaydet
+        // daily_stats tablosuna kaydet/güncelle
         $stmt = $this->db->prepare("
             INSERT INTO daily_stats 
             (stat_date, total_visitors, unique_visitors, total_page_views, 
@@ -311,13 +312,13 @@ class AnalyticsManager {
     }
     
     /**
-     * Analytics dashboard için veri al
+     * Analytics dashboard için veri al (daily_stats tablosundan)
      */
     public function getDashboardData($startDate = null, $endDate = null) {
         $startDate = $startDate ?? date('Y-m-d', strtotime('-7 days'));
         $endDate = $endDate ?? date('Y-m-d');
         
-        // Günlük istatistikler
+        // Günlük istatistikler (daily_stats tablosundan)
         $dailyStats = [];
         $stmt = $this->db->prepare("
             SELECT * FROM daily_stats 
@@ -331,7 +332,7 @@ class AnalyticsManager {
             $dailyStats[] = $row;
         }
         
-        // Toplam özetler
+        // Toplam özetler (daily_stats'ten hesaplanan)
         $totalStats = $this->db->query("
             SELECT 
                 SUM(total_visitors) as total_visitors,
@@ -347,7 +348,7 @@ class AnalyticsManager {
             WHERE stat_date BETWEEN '$startDate' AND '$endDate'
         ")->fetch_assoc();
         
-        // En popüler sayfalar
+        // En popüler sayfalar (page_visits tablosundan)
         $popularPages = [];
         $stmt = $this->db->prepare("
             SELECT page_url, COUNT(*) as visits 
@@ -398,5 +399,11 @@ class AnalyticsManager {
      */
     public function getSessionId() {
         return $this->sessionId;
+    }
+    /**
+     * Günlük özet oluştur (calculateDailyStats ile aynı işlevi görür)
+     */
+    public function generateDailySummary($date = null) {
+        return $this->calculateDailyStats($date);
     }
 }
