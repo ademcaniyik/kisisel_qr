@@ -9,10 +9,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Yetkisiz erişim']);
-    exit();
+$action = $_REQUEST['action'] ?? '';
+
+// Skip admin check for analytics tracking endpoints
+if (!in_array($action, ['track_event', 'track_order_funnel'])) {
+    if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Yetkisiz erişim']);
+        exit();
+    }
 }
 
 // --- RATE LIMITING ---
@@ -23,15 +28,16 @@ if (!Utilities::rateLimit('stats_api_' . ($_SERVER['REMOTE_ADDR'] ?? 'guest'), 6
 }
 // --- CSRF KORUMASI ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $csrfToken = $_POST['csrf_token'] ?? '';
-    if (!Utilities::validateCsrfToken($csrfToken)) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Geçersiz CSRF token']);
-        exit();
+    // Skip CSRF for analytics tracking endpoints
+    if (!in_array($action, ['track_event', 'track_order_funnel'])) {
+        $csrfToken = $_POST['csrf_token'] ?? '';
+        if (!Utilities::validateCsrfToken($csrfToken)) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Geçersiz CSRF token']);
+            exit();
+        }
     }
 }
-
-$action = $_REQUEST['action'] ?? '';
 
 try {
     $db = Database::getInstance();
@@ -103,28 +109,43 @@ try {
             header('Content-Type: application/json');
             echo json_encode($data);
             break;
-        
         case 'track_event':
-            // Analytics event tracking
-            require_once __DIR__ . '/../../includes/AnalyticsManager.php';
+            // Analytics event tracking (allow without CSRF for frontend tracking)
+            $input = json_decode(file_get_contents('php://input'), true);
+            $eventType = $input['event_type'] ?? '';
+            $eventName = $input['event_name'] ?? '';
+            $eventData = $input['event_data'] ?? null;
             
-            // GET parametrelerini al
-            $eventType = $_GET['event_type'] ?? 'click';
-            $eventName = $_GET['event_name'] ?? '';
-            $pageUrl = $_GET['page_url'] ?? '';
-            
-            if (empty($eventName)) {
+            if ($eventType && $eventName) {
+                require_once __DIR__ . '/../../includes/AnalyticsManager.php';
+                $analytics = new AnalyticsManager();
+                $result = $analytics->trackEvent($eventType, $eventName, $eventData);
+                
+                header('Content-Type: application/json');
+                echo json_encode(['success' => $result]);
+            } else {
                 http_response_code(400);
-                echo json_encode(['success' => false, 'message' => 'Event name required']);
-                exit();
+                echo json_encode(['success' => false, 'message' => 'Missing event parameters']);
             }
-            
-            $analytics = new AnalyticsManager();
-            $result = $analytics->trackEvent($eventType, $eventName, null, $pageUrl);
-            
-            echo json_encode(['success' => $result]);
             break;
+        case 'track_order_funnel':
+            // Analytics order funnel tracking (allow without CSRF for frontend tracking)
+            $input = json_decode(file_get_contents('php://input'), true);
+            $step = $input['step'] ?? '';
+            $stepData = $input['step_data'] ?? null;
             
+            if ($step) {
+                require_once __DIR__ . '/../../includes/AnalyticsManager.php';
+                $analytics = new AnalyticsManager();
+                $result = $analytics->trackOrderFunnel($step, $stepData);
+                
+                header('Content-Type: application/json');
+                echo json_encode(['success' => $result]);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Missing step parameter']);
+            }
+            break;
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Geçersiz action parametresi']);

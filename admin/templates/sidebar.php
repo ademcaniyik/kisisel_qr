@@ -56,7 +56,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?php echo $currentPage === 'analytics.php' ? 'active' : ''; ?>" href="analytics.php">
-                        <i class="fas fa-chart-line me-2"></i>Site Analytics
+                        <i class="fas fa-chart-line me-2"></i>Site Analitikleri
                     </a>
                 </li>
                 <li class="nav-item">
