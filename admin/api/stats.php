@@ -103,6 +103,28 @@ try {
             header('Content-Type: application/json');
             echo json_encode($data);
             break;
+        
+        case 'track_event':
+            // Analytics event tracking
+            require_once __DIR__ . '/../../includes/AnalyticsManager.php';
+            
+            // GET parametrelerini al
+            $eventType = $_GET['event_type'] ?? 'click';
+            $eventName = $_GET['event_name'] ?? '';
+            $pageUrl = $_GET['page_url'] ?? '';
+            
+            if (empty($eventName)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Event name required']);
+                exit();
+            }
+            
+            $analytics = new AnalyticsManager();
+            $result = $analytics->trackEvent($eventType, $eventName, null, $pageUrl);
+            
+            echo json_encode(['success' => $result]);
+            break;
+            
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Geçersiz action parametresi']);

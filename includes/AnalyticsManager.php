@@ -117,7 +117,12 @@ class AnalyticsManager {
             VALUES (?, ?, ?, ?, ?)
         ");
         $stmt->bind_param("sssss", $this->sessionId, $eventType, $eventName, $eventDataJson, $pageUrl);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        
+        // Özel olayları işle
+        $this->handleSpecialEvents($eventType, $eventName, $eventData);
+        
+        return $result;
     }
     
     /**
@@ -237,7 +242,7 @@ class AnalyticsManager {
         $orderButtonClicks = $this->db->query("
             SELECT COUNT(*) as count 
             FROM user_events 
-            WHERE event_name LIKE '%order%button%' 
+            WHERE event_name = 'order_button_clicked'
             AND DATE(created_at) = '$date'
         ")->fetch_assoc()['count'];
         

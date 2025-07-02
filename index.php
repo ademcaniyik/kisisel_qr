@@ -871,6 +871,7 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/analytics-tracking.js"></script>
     
     <!-- WhatsApp Widget (Modüler) -->
     <script src="assets/js/whatsapp-widget.js"></script>
@@ -982,6 +983,11 @@
 
         // Order form functions
         function showOrderForm() {
+            // Analytics tracking
+            if (typeof trackOrderButtonClick === 'function') {
+                trackOrderButtonClick();
+            }
+            
             const modal = new bootstrap.Modal(document.getElementById('orderModal'));
             modal.show();
         }
