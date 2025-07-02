@@ -139,11 +139,26 @@ try {
         .main-content {
             min-height: 100vh;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
         canvas {
             max-width: 100% !important;
             height: auto !important;
+            display: block;
+        }
+        
+        /* Chart container'larda overflow kontrolü */
+        .chart-container canvas {
+            position: relative !important;
+            width: 100% !important;
+            max-height: 300px !important;
+        }
+        
+        /* Body scroll düzeltmesi */
+        body {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -377,79 +392,112 @@ try {
         console.log('Daily Stats:', <?php echo json_encode($dailyStats); ?>);
         console.log('Total Stats:', <?php echo json_encode($totalStats); ?>);
         
-        // Ziyaretçi trendi grafiği
-        const ctx1 = document.getElementById('visitorsChart').getContext('2d');
-        const visitorsChart = new Chart(ctx1, {
-            type: 'line',
-            data: {
-                labels: [<?php 
-                    $labels = array_map(function($stat) {
-                        return "'" . date('d M', strtotime($stat['stat_date'])) . "'";
-                    }, $dailyStats);
-                    echo implode(',', $labels);
-                ?>],
-                datasets: [{
-                    label: 'Ziyaretçiler',
-                    data: [<?php 
-                        $data = array_map(function($stat) {
-                            return $stat['total_visitors'];
-                        }, $dailyStats);
-                        echo implode(',', $data);
-                    ?>],
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    fill: true
-                }, {
-                    label: 'Siparişler',
-                    data: [<?php 
-                        $data = array_map(function($stat) {
-                            return $stat['orders_completed'];
-                        }, $dailyStats);
-                        echo implode(',', $data);
-                    ?>],
-                    borderColor: '#28a745',
-                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2,
-                scales: {
-                    y: {
-                        beginAtZero: true
+        // Grafiklerin sadece bir kez oluşturulmasını sağla
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ziyaretçi trendi grafiği
+            const ctx1 = document.getElementById('visitorsChart');
+            if (ctx1 && !ctx1.hasAttribute('data-chart-initialized')) {
+                ctx1.setAttribute('data-chart-initialized', 'true');
+                
+                const visitorsChart = new Chart(ctx1.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: [<?php 
+                            if (!empty($dailyStats)) {
+                                $labels = array_map(function($stat) {
+                                    return "'" . date('d M', strtotime($stat['stat_date'])) . "'";
+                                }, $dailyStats);
+                                echo implode(',', $labels);
+                            }
+                        ?>],
+                        datasets: [{
+                            label: 'Ziyaretçiler',
+                            data: [<?php 
+                                if (!empty($dailyStats)) {
+                                    $data = array_map(function($stat) {
+                                        return $stat['total_visitors'];
+                                    }, $dailyStats);
+                                    echo implode(',', $data);
+                                }
+                            ?>],
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }, {
+                            label: 'Siparişler',
+                            data: [<?php 
+                                if (!empty($dailyStats)) {
+                                    $data = array_map(function($stat) {
+                                        return $stat['orders_completed'];
+                                    }, $dailyStats);
+                                    echo implode(',', $data);
+                                }
+                            ?>],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 2.5,
+                        interaction: {
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: {
+                                display: true
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        animation: {
+                            duration: 0 // Animasyonu kapat
+                        }
                     }
-                }
+                });
             }
-        });
-        
-        // Conversion funnel grafiği
-        const ctx2 = document.getElementById('funnelChart').getContext('2d');
-        const funnelChart = new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['Sipariş Tamamlanan', 'Sipariş Başlayan', 'Sadece Ziyaret'],
-                datasets: [{
-                    data: [
-                        <?php echo $totalStats['orders_completed'] ?? 0; ?>,
-                        <?php echo ($totalStats['orders_started'] ?? 0) - ($totalStats['orders_completed'] ?? 0); ?>,
-                        <?php echo ($totalStats['total_visitors'] ?? 0) - ($totalStats['orders_started'] ?? 0); ?>
-                    ],
-                    backgroundColor: ['#28a745', '#ffc107', '#6c757d'],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 1,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            
+            // Conversion funnel grafiği
+            const ctx2 = document.getElementById('funnelChart');
+            if (ctx2 && !ctx2.hasAttribute('data-chart-initialized')) {
+                ctx2.setAttribute('data-chart-initialized', 'true');
+                
+                const funnelChart = new Chart(ctx2.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sipariş Tamamlanan', 'Sipariş Başlayan', 'Sadece Ziyaret'],
+                        datasets: [{
+                            data: [
+                                <?php echo $totalStats['orders_completed'] ?? 0; ?>,
+                                <?php echo ($totalStats['orders_started'] ?? 0) - ($totalStats['orders_completed'] ?? 0); ?>,
+                                <?php echo ($totalStats['total_visitors'] ?? 0) - ($totalStats['orders_started'] ?? 0); ?>
+                            ],
+                            backgroundColor: ['#28a745', '#ffc107', '#6c757d'],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.2,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        animation: {
+                            duration: 0 // Animasyonu kapat
+                        }
                     }
-                }
+                });
             }
         });
     </script>
