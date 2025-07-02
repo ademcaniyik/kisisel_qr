@@ -66,6 +66,18 @@ class AnalyticsTracker {
         }
     }
     
+    async trackOrderFunnel(step, details = null) {
+        try {
+            await this.sendData('track_order_funnel', {
+                step: step,
+                details: details ? JSON.stringify(details) : null
+            });
+            console.log('📊 Order funnel tracked:', step, details);
+        } catch (error) {
+            console.error('Analytics tracking error:', error);
+        }
+    }
+    
     setupEventListeners() {
         // Sipariş butonu tıklamaları
         document.addEventListener('click', (e) => {

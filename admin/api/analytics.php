@@ -39,6 +39,44 @@ try {
     $eventData = $data['data'] ?? [];
     
     switch ($action) {
+        case 'track_page_view':
+            $pageUrl = $eventData['page'] ?? $_SERVER['REQUEST_URI'] ?? '/';
+            $analytics->trackPageVisit($pageUrl);
+            
+            $response = [
+                'success' => true,
+                'message' => 'Page view tracked',
+                'data' => ['page' => $pageUrl]
+            ];
+            break;
+            
+        case 'track_user_action':
+            $actionType = $eventData['action_type'] ?? 'user_interaction';
+            $details = $eventData['details'] ?? null;
+            $pageUrl = $eventData['page_url'] ?? $_SERVER['REQUEST_URI'] ?? '/';
+            
+            $analytics->trackEvent('user_action', $actionType, $details, $pageUrl);
+            
+            $response = [
+                'success' => true,
+                'message' => 'User action tracked',
+                'data' => ['action' => $actionType]
+            ];
+            break;
+            
+        case 'track_order_funnel':
+            $step = $eventData['step'] ?? 'unknown';
+            $details = $eventData['details'] ?? null;
+            
+            $analytics->trackOrderFunnel($step, $details);
+            
+            $response = [
+                'success' => true,
+                'message' => 'Order funnel tracked',
+                'data' => ['step' => $step]
+            ];
+            break;
+            
         case 'track_event':
             $eventType = $eventData['event_type'] ?? 'user_interaction';
             $eventName = $eventData['event_name'] ?? 'unknown';
@@ -62,18 +100,6 @@ try {
             $response = [
                 'success' => true,
                 'message' => 'Funnel step tracked successfully'
-            ];
-            break;
-            
-        case 'track_page_view':
-            $pageUrl = $eventData['page_url'] ?? $_SERVER['HTTP_REFERER'] ?? '';
-            $pageTitle = $eventData['page_title'] ?? '';
-            
-            $analytics->trackPageVisit($pageUrl, $pageTitle);
-            
-            $response = [
-                'success' => true,
-                'message' => 'Page view tracked successfully'
             ];
             break;
             

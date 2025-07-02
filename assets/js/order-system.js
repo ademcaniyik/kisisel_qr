@@ -5,12 +5,27 @@
 
 // Order form functions
 function showOrderForm() {
+    // Analytics tracking - sipariş butonuna tıklama
+    if (window.trackAnalytics) {
+        window.trackAnalytics.trackOrderFunnel('order_button_click', {
+            page: window.location.pathname,
+            timestamp: Date.now()
+        });
+        
+        // User action olarak da kaydet
+        window.trackAnalytics.trackUserAction('order_button_click', {
+            button_location: 'pricing_section'
+        });
+    }
+    
     const modal = new bootstrap.Modal(document.getElementById('orderModal'));
     modal.show();
     
-    // Analytics tracking
+    // Analytics tracking - modal açılma
     if (window.trackAnalytics) {
-        window.trackAnalytics.orderStep('modal_opened');
+        window.trackAnalytics.trackOrderFunnel('modal_opened', {
+            timestamp: Date.now()
+        });
     }
 }
 

@@ -237,9 +237,20 @@ class AnalyticsManager {
         $orderButtonClicks = $this->db->query("
             SELECT COUNT(*) as count 
             FROM user_events 
-            WHERE event_name LIKE '%order%button%' 
+            WHERE (event_name LIKE '%order%button%' OR event_name = 'order_button_click')
             AND DATE(created_at) = '$date'
         ")->fetch_assoc()['count'];
+        
+        // Order funnel'dan da sipariş butonuna tıklama verilerini al
+        $orderFunnelClicks = $this->db->query("
+            SELECT COUNT(DISTINCT session_id) as count 
+            FROM order_funnel 
+            WHERE step = 'order_button_click' 
+            AND DATE(completed_at) = '$date'
+        ")->fetch_assoc()['count'];
+        
+        // İkisinden büyük olanı al
+        $orderButtonClicks = max($orderButtonClicks, $orderFunnelClicks);
         
         // Başlayan sipariş sayısı (order_funnel tablosundan)
         $ordersStarted = $this->db->query("
