@@ -108,6 +108,8 @@ try {
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-height: 400px;
+            max-height: 500px;
         }
         
         .filter-card {
@@ -131,6 +133,17 @@ try {
         
         .progress-thin {
             height: 6px;
+        }
+        
+        /* Sayfa yüksekliği kontrolü */
+        .main-content {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        canvas {
+            max-width: 100% !important;
+            height: auto !important;
         }
     </style>
 </head>
@@ -279,7 +292,7 @@ try {
                             <i class="fas fa-chart-area me-2"></i>
                             Günlük Ziyaretçi Trendi
                         </h5>
-                        <canvas id="visitorsChart" height="300"></canvas>
+                        <canvas id="visitorsChart" style="max-height: 300px;"></canvas>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -288,7 +301,7 @@ try {
                             <i class="fas fa-chart-pie me-2"></i>
                             Conversion Funnel
                         </h5>
-                        <canvas id="funnelChart" height="300"></canvas>
+                        <canvas id="funnelChart" style="max-height: 300px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -360,6 +373,10 @@ try {
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Debug için verileri konsola yazdır
+        console.log('Daily Stats:', <?php echo json_encode($dailyStats); ?>);
+        console.log('Total Stats:', <?php echo json_encode($totalStats); ?>);
+        
         // Ziyaretçi trendi grafiği
         const ctx1 = document.getElementById('visitorsChart').getContext('2d');
         const visitorsChart = new Chart(ctx1, {
@@ -397,7 +414,8 @@ try {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -425,7 +443,8 @@ try {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
                 plugins: {
                     legend: {
                         position: 'bottom'
