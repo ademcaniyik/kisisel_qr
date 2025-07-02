@@ -34,7 +34,7 @@ if ($qrId) {
     $stmt->bind_param("s", $slug);
 } else {
     header("HTTP/1.0 404 Not Found");
-    include __DIR__ . '/errors/profile-not-found.php';
+    echo "Profil bulunamadı.";
     exit();
 }
 
@@ -43,7 +43,7 @@ $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
     header("HTTP/1.0 404 Not Found");
-    include __DIR__ . '/errors/profile-not-found.php';
+    echo "Profil bulunamadı.";
     exit();
 }
 

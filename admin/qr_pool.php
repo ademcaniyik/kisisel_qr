@@ -97,19 +97,6 @@ if (isset($_POST['action'])) {
                             echo json_encode($result);
                             exit();
                             
-                        case 'unassign_qr':
-                            $qrPoolId = (int)($_POST['qr_pool_id'] ?? 0);
-                            $reason = $_POST['reason'] ?? 'manual_unassign';
-                            
-                            if ($qrPoolId <= 0) {
-                                echo json_encode(['success' => false, 'error' => 'Geçersiz QR ID']);
-                                exit();
-                            }
-                            
-                            $result = $qrPoolManager->unassignQR($qrPoolId, $reason);
-                            echo json_encode($result);
-                            exit();
-                            
                         default:
                             echo json_encode(['success' => false, 'error' => 'Bilinmeyen işlem']);
                             exit();
@@ -605,11 +592,6 @@ if (isset($_POST['action'])) {
                 if (qr.profile_id) {
                     actionBtns = `<button class="btn btn-outline-primary btn-sm" onclick="viewQRDetails('${qr.qr_code_id}')" title="Profili Görüntüle"><i class="fas fa-eye"></i></button>` +
                         `<button class="btn btn-outline-secondary btn-sm" onclick="copyQRUrl('${qr.qr_code_id}')" title="URL Kopyala"><i class="fas fa-copy"></i></button>`;
-                    
-                    // Atanmış QR'lar için atamayı kaldırma butonu ekle
-                    if (qr.status === 'assigned') {
-                        actionBtns += `<button class="btn btn-outline-danger btn-sm" onclick="unassignQR(${qr.id}, '${qr.pool_id}', ${qr.profile_id})" title="Atamayı Kaldır"><i class="fas fa-unlink"></i></button>`;
-                    }
                 } else {
                     actionBtns = `<button class="btn btn-outline-secondary btn-sm" disabled title="Bu QR henüz bir profile atanmamış"><i class="fas fa-eye-slash"></i></button>`;
                 }
@@ -820,59 +802,6 @@ if (isset($_POST['action'])) {
                 console.error('Stok durumu güncellenirken hata:', error);
             }
         }, 30000); // 30 saniyede bir güncelle
-        
-        // QR atamayı kaldır
-        async function unassignQR(qrPoolId, poolId, profileId = null) {
-            const profileText = profileId ? ` (Profile ID: ${profileId})` : '';
-            if (!confirm(`${poolId} kodlu QR'ın atamasını kaldırmak istediğinizden emin misiniz?${profileText}\n\nBu QR tekrar müsait duruma gelecektir.`)) {
-                return;
-            }
-            
-            try {
-                const response = await fetch('qr_pool.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({
-                        action: 'unassign_qr',
-                        qr_pool_id: qrPoolId,
-                        reason: 'admin_manual_unassign'
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(result.message || 'QR başarıyla müsait duruma getirildi!', 'success');
-                    loadQRList(currentStatus, currentPage); // Mevcut listeyi yenile
-                    updateStockStatus(); // İstatistikleri güncelle
-                } else {
-                    showToast('Hata: ' + (result.error || 'Bilinmeyen hata'), 'danger');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Bir hata oluştu!', 'danger');
-            }
-        }
-        
-        // Stok durumunu manuel güncelle
-        async function updateStockStatus() {
-            try {
-                const response = await fetch('qr_pool.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: 'action=get_stock_status'
-                });
-                const status = await response.json();
-                
-                document.getElementById('availableCount').textContent = status.available;
-                document.getElementById('assignedCount').textContent = status.assigned;
-                document.getElementById('deliveredCount').textContent = status.delivered;
-                document.getElementById('totalCount').textContent = status.total;
-                
-            } catch (error) {
-                console.error('Stok durumu güncellenirken hata:', error);
-            }
-        }
     </script>
 </body>
 </html>
