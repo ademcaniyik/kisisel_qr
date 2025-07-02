@@ -8,7 +8,11 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once '../config/security.php';
+// Session'ı başlat (security.php'yi bypass et)
+session_start();
+
+// Database bağlantısını dahil et
+require_once '../config/database.php';
 require_once '../includes/AnalyticsManager.php';
 
 // Admin kontrolü
