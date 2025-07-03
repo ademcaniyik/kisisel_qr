@@ -532,6 +532,68 @@ class QRPoolManager {
         }
     }
     
+    /**
+     * Profil silindiğinde o profile atanmış QR'ı tekrar müsait duruma çevir
+     * @param int $profileId Silinecek profil ID'si
+     * @return array İşlem sonucu
+     */
+    public function unassignProfileQR($profileId) {
+        try {
+            error_log("=== QRPoolManager unassignProfileQR Debug ===");
+            error_log("Removing QR assignment for profile: " . $profileId);
+            
+            // İlk olarak bu profile atanmış QR'ları bul
+            $stmt = $this->db->prepare("SELECT id, pool_id, qr_code_id FROM qr_pool WHERE profile_id = ? AND status = 'assigned'");
+            $stmt->bind_param("i", $profileId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $assignedQRs = $result->fetch_all(MYSQLI_ASSOC);
+            
+            if (empty($assignedQRs)) {
+                error_log("No assigned QR codes found for profile: " . $profileId);
+                return [
+                    'success' => true,
+                    'message' => 'Bu profile atanmış QR kodu bulunamadı',
+                    'unassigned_count' => 0
+                ];
+            }
+            
+            // QR atamalarını kaldır ve durumu 'available' yap
+            $updateStmt = $this->db->prepare("UPDATE qr_pool SET profile_id = NULL, status = 'available', assigned_at = NULL WHERE profile_id = ?");
+            $updateStmt->bind_param("i", $profileId);
+            
+            if ($updateStmt->execute()) {
+                $unassignedCount = $updateStmt->affected_rows;
+                error_log("Successfully unassigned {$unassignedCount} QR codes from profile: " . $profileId);
+                
+                // Log the unassigned QR codes
+                foreach ($assignedQRs as $qr) {
+                    error_log("QR {$qr['pool_id']} (ID: {$qr['qr_code_id']}) is now available again");
+                }
+                
+                return [
+                    'success' => true,
+                    'message' => "{$unassignedCount} adet QR kodu tekrar müsait duruma getirildi",
+                    'unassigned_count' => $unassignedCount,
+                    'qr_codes' => array_column($assignedQRs, 'pool_id')
+                ];
+            } else {
+                error_log("Failed to unassign QR codes for profile: " . $profileId);
+                return [
+                    'success' => false,
+                    'error' => 'QR atamalarını kaldırırken bir hata oluştu'
+                ];
+            }
+            
+        } catch (Exception $e) {
+            error_log("Exception in unassignProfileQR: " . $e->getMessage());
+            return [
+                'success' => false,
+                'error' => 'QR ataması kaldırılırken hata: ' . $e->getMessage()
+            ];
+        }
+    }
+
     // Yardımcı fonksiyon ekle:
     private function getBaseUrl() {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

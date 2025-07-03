@@ -158,6 +158,21 @@ try {
             }
             $stmt->close();
             
+            // QR Pool'dan bu profile atanmış QR'ları serbest bırak
+            try {
+                require_once __DIR__ . '/../../includes/QRPoolManager.php';
+                $qrPoolManager = new QRPoolManager();
+                $unassignResult = $qrPoolManager->unassignProfileQR($id);
+                
+                if ($unassignResult['success']) {
+                    error_log("Profile $id deleted - QR unassign result: " . json_encode($unassignResult));
+                } else {
+                    error_log("Warning: Failed to unassign QR codes for profile $id: " . $unassignResult['error']);
+                }
+            } catch (Exception $e) {
+                error_log("Error unassigning QR codes during profile deletion: " . $e->getMessage());
+            }
+            
             // İlgili QR kodlarını dosya sisteminden sil
             $stmt = $connection->prepare("SELECT id FROM qr_codes WHERE profile_id = ?");
             $stmt->bind_param("i", $id);

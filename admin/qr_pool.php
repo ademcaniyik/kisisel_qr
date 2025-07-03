@@ -591,7 +591,8 @@ if (isset($_POST['action'])) {
                 let actionBtns = '';
                 if (qr.profile_id) {
                     actionBtns = `<button class="btn btn-outline-primary btn-sm" onclick="viewQRDetails('${qr.qr_code_id}')" title="Profili Görüntüle"><i class="fas fa-eye"></i></button>` +
-                        `<button class="btn btn-outline-secondary btn-sm" onclick="copyQRUrl('${qr.qr_code_id}')" title="URL Kopyala"><i class="fas fa-copy"></i></button>`;
+                        `<button class="btn btn-outline-secondary btn-sm" onclick="copyQRUrl('${qr.qr_code_id}')" title="URL Kopyala"><i class="fas fa-copy"></i></button>` +
+                        `<button class="btn btn-outline-danger btn-sm" onclick="unassignQR(${qr.id}, '${qr.pool_id}')" title="QR Atamasını Kaldır"><i class="fas fa-unlink"></i></button>`;
                 } else {
                     actionBtns = `<button class="btn btn-outline-secondary btn-sm" disabled title="Bu QR henüz bir profile atanmamış"><i class="fas fa-eye-slash"></i></button>`;
                 }
@@ -767,6 +768,56 @@ if (isset($_POST['action'])) {
             });
         }
 
+        function unassignQR(qrId, poolId) {
+            if (!confirm(`${poolId} QR kodunun atamasını kaldırmak istediğinize emin misiniz?\nBu işlem QR'ı tekrar müsait duruma getirecektir.`)) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'unassign_qr');
+            formData.append('qr_id', qrId);
+
+            fetch('api/qr_pool_api.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('QR ataması başarıyla kaldırıldı!');
+                    // QR listesini yenile
+                    loadQRList(currentStatus, 1);
+                    // Stok durumunu güncelle
+                    updateStockStatus();
+                } else {
+                    alert('Hata: ' + (data.error || 'Bilinmeyen hata'));
+                }
+            })
+            .catch(error => {
+                console.error('QR atama kaldırma hatası:', error);
+                alert('Sunucu hatası oluştu');
+            });
+        }
+
+        async function updateStockStatus() {
+            try {
+                const response = await fetch('qr_pool.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'action=get_stock_status'
+                });
+                const status = await response.json();
+                
+                document.getElementById('availableCount').textContent = status.available;
+                document.getElementById('assignedCount').textContent = status.assigned;
+                document.getElementById('deliveredCount').textContent = status.delivered;
+                document.getElementById('totalCount').textContent = status.total;
+                
+            } catch (error) {
+                console.error('Stok durumu güncellenirken hata:', error);
+            }
+        }
+
         function exportAllQRs() {
             alert('Tüm QR\'ların dışa aktarma özelliği yakında geliştirilecek...');
         }
@@ -784,24 +835,7 @@ if (isset($_POST['action'])) {
         }
 
         // Anlık stok durumu güncellemesi
-        setInterval(async function() {
-            try {
-                const response = await fetch('qr_pool.php', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: 'action=get_stock_status'
-                });
-                const status = await response.json();
-                
-                document.getElementById('availableCount').textContent = status.available;
-                document.getElementById('assignedCount').textContent = status.assigned;
-                document.getElementById('deliveredCount').textContent = status.delivered;
-                document.getElementById('totalCount').textContent = status.total;
-                
-            } catch (error) {
-                console.error('Stok durumu güncellenirken hata:', error);
-            }
-        }, 30000); // 30 saniyede bir güncelle
+        setInterval(updateStockStatus, 30000); // 30 saniyede bir güncelle
     </script>
 </body>
 </html>
