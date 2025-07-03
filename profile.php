@@ -33,8 +33,8 @@ if ($qrId) {
     ");
     $stmt->bind_param("s", $slug);
 } else {
-    header("HTTP/1.0 404 Not Found");
-    echo "Profil bulunamadı.";
+    // QR ID veya slug yok, 404 sayfasına yönlendir
+    include __DIR__ . '/errors/profile-not-found.php';
     exit();
 }
 
@@ -42,8 +42,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("HTTP/1.0 404 Not Found");
-    echo "Profil bulunamadı.";
+    // Profil bulunamadı, 404 sayfasına yönlendir
+    include __DIR__ . '/errors/profile-not-found.php';
     exit();
 }
 
