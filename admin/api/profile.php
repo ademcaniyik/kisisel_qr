@@ -61,7 +61,7 @@ try {
             $isDynamic = isset($_POST['is_dynamic']) ? 1 : 0;
             $redirectUrl = $isDynamic ? Utilities::sanitizeInput($_POST['redirect_url']) : null;
             
-            // Social links processing - Convert to OLD FORMAT for compatibility
+            // Social links processing - Use NEW FORMAT like index.php order system
             $socialLinks = [];
             if (isset($_POST['social_links']) && !empty($_POST['social_links'])) {
                 $socialLinksData = json_decode($_POST['social_links'], true);
@@ -72,19 +72,16 @@ try {
                             $platform = $link['platform'];
                             $url = $link['url'];
                             
-                            // Convert to old format: {"platform": "url"}
-                            if ($platform === 'whatsapp') {
-                                // WhatsApp için wa.me formatına çevir
-                                $cleanNumber = preg_replace('/[^\d]/', '', $url);
-                                $socialLinks[$platform] = "https://wa.me/" . $cleanNumber;
-                            } else {
-                                $socialLinks[$platform] = $url;
-                            }
+                            // Keep NEW format: [{"platform":"x","url":"y"}] like index.php
+                            $socialLinks[] = [
+                                'platform' => $platform,
+                                'url' => $url
+                            ];
                         }
                     }
                 }
             }
-            $socialLinksJson = json_encode($socialLinks);
+            $socialLinksJson = json_encode($socialLinks, JSON_UNESCAPED_UNICODE);
             
             $slug = Utilities::generateSlug();
             $themeCheckStmt = $connection->prepare("SELECT theme_name FROM themes WHERE theme_name = ?");
@@ -359,7 +356,7 @@ try {
             $iban = Utilities::sanitizeInput($_POST['iban'] ?? '');
             $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
             
-            // Social links processing - Convert to OLD FORMAT for compatibility
+            // Social links processing - Use NEW FORMAT like index.php order system
             $socialLinks = [];
             if (isset($_POST['social_links']) && !empty($_POST['social_links'])) {
                 $socialLinksData = json_decode($_POST['social_links'], true);
@@ -370,19 +367,16 @@ try {
                             $platform = $link['platform'];
                             $url = $link['url'];
                             
-                            // Convert to old format: {"platform": "url"}
-                            if ($platform === 'whatsapp') {
-                                // WhatsApp için wa.me formatına çevir
-                                $cleanNumber = preg_replace('/[^\d]/', '', $url);
-                                $socialLinks[$platform] = "https://wa.me/" . $cleanNumber;
-                            } else {
-                                $socialLinks[$platform] = $url;
-                            }
+                            // Keep NEW format: [{"platform":"x","url":"y"}] like index.php
+                            $socialLinks[] = [
+                                'platform' => $platform,
+                                'url' => $url
+                            ];
                         }
                     }
                 }
             }
-            $socialLinksJson = json_encode($socialLinks);
+            $socialLinksJson = json_encode($socialLinks, JSON_UNESCAPED_UNICODE);
             
             // Mevcut profil verilerini al
             $stmt = $connection->prepare("SELECT photo_url, photo_data FROM profiles WHERE id = ?");
