@@ -302,7 +302,7 @@
                         Profesyonel profil sistemi ile markanızı güçlendirin!
                     </p>
                     <div class="cta-buttons">
-                        <a href="https://acdisoftware.com.tr/kisisel_qr/qr/7d268b70" target="_blank" class="btn-hero btn-primary-hero">
+                        <a href="https://acdisoftware.com.tr/kisisel_qr/qr/ldjv1peb" target="_blank" class="btn-hero btn-primary-hero">
                             <i class="fas fa-eye"></i>
                             Canlı Demo
                         </a>
