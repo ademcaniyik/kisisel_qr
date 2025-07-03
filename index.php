@@ -308,7 +308,7 @@
                         </a>
                         <button class="btn-hero btn-outline-hero" onclick="showOrderForm()">
                             <i class="fas fa-shopping-cart"></i>
-                            QR Sticker Sipariş (10x10 cm) - 200₺
+                            QR Sticker Sipariş (10x10 cm) - <span style="text-decoration: line-through; color: #999;">350₺</span> <span style="color: #e74c3c; font-weight: bold;">200₺</span>
                         </button>
                     </div>
                 </div>
@@ -440,7 +440,7 @@
                         <i class="fas fa-eye me-2"></i>Canlı Demo Görün
                     </a>
                     <a href="#pricing" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-shopping-cart me-2"></i>Şimdi Sipariş Ver
+                        <i class="fas fa-shopping-cart me-2"></i><span style="text-decoration: line-through; color: #999;">350₺</span> <span style="font-weight: bold;">200₺</span> - Şimdi Sipariş Ver
                     </a>
                 </div>
             </div>
@@ -528,11 +528,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">
                     <div class="pricing-card featured">
-                        <div class="badge bg-primary position-absolute top-0 start-50 translate-middle px-3 py-1">Özel Fiyat</div>
-                        <h3>🏷️ QR Sticker</h3>
-                        <div class="price">₺200<span class="price-period"></span></div>
-                        <div class="text-center mb-3">
-                            <span class="badge bg-info text-dark fs-6">📏 10x10 cm Boyutunda</span>
+<div class="badge bg-success position-absolute top-0 start-50 translate-middle px-3 py-1">%43 İndirim</div>
+<h3>🏷️ QR Sticker</h3>
+<div class="price"><span style="text-decoration: line-through; color: #999; font-size: 0.7em;">₺350</span> ₺200<span class="price-period"></span></div>
+<div class="text-center mb-3">
+<span class="badge bg-success text-white fs-6">📏 10x10 cm Boyutunda</span>
                         </div>
                         <ul class="list-unstyled mt-4">
                             <li>✅ Şeffaf arka planlı sticker</li>
@@ -545,8 +545,7 @@
                             <li>✅ Kolay uygulama</li>
                         </ul>
                         <button class="btn btn-primary w-100 mt-3" onclick="showOrderForm()">
-                            <i class="fas fa-shopping-cart me-2"></i>Şimdi Sipariş Ver
-                        </button>
+<i class="fas fa-shopping-cart me-2"></i><span style="text-decoration: line-through; color: #ccc;">350₺</span> <span style="font-weight: bold;">200₺</span> - Şimdi Sipariş Ver                        </button>
                     </div>
                 </div>
             </div>
@@ -564,8 +563,7 @@
             <div class="d-flex gap-3 justify-content-center flex-wrap">
                 <button class="btn-hero btn-primary-hero" onclick="showOrderForm()">
                     <i class="fas fa-shopping-cart"></i>
-                    Şimdi Sipariş Ver - 200₺
-                </button>
+<span style="text-decoration: line-through; color: rgba(255,255,255,0.7);">350₺</span> <span style="font-weight: bold;">200₺</span> - Şimdi Sipariş Ver                </button>
                 <a href="https://wa.me/905349334631?text=Merhaba, QR sticker hakkında bilgi almak istiyorum."
                     target="_blank" class="btn-hero btn-outline-hero">
                     <i class="fab fa-whatsapp"></i>
