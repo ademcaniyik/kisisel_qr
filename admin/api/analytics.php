@@ -17,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Error handling
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Production'da false olmalı
+ini_set('display_errors', 1); // Debug için açalım
+
+// Debug log
+error_log("Analytics API called: " . $_SERVER['REQUEST_METHOD'] . " " . $_SERVER['REQUEST_URI']);
 
 try {
     // Database connection
@@ -39,7 +42,12 @@ try {
     // JSON input al
     $input = json_decode(file_get_contents('php://input'), true);
     
+    // Debug
+    error_log("Analytics API input: " . file_get_contents('php://input'));
+    error_log("Analytics API parsed: " . print_r($input, true));
+    
     if (!$input) {
+        error_log("Analytics API: Invalid JSON input");
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid JSON input']);
         exit();
