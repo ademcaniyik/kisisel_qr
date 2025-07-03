@@ -298,6 +298,19 @@ if ($result) {
             box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
         }
         
+        /* WhatsApp özel input stilleri */
+        .whatsapp-phone-input.is-valid {
+            border-color: #25d366 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2325d366' d='m2.3 6.73.19-.19-.25-.17c-.16-.12-.29-.24-.41-.4-.12-.16-.22-.33-.3-.52-.08-.19-.13-.39-.13-.6s.05-.41.13-.6c.08-.19.18-.36.3-.52.12-.16.25-.28.41-.4l.25-.17-.19-.19c-.22-.22-.47-.42-.75-.59-.28-.17-.58-.31-.9-.42s-.65-.16-1-.16c-.69 0-1.33.13-1.92.4s-1.11.63-1.56 1.08c-.45.45-.81.97-1.08 1.56s-.4 1.23-.4 1.92c0 .35.05.68.16 1s.25.62.42.9c.17.28.37.53.59.75l.19.19.17-.25c.12-.16.24-.29.4-.41.16-.12.33-.22.52-.3.19-.08.39-.13.6-.13s.41.05.6.13c.19.08.36.18.52.3.16.12.28.25.41.4l.25.17z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .whatsapp-phone-input.is-invalid {
+            border-color: #dc3545 !important;
+        }
+        
         /* Platform specific colors */
         .platform-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); color: white; }
         .platform-x { background: #1da1f2; color: white; }
@@ -1120,6 +1133,15 @@ if ($result) {
         $('#edit_socialLinksContainer .social-media-item').each(function() {
             let platform = $(this).data('platform');
             let url = $(this).find('input').val();
+            
+            // WhatsApp için özel URL formatlaması
+            if (platform === 'whatsapp' && url) {
+                // Telefon numarasını tam formata çevir
+                if (url.length === 10 && url.startsWith('5')) {
+                    url = '+90' + url; // +90 prefix'i ekle
+                }
+            }
+            
             if (platform && url) {
                 links.push({ platform, url });
             }
@@ -1240,16 +1262,60 @@ if ($result) {
                     
                     // Sosyal medya linkleri
                     let links = [];
-                    try { links = JSON.parse(res.profile.social_links); } catch(e) {}
+                    console.log('Raw social_links from database:', res.profile.social_links);
+                    try { links = JSON.parse(res.profile.social_links); } catch(e) {
+                        console.error('JSON parse error for social_links:', e);
+                    }
+                    console.log('Parsed links:', links);
+                    
                     if (!Array.isArray(links) && typeof links === 'object' && links !== null) {
                         links = Object.entries(links).map(([platform, url]) => ({ platform, url }));
+                        console.log('Converted object to array:', links);
                     }
+                    
                     let html = '';
                     if (Array.isArray(links) && links.length > 0) {
                         html += '<div class="mb-2"><strong>Sosyal Medya:</strong></div>';
                         links.forEach(link => {
-                            html += `<div><a href="${link.url}" target="_blank"><i class="fab fa-${link.platform}"></i> ${link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}</a></div>`;
+                            console.log('Processing link:', link);
+                            if (link.platform && link.url && socialMediaPlatforms[link.platform]) {
+                                const platform = socialMediaPlatforms[link.platform];
+                                let displayUrl = link.url;
+                                let displayName = platform.name;
+                                
+                                // WhatsApp için özel formatla
+                                if (link.platform === 'whatsapp') {
+                                    // +90 ile başlıyorsa güzel formatla
+                                    if (link.url.startsWith('+90')) {
+                                        const phone = link.url.substring(3);
+                                        displayName = `WhatsApp (+90 ${phone.substring(0,3)} ${phone.substring(3,6)} ${phone.substring(6,8)} ${phone.substring(8,10)})`;
+                                    } else {
+                                        displayName = `WhatsApp (${link.url})`;
+                                    }
+                                    displayUrl = `https://wa.me/${link.url.replace('+', '')}`;
+                                }
+                                // Website için özel kontrol
+                                else if (link.platform === 'website') {
+                                    displayUrl = link.url.startsWith('http') ? link.url : 'https://' + link.url;
+                                }
+                                // Diğer platformlar için base URL + kullanıcı adı
+                                else {
+                                    displayUrl = platform.baseUrl + link.url.replace(platform.prefix, '');
+                                }
+                                
+                                console.log('Adding link:', { platform: link.platform, displayName, displayUrl });
+                                html += `<div class="mb-1">
+                                    <a href="${displayUrl}" target="_blank" class="text-decoration-none">
+                                        <i class="${platform.icon} me-2" style="color: var(--bs-primary);"></i>
+                                        ${displayName}
+                                    </a>
+                                </div>`;
+                            } else {
+                                console.warn('Skipping invalid link:', link);
+                            }
                         });
+                    } else {
+                        console.log('No social links found or empty array');
                     }
                     $('#view_socialLinks').html(html);
                     $('#viewProfileModal').modal('show');
@@ -1428,10 +1494,12 @@ if ($result) {
         whatsapp: {
             name: 'WhatsApp',
             icon: 'fab fa-whatsapp',
-            prefix: '+',
+            prefix: '+90',
             baseUrl: 'https://wa.me/',
-            placeholder: '905551234567',
-            color: 'platform-whatsapp'
+            placeholder: '5551234567',
+            color: 'platform-whatsapp',
+            validation: 'phone',
+            helpText: '10 haneli telefon numarası (5XX XXX XX XX)'
         },
         website: {
             name: 'Website',
@@ -1500,6 +1568,42 @@ if ($result) {
         const container = $(`#${containerId}`);
         const itemId = `social-${platformKey}-${Date.now()}`;
         
+        // WhatsApp için özel input alanı
+        let inputField = '';
+        if (platformKey === 'whatsapp') {
+            // WhatsApp telefon numarasını +90 prefix'i olmadan göster
+            let phoneValue = value;
+            if (phoneValue.startsWith('+90')) {
+                phoneValue = phoneValue.substring(3);
+            } else if (phoneValue.startsWith('90')) {
+                phoneValue = phoneValue.substring(2);
+            }
+            
+            inputField = `
+                <div class="input-group">
+                    <span class="input-group-text">${platform.prefix}</span>
+                    <input type="tel" class="form-control whatsapp-phone-input" 
+                           placeholder="${platform.placeholder}" 
+                           value="${phoneValue}"
+                           data-platform="${platformKey}"
+                           maxlength="10"
+                           pattern="5[0-9]{9}"
+                           title="5 ile başlayan 10 haneli telefon numarası">
+                </div>
+                <small class="text-muted mt-1 d-block">${platform.helpText}</small>
+            `;
+        } else {
+            inputField = `
+                <div class="input-group">
+                    <span class="input-group-text">${platform.prefix}</span>
+                    <input type="text" class="form-control" 
+                           placeholder="${platform.placeholder}" 
+                           value="${value}"
+                           data-platform="${platformKey}">
+                </div>
+            `;
+        }
+        
         const itemHtml = `
             <div class="social-media-item" data-platform="${platformKey}" id="${itemId}">
                 <div class="platform-header">
@@ -1511,17 +1615,18 @@ if ($result) {
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="input-group">
-                    <span class="input-group-text">${platform.prefix}</span>
-                    <input type="text" class="form-control" 
-                           placeholder="${platform.placeholder}" 
-                           value="${value}"
-                           data-platform="${platformKey}">
-                </div>
+                ${inputField}
             </div>
         `;
         
         container.append(itemHtml);
+        
+        // WhatsApp input'u için özel event listener ekle
+        if (platformKey === 'whatsapp') {
+            $(`#${itemId} .whatsapp-phone-input`).on('input', function() {
+                formatWhatsAppInput(this);
+            });
+        }
     }
 
     // Modern sosyal medya item silme fonksiyonu
@@ -1550,6 +1655,15 @@ if ($result) {
         $('#socialLinksContainer .social-media-item').each(function() {
             let platform = $(this).data('platform');
             let url = $(this).find('input').val();
+            
+            // WhatsApp için özel URL formatlaması
+            if (platform === 'whatsapp' && url) {
+                // Telefon numarasını tam formata çevir
+                if (url.length === 10 && url.startsWith('5')) {
+                    url = '+90' + url; // +90 prefix'i ekle
+                }
+            }
+            
             if (platform && url) {
                 links.push({ platform, url });
             }
@@ -1687,6 +1801,34 @@ if ($result) {
             // 5 ile başlamasını zorunlu kıl
             if (input.value.length > 0 && !input.value.startsWith('5')) {
                 input.value = '5' + input.value.substring(1);
+            }
+        }
+
+        // WhatsApp telefon numarası formatlaması
+        function formatWhatsAppInput(input) {
+            // Sadece rakam kabul et
+            input.value = input.value.replace(/[^0-9]/g, '');
+            
+            // 10 haneden fazla girişi engelle
+            if (input.value.length > 10) {
+                input.value = input.value.substring(0, 10);
+            }
+            
+            // 5 ile başlamasını zorunlu kıl
+            if (input.value.length > 0 && !input.value.startsWith('5')) {
+                input.value = '5' + input.value.substring(1);
+            }
+            
+            // Gerçek zamanlı doğrulama gösterimi
+            const isValid = input.value.length === 10 && input.value.startsWith('5');
+            if (input.value.length > 0) {
+                if (isValid) {
+                    $(input).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(input).removeClass('is-valid').addClass('is-invalid');
+                }
+            } else {
+                $(input).removeClass('is-valid is-invalid');
             }
         }
 
