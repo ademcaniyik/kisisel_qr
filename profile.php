@@ -422,11 +422,37 @@ if (!$theme) {
 
     <style>
         :root {
-            --background-color: <?php echo htmlspecialchars($profile['background_color'] ?? '#f8f9fa'); ?>;
-            --text-color: <?php echo htmlspecialchars($profile['text_color'] ?? '#333333'); ?>;
-            --accent-color: <?php echo htmlspecialchars($profile['accent_color'] ?? '#007bff'); ?>;
-            --card-background: <?php echo htmlspecialchars($profile['card_background'] ?? '#ffffff'); ?>;
+            <?php 
+            // Tema bazlı renk ayarları
+            $themeClass = getThemeClass($profile['theme'] ?? 'default');
+            $themeColors = [
+                'dark' => [
+                    'background_color' => 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%)',
+                    'text_color' => '#e0e0e0',
+                    'accent_color' => '#00d4ff',
+                    'card_background' => 'rgba(26, 26, 46, 0.95)'
+                ],
+                'default' => [
+                    'background_color' => '#f8f9fa',
+                    'text_color' => '#333333',
+                    'accent_color' => '#007bff',
+                    'card_background' => '#ffffff'
+                ]
+            ];
+            
+            $currentTheme = $themeColors[$themeClass] ?? $themeColors['default'];
+            ?>
+            --background-color: <?php echo $profile['background_color'] ?? $currentTheme['background_color']; ?>;
+            --text-color: <?php echo $profile['text_color'] ?? $currentTheme['text_color']; ?>;
+            --accent-color: <?php echo $profile['accent_color'] ?? $currentTheme['accent_color']; ?>;
+            --card-background: <?php echo $profile['card_background'] ?? $currentTheme['card_background']; ?>;
             --font-family: <?php echo htmlspecialchars($profile['font_family'] ?? "'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"); ?>;
+        }
+        
+        /* Dark tema için özel CSS değişken override */
+        body.theme-dark {
+            --text-color: #e0e0e0;
+            --card-background: rgba(26, 26, 46, 0.95);
         }
     </style>
 </head>
@@ -579,21 +605,21 @@ if (!$theme) {
 
                     <?php if ($profile['iban']): ?>
                         <!-- IBAN - Mükemmel Hizalama -->
-                        <div style="display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; margin-bottom: 16px; padding: 12px 0; border-bottom: 1px solid #f8f8f8;">
+                        <div class="iban-container" style="display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; margin-bottom: 16px; padding: 12px 0; border-bottom: 1px solid rgba(128, 128, 128, 0.2);">
                             <!-- İkon ve Copy Butonu Alanı -->
-                            <div style="position: relative; width: 32px; height: 32px; background: #f8f8f8; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-university" style="font-size: 12px; color: #666;"></i>
-                                <button onclick="copyIban()" style="position: absolute; top: -4px; right: -4px; background: #fff; border: 1px solid #ddd; color: #666; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" 
-                                        onmouseover="this.style.color='#000'; this.style.borderColor='#999'; this.style.background='#f9f9f9'" 
-                                        onmouseout="this.style.color='#666'; this.style.borderColor='#ddd'; this.style.background='#fff'"
+                            <div class="icon-wrapper" style="position: relative; width: 32px; height: 32px; background: var(--card-background, #f8f8f8); border-radius: 6px; display: flex; align-items: center; justify-content: center; opacity: 1;">
+                                <i class="fas fa-university" style="font-size: 12px; color: var(--accent-color, #666);"></i>
+                                <button onclick="copyIban()" class="copy-btn" style="position: absolute; top: -4px; right: -4px; background: var(--card-background, #fff); border: 1px solid var(--text-color, #ddd); color: var(--text-color, #666); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); opacity: 1;" 
+                                        onmouseover="this.style.opacity='1'" 
+                                        onmouseout="this.style.opacity='1'"
                                         title="IBAN Kopyala">
                                     <i class="fas fa-copy" style="font-size: 7px;"></i>
                                 </button>
                             </div>
                             <!-- Metin Alanı -->
                             <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
-                                <span style="color: #888; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">IBAN</span>
-                                <span id="iban-number" style="color: #000; font-family: 'SF Mono', monospace; font-size: 14px; font-weight: 500; word-break: break-all;">
+                                <span class="field-label" style="color: var(--text-color, #888); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">IBAN</span>
+                                <span id="iban-number" class="field-value" style="color: var(--text-color, #000); font-family: 'SF Mono', monospace; font-size: 14px; font-weight: 500; word-break: break-all;">
                                     <?php echo htmlspecialchars($profile['iban']); ?>
                                 </span>
                             </div>
@@ -602,15 +628,15 @@ if (!$theme) {
 
                     <?php if ($profile['blood_type']): ?>
                         <!-- Kan Grubu - Mükemmel Hizalama -->
-                        <div style="display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; margin-bottom: 16px; padding: 12px 0;">
+                        <div class="blood-type-container" style="display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; margin-bottom: 16px; padding: 12px 0;">
                             <!-- İkon Alanı -->
-                            <div style="width: 32px; height: 32px; background: #f8f8f8; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-tint" style="font-size: 12px; color: #666;"></i>
+                            <div class="icon-wrapper" style="width: 32px; height: 32px; background: var(--card-background, #f8f8f8); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-tint" style="font-size: 12px; color: var(--accent-color, #666);"></i>
                             </div>
                             <!-- Metin Alanı -->
                             <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
-                                <span style="color: #888; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kan Grubu</span>
-                                <span style="color: #000; font-size: 14px; font-weight: 600;">
+                                <span class="field-label" style="color: var(--text-color, #888); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Kan Grubu</span>
+                                <span class="field-value" style="color: var(--text-color, #000); font-size: 14px; font-weight: 600;">
                                     <?php echo htmlspecialchars($profile['blood_type']); ?>
                                 </span>
                             </div>
