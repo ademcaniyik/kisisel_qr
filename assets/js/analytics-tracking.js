@@ -21,7 +21,7 @@
             eventData.timestamp = new Date().toISOString();
             
             // Send to server via fetch
-            fetch('admin/api/stats.php', {
+            fetch('admin/api/analytics.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,7 +51,7 @@
                 stepData = {};
             }
             
-            fetch('admin/api/stats.php', {
+            fetch('admin/api/analytics.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

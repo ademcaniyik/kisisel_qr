@@ -23,8 +23,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $action = $_REQUEST['action'] ?? '';
 
+// Analytics tracking endpoints için tüm güvenlik kontrollerini bypass et
+$analyticsActions = ['track_event', 'track_order_funnel'];
+$isAnalyticsAction = in_array($action, $analyticsActions);
+
 // Skip admin check for analytics tracking endpoints
-if (!in_array($action, ['track_event', 'track_order_funnel'])) {
+if (!$isAnalyticsAction) {
     if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Yetkisiz erişim']);
@@ -32,22 +36,20 @@ if (!in_array($action, ['track_event', 'track_order_funnel'])) {
     }
 }
 
-// --- RATE LIMITING ---
-if (!Utilities::rateLimit('stats_api_' . ($_SERVER['REMOTE_ADDR'] ?? 'guest'), 60, 60)) {
+// --- RATE LIMITING (Skip for analytics) ---
+if (!$isAnalyticsAction && !Utilities::rateLimit('stats_api_' . ($_SERVER['REMOTE_ADDR'] ?? 'guest'), 60, 60)) {
     http_response_code(429);
     echo json_encode(['success' => false, 'message' => 'Çok fazla istek. Lütfen daha sonra tekrar deneyin.']);
     exit();
 }
-// --- CSRF KORUMASI ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Skip CSRF for analytics tracking endpoints
-    if (!in_array($action, ['track_event', 'track_order_funnel'])) {
-        $csrfToken = $_POST['csrf_token'] ?? '';
-        if (!Utilities::validateCsrfToken($csrfToken)) {
-            http_response_code(403);
-            echo json_encode(['success' => false, 'message' => 'Geçersiz CSRF token']);
-            exit();
-        }
+
+// --- CSRF KORUMASI (Skip for analytics) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isAnalyticsAction) {
+    $csrfToken = $_POST['csrf_token'] ?? '';
+    if (!Utilities::validateCsrfToken($csrfToken)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Geçersiz CSRF token']);
+        exit();
     }
 }
 
