@@ -104,6 +104,47 @@ async function completeOrder() {
         return; // Zaten tıklanmış, işlemi durdur
     }
     
+    // 2. Adım (teslimat bilgileri) doğrulaması
+    const requiredDeliveryFields = [
+        { id: 'deliveryCity', name: 'İl' },
+        { id: 'deliveryDistrict', name: 'İlçe' },
+        { id: 'deliveryAddress', name: 'Adres' },
+        { id: 'deliveryName', name: 'Alıcı Adı' },
+        { id: 'deliveryPhone', name: 'Alıcı Telefonu' }
+    ];
+    
+    let hasDeliveryError = false;
+    let errorMessage = 'Lütfen aşağıdaki alanları doldurun:\n';
+    
+    requiredDeliveryFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (!element || !element.value.trim()) {
+            element?.classList.add('is-invalid');
+            errorMessage += `• ${field.name}\n`;
+            hasDeliveryError = true;
+        } else {
+            element?.classList.remove('is-invalid');
+        }
+    });
+    
+    // Telefon numarası özel kontrolü
+    const deliveryPhone = document.getElementById('deliveryPhone');
+    if (deliveryPhone && deliveryPhone.value.trim()) {
+        const phoneNumber = deliveryPhone.value.replace(/\D/g, '');
+        if (phoneNumber.length < 10) {
+            deliveryPhone.classList.add('is-invalid');
+            errorMessage += '• Alıcı telefonu en az 10 haneli olmalıdır\n';
+            hasDeliveryError = true;
+        } else {
+            deliveryPhone.classList.remove('is-invalid');
+        }
+    }
+    
+    if (hasDeliveryError) {
+        alert(errorMessage);
+        return;
+    }
+    
     // Butonu devre dışı bırak
     completeOrderBtn.disabled = true;
     const originalText = completeOrderBtn.innerHTML;
