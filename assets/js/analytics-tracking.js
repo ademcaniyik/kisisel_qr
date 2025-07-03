@@ -5,6 +5,12 @@
 (function() {
     'use strict';
     
+    // Prevent multiple initialization
+    if (window.AnalyticsInitialized) {
+        console.log('🔍 Analytics: Already initialized, skipping...');
+        return;
+    }
+    
     // Analytics tracking functions
     const Analytics = {
         
@@ -122,22 +128,44 @@
                         return;
                     }
                     
+                    // Prevent duplicate listeners - check if already has analytics listener
+                    if (button.hasAttribute('data-analytics-tracked')) {
+                        console.log(`🔍 Analytics: Button already tracked, skipping: ${buttonText}`);
+                        return;
+                    }
+                    
                     console.log(`✅ Analytics: Adding click listener to button: ${buttonText}`);
                     buttonCount++;
                     
+                    // Mark button as tracked
+                    button.setAttribute('data-analytics-tracked', 'true');
+                    
+                    // Add click tracking with debounce
+                    let lastClickTime = 0;
                     button.addEventListener('click', function(e) {
+                        const currentTime = Date.now();
+                        
+                        // Prevent double clicks within 1 second
+                        if (currentTime - lastClickTime < 1000) {
+                            console.log('🔍 Analytics: Preventing duplicate click (too fast)');
+                            return;
+                        }
+                        lastClickTime = currentTime;
+                        
                         console.log('🔍 Analytics: Order button clicked!', button, buttonText);
                         
                         self.trackEvent('click', 'order_button_clicked', {
                             button_text: button.textContent || button.innerText || 'Order Button',
                             button_id: button.id || '',
                             button_class: button.className || '',
-                            button_onclick: button.getAttribute('onclick') || ''
+                            button_onclick: button.getAttribute('onclick') || '',
+                            timestamp: new Date().toISOString()
                         });
                         
                         self.trackOrderFunnel('order_clicked', {
                             button_element: selector,
-                            button_text: buttonText
+                            button_text: buttonText,
+                            timestamp: new Date().toISOString()
                         });
                     });
                 });
@@ -151,9 +179,11 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             Analytics.init();
+            window.AnalyticsInitialized = true;
         });
     } else {
         Analytics.init();
+        window.AnalyticsInitialized = true;
     }
     
     // Make Analytics available globally if needed
