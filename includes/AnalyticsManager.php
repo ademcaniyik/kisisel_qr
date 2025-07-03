@@ -243,5 +243,132 @@ class AnalyticsManager {
         
         return $result;
     }
+    
+    /**
+     * Otomatik daily stats güncelleme
+     * Analytics dashboard açıldığında otomatik çalışır
+     */
+    public function autoUpdateDailyStats() {
+        $today = date('Y-m-d');
+        
+        try {
+            // Bugünkü order button clicks sayısını hesapla
+            $result = $this->db->query("
+                SELECT COUNT(*) as count 
+                FROM user_events 
+                WHERE event_name = 'order_button_clicked' 
+                AND DATE(created_at) = '$today'
+            ");
+            $orderClicks = $result->fetch_assoc()['count'];
+            
+            // Bugünkü unique sessions sayısını hesapla
+            $result = $this->db->query("
+                SELECT COUNT(DISTINCT session_id) as count 
+                FROM user_events 
+                WHERE DATE(created_at) = '$today'
+            ");
+            $uniqueVisitors = $result->fetch_assoc()['count'];
+            
+            // Page views sayısını hesapla
+            $result = $this->db->query("
+                SELECT COUNT(*) as count 
+                FROM user_events 
+                WHERE event_name = 'page_loaded' 
+                AND DATE(created_at) = '$today'
+            ");
+            $pageViews = $result->fetch_assoc()['count'];
+            
+            // Daily stats tablosunu güncelle
+            $stmt = $this->db->prepare("
+                INSERT INTO daily_stats 
+                (stat_date, total_visitors, unique_visitors, total_page_views, order_button_clicks) 
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                total_visitors = VALUES(total_visitors),
+                unique_visitors = VALUES(unique_visitors),
+                total_page_views = VALUES(total_page_views),
+                order_button_clicks = VALUES(order_button_clicks),
+                updated_at = NOW()
+            ");
+            
+            $stmt->bind_param("siiii", $today, $uniqueVisitors, $uniqueVisitors, $pageViews, $orderClicks);
+            $result = $stmt->execute();
+            
+            // Son 3 günün verilerini de kontrol et (eksik varsa güncelle)
+            for ($i = 1; $i <= 3; $i++) {
+                $date = date('Y-m-d', strtotime("-$i days"));
+                
+                // Bu tarih için kayıt var mı kontrol et
+                $checkResult = $this->db->query("SELECT id FROM daily_stats WHERE stat_date = '$date'");
+                if ($checkResult->num_rows == 0) {
+                    // Kayıt yoksa oluştur
+                    $this->updateDailyStatsForDate($date);
+                }
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            error_log("Analytics auto update error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Belirli bir tarih için daily stats güncelle
+     */
+    private function updateDailyStatsForDate($date) {
+        try {
+            // Order button clicks
+            $result = $this->db->query("
+                SELECT COUNT(*) as count 
+                FROM user_events 
+                WHERE event_name = 'order_button_clicked' 
+                AND DATE(created_at) = '$date'
+            ");
+            $orderClicks = $result->fetch_assoc()['count'];
+            
+            // Unique visitors
+            $result = $this->db->query("
+                SELECT COUNT(DISTINCT session_id) as count 
+                FROM user_events 
+                WHERE DATE(created_at) = '$date'
+            ");
+            $uniqueVisitors = $result->fetch_assoc()['count'];
+            
+            // Page views
+            $result = $this->db->query("
+                SELECT COUNT(*) as count 
+                FROM user_events 
+                WHERE event_name = 'page_loaded' 
+                AND DATE(created_at) = '$date'
+            ");
+            $pageViews = $result->fetch_assoc()['count'];
+            
+            // Sadece veri varsa kaydet
+            if ($uniqueVisitors > 0 || $orderClicks > 0 || $pageViews > 0) {
+                $stmt = $this->db->prepare("
+                    INSERT INTO daily_stats 
+                    (stat_date, total_visitors, unique_visitors, total_page_views, order_button_clicks) 
+                    VALUES (?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE
+                    total_visitors = VALUES(total_visitors),
+                    unique_visitors = VALUES(unique_visitors),
+                    total_page_views = VALUES(total_page_views),
+                    order_button_clicks = VALUES(order_button_clicks),
+                    updated_at = NOW()
+                ");
+                
+                $stmt->bind_param("siiii", $date, $uniqueVisitors, $uniqueVisitors, $pageViews, $orderClicks);
+                return $stmt->execute();
+            }
+            
+            return true;
+            
+        } catch (Exception $e) {
+            error_log("Analytics date update error for $date: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

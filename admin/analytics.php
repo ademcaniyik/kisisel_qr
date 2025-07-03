@@ -12,6 +12,9 @@ require_once '../includes/AnalyticsManager.php';
 // Analytics manager
 $analytics = new AnalyticsManager();
 
+// Günlük istatistikleri otomatik güncelle (dashboard yüklendiğinde)
+$analytics->autoUpdateDailyStats();
+
 // Tarih aralığı
 $startDate = $_GET['start_date'] ?? date('Y-m-d', strtotime('-7 days'));
 $endDate = $_GET['end_date'] ?? date('Y-m-d');
