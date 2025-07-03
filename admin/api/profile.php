@@ -60,7 +60,9 @@ try {
             $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
             $isDynamic = isset($_POST['is_dynamic']) ? 1 : 0;
             $redirectUrl = $isDynamic ? Utilities::sanitizeInput($_POST['redirect_url']) : null;
-            $socialLinks = isset($_POST['social_links']) ? $_POST['social_links'] : [];
+            // Social links zaten JavaScript'te JSON.stringify ile gönderildiği için, tekrar encode etmeyelim
+            $socialLinksJson = isset($_POST['social_links']) ? $_POST['social_links'] : '[]';
+            
             $slug = Utilities::generateSlug();
             $themeCheckStmt = $connection->prepare("SELECT theme_name FROM themes WHERE theme_name = ?");
             $themeCheckStmt->bind_param("s", $theme);
@@ -69,7 +71,6 @@ try {
                 $theme = 'default';
             }
             $themeCheckStmt->close();
-            $socialLinksJson = json_encode($socialLinks);
             $photoUrl = null;
             $photoData = null;
             if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -334,8 +335,9 @@ try {
             $theme = Utilities::sanitizeInput($_POST['theme'] ?? 'default');
             $iban = Utilities::sanitizeInput($_POST['iban'] ?? '');
             $bloodType = Utilities::sanitizeInput($_POST['blood_type'] ?? '');
-            $socialLinks = isset($_POST['social_links']) ? json_decode($_POST['social_links'], true) : [];
-            $socialLinksJson = json_encode($socialLinks);
+            
+            // Social links zaten JavaScript'te JSON.stringify ile gönderildiği için, tekrar encode etmeyelim
+            $socialLinksJson = isset($_POST['social_links']) ? $_POST['social_links'] : '[]';
             
             // Mevcut profil verilerini al
             $stmt = $connection->prepare("SELECT photo_url, photo_data FROM profiles WHERE id = ?");

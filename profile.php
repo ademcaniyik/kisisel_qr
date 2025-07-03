@@ -488,23 +488,12 @@ if (!$theme) {
             <?php if ($profile['social_links']): ?>
                 <div class="social-links">
                     <?php
-                    // DEBUG: Sosyal medya linkleri kontrolü
-                    echo "<!-- DEBUG: social_links raw data: " . htmlspecialchars($profile['social_links']) . " -->";
-                    
                     $links = json_decode($profile['social_links'], true);
-                    $json_error = json_last_error();
-                    
-                    echo "<!-- DEBUG: JSON decode error: " . $json_error . " (0 = OK) -->";
-                    echo "<!-- DEBUG: Links type: " . gettype($links) . " -->";
                     
                     // Eğer string döndüyse, tekrar decode et (double-encoded durumu)
                     if (is_string($links)) {
-                        echo "<!-- DEBUG: Double-encoded detected, decoding again -->";
                         $links = json_decode($links, true);
-                        echo "<!-- DEBUG: After second decode - type: " . gettype($links) . " -->";
                     }
-                    
-                    echo "<!-- DEBUG: Links count: " . (is_array($links) ? count($links) : 'not_array') . " -->";
                     
                     if (is_array($links) && !empty($links)) {
                         $linkCount = 0;
@@ -512,51 +501,39 @@ if (!$theme) {
                             $platform = '';
                             $url = '';
                             
-                            echo "<!-- DEBUG: Processing link $key => " . (is_array($value) ? json_encode($value) : $value) . " -->";
-                            
                             // Yeni array format: [{"platform":"facebook","url":"..."}] - EN YAYGINI
                             if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
                                 $platform = $value['platform'];
                                 $url = $value['url'];
-                                echo "<!-- DEBUG: Array format detected - Platform: $platform, URL: $url -->";
                             }
                             // Eski JSON format: {"platform": "url"}
                             else if (is_string($key) && is_string($value)) {
                                 $platform = $key;
                                 $url = $value;
-                                echo "<!-- DEBUG: String format detected - Platform: $platform, URL: $url -->";
                             }
                             // Geçersiz format
                             else {
-                                echo "<!-- DEBUG: Skipping invalid format -->";
                                 continue;
                             }
 
                             // Boş URL'leri atla - ancak telefon numaralarını kabul et
                             if (empty($url) || $url === 'undefined') {
-                                echo "<!-- DEBUG: Skipping empty URL for platform: $platform -->";
                                 continue;
                             }
                             
                             // Sadece tamamen sayısal olanları atla (telefon numaraları değil)
                             if (is_numeric($url) && !str_contains($url, '+')) {
-                                echo "<!-- DEBUG: Skipping numeric URL for platform: $platform -->";
                                 continue;
                             }
 
                             $formattedUrl = formatSocialUrl($platform, $url);
                             
-                            echo "<!-- DEBUG: formatSocialUrl returned: $formattedUrl -->";
-                            
                             // formatSocialUrl'den # dönerse atla
                             if ($formattedUrl === '#') {
-                                echo "<!-- DEBUG: Skipping # URL for platform: $platform -->";
                                 continue;
                             }
                             
                             $platformLower = strtolower($platform);
-                            
-                            echo "<!-- DEBUG: Formatted URL for $platform: $formattedUrl -->";
 
                             // Platform isimlerini Türkçe'ye çevir
                             $platformNames = [
@@ -581,8 +558,6 @@ if (!$theme) {
 
                             $displayName = $platformNames[$platformLower] ?? ucfirst($platform);
                             $linkCount++;
-                            
-                            echo "<!-- DEBUG: Rendering link $linkCount for $platform ($displayName) -->";
                     ?>
                             <a href="<?php echo htmlspecialchars($formattedUrl); ?>"
                                 target="_blank"
@@ -593,16 +568,9 @@ if (!$theme) {
                             </a>
                     <?php
                         }
-                        echo "<!-- DEBUG: Total links rendered: $linkCount -->";
-                    } else {
-                        echo "<!-- DEBUG: No valid links found -->";
-                        echo "<!-- Sosyal medya linkleri bulunamadı veya geçersiz JSON -->";
                     }
                     ?>
                 </div>
-            <?php else: ?>
-                <!-- DEBUG: social_links field is empty -->
-                <!-- Sosyal medya linkleri yok -->
             <?php endif; ?>
 
             <!-- IBAN ve Kan Grubu - Mükemmel Hizalanmış Tasarım -->

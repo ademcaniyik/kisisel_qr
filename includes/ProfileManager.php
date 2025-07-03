@@ -177,27 +177,11 @@ class ProfileManager {
                         ];
                         
                         if (isset($platformMap[$platform])) {
-                            // @ ile başlıyorsa tam URL'e çevir
-                            if (strpos($value, '@') === 0) {
-                                $username = substr($value, 1);
-                                switch ($platform) {
-                                    case 'instagram':
-                                        $value = "https://instagram.com/{$username}";
-                                        break;
-                                    case 'twitter':
-                                        $value = "https://twitter.com/{$username}";
-                                        break;
-                                    case 'tiktok':
-                                        $value = "https://tiktok.com/@{$username}";
-                                        break;
-                                    case 'whatsapp':
-                                        // WhatsApp için telefon numarası formatı
-                                        $value = "https://wa.me/{$username}";
-                                        break;
-                                }
-                            }
-                            
-                            $socialLinks[$platformMap[$platform]] = $value;
+                            // Yeni format kullan: [{"platform":"x","url":"y"}]
+                            $socialLinks[] = [
+                                'platform' => $platformMap[$platform],
+                                'url' => $value
+                            ];
                         }
                     }
                 }
