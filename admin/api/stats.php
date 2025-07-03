@@ -1,6 +1,18 @@
 <?php
 // admin/api/stats.php
 // Tüm istatistik işlemleri (dashboard, device, scan) tek dosyada yönetilir.
+
+// CORS headers for analytics tracking
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/utilities.php';
 
