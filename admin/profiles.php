@@ -422,16 +422,16 @@ if ($result) {
                                             
                                             if ($qrRow): ?>
                                             <a href="<?= getBasePath() ?>/profile.php?qr_id=<?= htmlspecialchars($qrRow['id']) ?>"
-                                               class="btn btn-sm btn-info"
+                                               class="btn btn-sm btn-success me-1"
                                                target="_blank"
                                                title="Profili yeni sekmede görüntüle">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-external-link-alt"></i>
                                             </a>
-                                            <?php else: ?>
-                                            <button class="btn btn-sm btn-info" onclick="viewProfile(<?php echo $profile['id']; ?>)" title="Profil önizlemesi">
+                                            <?php endif; ?>
+                                            <!-- Her zaman modal önizleme butonu göster -->
+                                            <button class="btn btn-sm btn-info" onclick="viewProfile(<?php echo $profile['id']; ?>)" title="Profil önizlemesi (Modal)">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <?php endif; ?>
                                             <button class="btn btn-sm btn-danger" onclick="deleteProfile(<?php echo $profile['id']; ?>)">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -1260,24 +1260,41 @@ if ($result) {
                         photoContainer.html(`<img src="${BASE_PATH}/assets/images/default-profile.svg" alt="Varsayılan profil" class="img-thumbnail profile-photo-preview">`);
                     }
                     
-                    // Sosyal medya linkleri
+                    // Sosyal medya linkleri - Debug için detaylı loglar
                     let links = [];
+                    console.log('=== SOCIAL MEDIA DEBUG START ===');
+                    console.log('Profile ID:', res.profile.id);
+                    console.log('Profile Name:', res.profile.name);
                     console.log('Raw social_links from database:', res.profile.social_links);
-                    try { links = JSON.parse(res.profile.social_links); } catch(e) {
-                        console.error('JSON parse error for social_links:', e);
+                    console.log('Type of social_links:', typeof res.profile.social_links);
+                    
+                    try { 
+                        links = JSON.parse(res.profile.social_links); 
+                        console.log('✅ JSON parse successful');
+                    } catch(e) {
+                        console.error('❌ JSON parse error for social_links:', e);
+                        console.log('Attempting to work with raw data...');
+                        links = res.profile.social_links || [];
                     }
                     console.log('Parsed links:', links);
+                    console.log('Links is array?', Array.isArray(links));
                     
                     if (!Array.isArray(links) && typeof links === 'object' && links !== null) {
+                        console.log('Converting object to array...');
                         links = Object.entries(links).map(([platform, url]) => ({ platform, url }));
                         console.log('Converted object to array:', links);
                     }
                     
                     let html = '';
                     if (Array.isArray(links) && links.length > 0) {
+                        console.log(`Processing ${links.length} social media links...`);
                         html += '<div class="mb-2"><strong>Sosyal Medya:</strong></div>';
-                        links.forEach(link => {
-                            console.log('Processing link:', link);
+                        links.forEach((link, index) => {
+                            console.log(`Processing link ${index + 1}:`, link);
+                            console.log(`- Platform: ${link.platform}`);
+                            console.log(`- URL: ${link.url}`);
+                            console.log(`- Platform exists in config?`, !!socialMediaPlatforms[link.platform]);
+                            
                             if (link.platform && link.url && socialMediaPlatforms[link.platform]) {
                                 const platform = socialMediaPlatforms[link.platform];
                                 let displayUrl = link.url;
@@ -1285,14 +1302,19 @@ if ($result) {
                                 
                                 // WhatsApp için özel formatla
                                 if (link.platform === 'whatsapp') {
+                                    console.log('🟢 WhatsApp link found!');
+                                    console.log('- Original URL:', link.url);
                                     // +90 ile başlıyorsa güzel formatla
                                     if (link.url.startsWith('+90')) {
                                         const phone = link.url.substring(3);
-                                        displayName = `WhatsApp (+90 ${phone.substring(0,3)} ${phone.substring(3,6)} ${phone.substring(6,8)} ${phone.substring(8,10)})`;
+                                        displayName = 'WhatsApp (+90 ' + phone.substring(0,3) + ' ' + phone.substring(3,6) + ' ' + phone.substring(6,8) + ' ' + phone.substring(8,10) + ')';
+                                        console.log('- Formatted display name:', displayName);
                                     } else {
-                                        displayName = `WhatsApp (${link.url})`;
+                                        displayName = 'WhatsApp (' + link.url + ')';
+                                        console.log('- Simple display name:', displayName);
                                     }
-                                    displayUrl = `https://wa.me/${link.url.replace('+', '')}`;
+                                    displayUrl = 'https://wa.me/' + link.url.replace('+', '');
+                                    console.log('- Final WhatsApp URL:', displayUrl);
                                 }
                                 // Website için özel kontrol
                                 else if (link.platform === 'website') {
@@ -1303,22 +1325,108 @@ if ($result) {
                                     displayUrl = platform.baseUrl + link.url.replace(platform.prefix, '');
                                 }
                                 
-                                console.log('Adding link:', { platform: link.platform, displayName, displayUrl });
-                                html += `<div class="mb-1">
-                                    <a href="${displayUrl}" target="_blank" class="text-decoration-none">
-                                        <i class="${platform.icon} me-2" style="color: var(--bs-primary);"></i>
-                                        ${displayName}
-                                    </a>
-                                </div>`;
+                                console.log('✅ Adding link ' + (index + 1) + ':', { platform: link.platform, displayName, displayUrl });
+                                html += '<div class="mb-1">' +
+                                    '<a href="' + displayUrl + '" target="_blank" class="text-decoration-none">' +
+                                        '<i class="' + platform.icon + ' me-2" style="color: var(--bs-primary);"></i>' +
+                                        displayName +
+                                    '</a>' +
+                                '</div>';
                             } else {
-                                console.warn('Skipping invalid link:', link);
+                                console.warn('❌ Skipping invalid link ' + (index + 1) + ':', link);
+                                if (!link.platform) console.warn('  - Missing platform');
+                                if (!link.url) console.warn('  - Missing URL');
+                                if (!socialMediaPlatforms[link.platform]) console.warn('  - Platform not in config');
                             }
                         });
                     } else {
-                        console.log('No social links found or empty array');
+                        console.log('ℹ️ No social links found or empty array');
+                        console.log('- Array check:', Array.isArray(links));
+                        console.log('- Length:', links.length);
                     }
+                    console.log('=== SOCIAL MEDIA DEBUG END ===');
+                    console.log('Final HTML:', html);
+                    console.log('Final HTML length:', html.length);
+                    
                     $('#view_socialLinks').html(html);
+                    
+                    // HTML'in DOM'a eklenip eklenmediğini kontrol et
+                    setTimeout(() => {
+                        const socialLinksContainer = document.getElementById('view_socialLinks');
+                        console.log('DOM Social Links Container:', socialLinksContainer);
+                        console.log('DOM Container innerHTML:', socialLinksContainer ? socialLinksContainer.innerHTML : 'NOT FOUND');
+                        console.log('DOM Container children count:', socialLinksContainer ? socialLinksContainer.children.length : 0);
+                        
+                        if (socialLinksContainer && socialLinksContainer.innerHTML.includes('WhatsApp')) {
+                            console.log('✅ WhatsApp found in DOM!');
+                        } else {
+                            console.log('❌ WhatsApp NOT found in DOM!');
+                        }
+                    }, 100);
+                    
                     $('#viewProfileModal').modal('show');
+                    
+                    // Modal açıldıktan sonra görünürlük kontrolü
+                    setTimeout(() => {
+                        const modal = document.getElementById('viewProfileModal');
+                        const socialSection = document.getElementById('view_socialLinks');
+                        
+                        console.log('=== MODAL VISIBILITY CHECK ===');
+                        console.log('Modal element:', modal);
+                        console.log('Modal display style:', modal ? window.getComputedStyle(modal).display : 'NOT FOUND');
+                        console.log('Modal classes:', modal ? modal.className : 'NOT FOUND');
+                        console.log('Social section display:', socialSection ? window.getComputedStyle(socialSection).display : 'NOT FOUND');
+                        console.log('Social section visibility:', socialSection ? window.getComputedStyle(socialSection).visibility : 'NOT FOUND');
+                        console.log('Social section opacity:', socialSection ? window.getComputedStyle(socialSection).opacity : 'NOT FOUND');
+                        
+                        // Sosyal medya linklerini ayrı ayrı kontrol et
+                        const whatsappLinks = document.querySelectorAll('#view_socialLinks a[href*="wa.me"]');
+                        console.log('WhatsApp links found:', whatsappLinks.length);
+                        whatsappLinks.forEach((link, index) => {
+                            console.log(`WhatsApp link ${index + 1}:`, link);
+                            console.log(`  - Display:`, window.getComputedStyle(link).display);
+                            console.log(`  - Visibility:`, window.getComputedStyle(link).visibility);
+                            console.log(`  - Opacity:`, window.getComputedStyle(link).opacity);
+                            console.log(`  - Text content:`, link.textContent);
+                            
+                            // Font Awesome ikonu kontrol et
+                            const icon = link.querySelector('i.fab.fa-whatsapp');
+                            if (icon) {
+                                console.log(`  - Icon element:`, icon);
+                                console.log(`  - Icon display:`, window.getComputedStyle(icon).display);
+                                console.log(`  - Icon font-family:`, window.getComputedStyle(icon).fontFamily);
+                            } else {
+                                console.log(`  - Icon NOT FOUND!`);
+                            }
+                        });
+                        
+                        // Font Awesome'ın yüklenip yüklenmediğini kontrol et
+                        const testIcon = document.createElement('i');
+                        testIcon.className = 'fab fa-whatsapp';
+                        document.body.appendChild(testIcon);
+                        const iconStyle = window.getComputedStyle(testIcon);
+                        console.log('Font Awesome test - Font family:', iconStyle.fontFamily);
+                        console.log('Font Awesome test - Font weight:', iconStyle.fontWeight);
+                        document.body.removeChild(testIcon);
+                        
+                        // Manual test - sosyal medya bölümüne test içerik ekle
+                        console.log('=== MANUAL TEST ===');
+                        const socialContainer = document.getElementById('view_socialLinks');
+                        if (socialContainer) {
+                            // Mevcut içeriği kaydet
+                            const originalContent = socialContainer.innerHTML;
+                            
+                            // Test içeriği ekle
+                            socialContainer.innerHTML = originalContent + 
+                                '<div style="background: yellow; padding: 10px; border: 2px solid red; margin: 10px 0;">' +
+                                '<strong>TEST: Bu görünüyor mu?</strong>' +
+                                '</div>';
+                            
+                            console.log('Test content added to social section');
+                        }
+                        
+                        console.log('=== END VISIBILITY CHECK ===');
+                    }, 500);
                 } else {
                     alert('Profil verileri alınamadı!');
                 }

@@ -348,15 +348,15 @@ if (!$theme) {
                             $platform = '';
                             $url = '';
                             
-                            // Yeni JSON format: {"platform": "url"}
-                            if (is_string($key) && is_string($value)) {
-                                $platform = $key;
-                                $url = $value;
-                            }
-                            // Eski array format: [{"platform":"facebook","url":"..."}]
-                            else if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
+                            // Yeni array format: [{"platform":"facebook","url":"..."}] - EN YAYGINI
+                            if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
                                 $platform = $value['platform'];
                                 $url = $value['url'];
+                            }
+                            // Eski JSON format: {"platform": "url"}
+                            else if (is_string($key) && is_string($value)) {
+                                $platform = $key;
+                                $url = $value;
                             }
                             // Geçersiz format
                             else {
@@ -475,15 +475,15 @@ if (!$theme) {
                             $platform = '';
                             $url = '';
                             
-                            // Yeni JSON format: {"platform": "url"}
-                            if (is_string($key) && is_string($value)) {
-                                $platform = $key;
-                                $url = $value;
-                            }
-                            // Eski array format: [{"platform":"facebook","url":"..."}]
-                            else if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
+                            // Yeni array format: [{"platform":"facebook","url":"..."}] - EN YAYGINI
+                            if (is_array($value) && isset($value['platform']) && isset($value['url'])) {
                                 $platform = $value['platform'];
                                 $url = $value['url'];
+                            }
+                            // Eski JSON format: {"platform": "url"}
+                            else if (is_string($key) && is_string($value)) {
+                                $platform = $key;
+                                $url = $value;
                             }
                             // Geçersiz format
                             else {
