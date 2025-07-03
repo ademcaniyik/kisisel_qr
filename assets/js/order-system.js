@@ -33,6 +33,18 @@ function nextStep() {
         document.getElementById('step1').style.display = 'none';
         document.getElementById('step2').style.display = 'block';
         
+        // 2. adıma geçince teslimat formu kısmına scroll yap
+        setTimeout(() => {
+            const step2Element = document.getElementById('step2');
+            if (step2Element) {
+                step2Element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }
+        }, 100);
+        
         // Analytics tracking
         if (window.trackAnalytics) {
             window.trackAnalytics.orderStep('step1_completed');
@@ -95,6 +107,18 @@ function initPaymentMethods() {
 function prevStep() {
     document.getElementById('step2').style.display = 'none';
     document.getElementById('step1').style.display = 'block';
+    
+    // 1. adıma dönerken forma scroll yap
+    setTimeout(() => {
+        const step1Element = document.getElementById('step1');
+        if (step1Element) {
+            step1Element.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start',
+                inline: 'nearest'
+            });
+        }
+    }, 100);
 }
 
 async function completeOrder() {
